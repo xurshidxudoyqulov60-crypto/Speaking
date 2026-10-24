@@ -1,0 +1,4553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>SpeakFlow — English Speaking & Listening Practice</title>
+  <style>
+    :root {
+      --bg: #ffffff;
+      --text-main: #111111;
+      --text-muted: #71717a;
+      --border: #e4e4e7;
+      --focus-line: #d4d4d8;
+      --btn-bg: #ffffff;
+      --btn-hover: #f4f4f5;
+      --btn-active: #111111;
+      --btn-active-text: #ffffff;
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --accent-green: #10b981;
+      --green-bg: #ecfdf5;
+      --green-border: #10b981;
+      --red-bg: #fef2f2;
+      --red-border: #ef4444;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      width: 100%;
+      min-height: 100%;
+      background-color: var(--bg);
+      color: var(--text-main);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+      user-select: none;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      cursor: default;
+      caret-color: transparent;
+    }
+
+    button, input, select {
+      font-family: inherit;
+      color: var(--text-main);
+    }
+
+    .app-shell {
+      max-width: 640px;
+      margin: 0 auto;
+      padding: calc(16px + env(safe-area-inset-top, 0px)) 20px calc(24px + env(safe-area-inset-bottom, 0px));
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* HOME VIEW */
+    .home-header {
+      padding: 20px 0 16px;
+      margin-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .home-title {
+      font-size: 2rem;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      margin-bottom: 4px;
+    }
+
+    .home-tagline {
+      color: var(--text-muted);
+      font-size: 0.94rem;
+      line-height: 1.45;
+    }
+
+    
+    /* MODE SWITCHER (3 COLUMNS) */
+    .mode-switch-wrap {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 4px;
+      background: var(--btn-hover);
+      padding: 4px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+      margin-bottom: 20px;
+    }
+
+    .mode-btn {
+      min-height: 44px;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 0.84rem;
+      font-weight: 600;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      padding: 0 4px;
+      transition: all 0.15s ease;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    .mode-btn:hover {
+      color: var(--text-main);
+    }
+
+    .mode-btn.active {
+      background: #ffffff;
+      color: var(--text-main);
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+    }
+
+    /* -------------------------------------------------------------
+       VOCABULARY PRACTICE VIEW
+    ------------------------------------------------------------- */
+    .vocabulary-view {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      gap: 16px;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    .vocab-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .vocab-meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .vocab-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .vocab-level-pills {
+      display: inline-flex;
+      background: var(--btn-hover);
+      padding: 3px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      gap: 2px;
+    }
+
+    .vocab-lvl-pill {
+      border: none;
+      background: transparent;
+      padding: 6px 14px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      border-radius: 6px;
+      cursor: pointer;
+      color: var(--text-muted);
+      transition: all 0.15s ease;
+      user-select: none;
+    }
+
+    .vocab-lvl-pill:hover {
+      color: var(--text-main);
+    }
+
+    .vocab-lvl-pill.active {
+      background: var(--text-main);
+      color: #ffffff;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .vocab-toggle-btn {
+      min-height: 34px;
+      padding: 0 12px;
+      border: 1px solid var(--border);
+      background: #ffffff;
+      border-radius: var(--radius-sm);
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-main);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+      user-select: none;
+    }
+
+    .vocab-toggle-btn:hover {
+      background: var(--btn-hover);
+      border-color: var(--text-main);
+    }
+
+    .vocab-toggle-btn.active {
+      background: var(--btn-hover);
+      border-color: var(--text-main);
+      color: var(--text-main);
+    }
+
+    /* Search input */
+    .vocab-search-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+      width: 100%;
+    }
+
+    .vocab-search-icon {
+      position: absolute;
+      left: 12px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      pointer-events: none;
+    }
+
+    .vocab-search-input {
+      width: 100%;
+      height: 42px;
+      padding: 0 36px 0 36px;
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      font-size: 0.9rem;
+      color: var(--text-main);
+      outline: none;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+      user-select: text;
+      -webkit-user-select: text;
+    }
+
+    .vocab-search-input:focus {
+      border-color: var(--text-main);
+      box-shadow: 0 0 0 1px var(--text-main);
+    }
+
+    .vocab-search-clear {
+      position: absolute;
+      right: 10px;
+      background: none;
+      border: none;
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 4px;
+      line-height: 1;
+    }
+
+    /* Cards List */
+    .vocab-cards-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .vocab-card {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 16px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .vocab-card:hover {
+      border-color: var(--focus-line);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+    }
+
+    .vocab-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .vocab-word-info {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .vocab-word-title {
+      font-size: 1.22rem;
+      font-weight: 700;
+      color: var(--text-main);
+      letter-spacing: -0.01em;
+    }
+
+    .vocab-pos-badge {
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 2px 7px;
+      border-radius: 4px;
+      background: var(--btn-hover);
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+    }
+
+    .vocab-speak-btn {
+      min-height: 34px;
+      padding: 0 12px;
+      border-radius: 9999px;
+      border: 1px solid var(--border);
+      background: var(--btn-hover);
+      color: var(--text-main);
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.15s ease;
+      user-select: none;
+    }
+
+    .vocab-speak-btn:hover {
+      background: var(--text-main);
+      color: #ffffff;
+      border-color: var(--text-main);
+    }
+
+    .vocab-speak-btn.speaking {
+      background: var(--accent-green);
+      color: #ffffff;
+      border-color: var(--accent-green);
+      animation: pulseVocabBtn 0.8s infinite alternate;
+    }
+
+    @keyframes pulseVocabBtn {
+      0% { transform: scale(1); }
+      100% { transform: scale(1.04); }
+    }
+
+    .vocab-tr-box {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      font-size: 0.96rem;
+      line-height: 1.4;
+    }
+
+    .vocab-tr-label {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .vocab-tr-text {
+      font-weight: 600;
+      color: var(--text-main);
+      transition: filter 0.2s ease, opacity 0.2s ease;
+    }
+
+    /* Flashcard blur effect */
+    .vocab-tr-text.blurred,
+    .vocab-example-uz.blurred {
+      filter: blur(6px);
+      user-select: none;
+      cursor: pointer;
+      opacity: 0.5;
+      transition: filter 0.2s ease, opacity 0.2s ease;
+    }
+
+    .vocab-tr-text.blurred.revealed,
+    .vocab-example-uz.blurred.revealed {
+      filter: none;
+      opacity: 1;
+    }
+
+    /* Example Card inside word */
+    .vocab-example-card {
+      background: var(--btn-hover);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 12px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .vocab-example-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .vocab-example-en {
+      font-size: 0.94rem;
+      color: var(--text-main);
+      line-height: 1.45;
+      font-style: italic;
+    }
+
+    .example-quote {
+      font-family: Georgia, serif;
+      font-weight: bold;
+      color: var(--text-muted);
+    }
+
+    .vocab-ex-speak-btn {
+      border: none;
+      background: transparent;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 2px 4px;
+      border-radius: 4px;
+      transition: all 0.15s ease;
+      line-height: 1;
+      user-select: none;
+    }
+
+    .vocab-ex-speak-btn:hover {
+      color: var(--text-main);
+      transform: scale(1.15);
+    }
+
+    .vocab-example-uz {
+      font-size: 0.86rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+      border-top: 1px dashed var(--border);
+      padding-top: 6px;
+      margin-top: 2px;
+      transition: filter 0.2s ease, opacity 0.2s ease;
+    }
+
+    /* Empty State */
+    .vocab-empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--text-muted);
+      font-size: 0.92rem;
+      background: var(--btn-hover);
+      border-radius: var(--radius-md);
+      border: 1px dashed var(--border);
+    }
+
+    /* Bottom Actions */
+    .vocab-bottom-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding-top: 10px;
+      border-top: 1px solid var(--border);
+    }
+
+    .vocab-mode-shortcuts {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+
+    .section-label {
+      font-size: 0.76rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      font-weight: 600;
+    }
+
+    .topic-list {
+      list-style: none;
+      border-top: 1px solid var(--border);
+      margin-bottom: 24px;
+    }
+
+    .topic-item {
+      border-bottom: 1px solid var(--border);
+    }
+
+    .topic-btn {
+      width: 100%;
+      min-height: 52px;
+      text-align: left;
+      background: var(--btn-bg);
+      border: none;
+      padding: 14px 10px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: background-color 0.15s ease, padding-left 0.15s ease;
+      font-size: 1rem;
+      font-weight: 500;
+    }
+
+    .topic-btn:hover, .topic-btn:focus-visible {
+      background-color: var(--btn-hover);
+      padding-left: 14px;
+      outline: none;
+    }
+
+    .topic-btn.selected {
+      background-color: var(--btn-active);
+      color: var(--btn-active-text);
+      font-weight: 600;
+      border-radius: var(--radius-sm);
+    }
+
+    .topic-btn.selected span {
+      color: var(--btn-active-text) !important;
+    }
+
+    .level-selector {
+      padding: 18px 0 10px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      animation: fadeIn 0.2s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .level-buttons {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .level-btn {
+      min-height: 54px;
+      padding: 8px 6px;
+      border: 1px solid var(--border);
+      background: var(--btn-bg);
+      color: var(--text-main);
+      cursor: pointer;
+      border-radius: var(--radius-md);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      transition: all 0.15s ease;
+    }
+
+    .level-btn .lvl-name {
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+
+    .level-btn .lvl-sub {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .level-btn:hover, .level-btn:focus-visible {
+      border-color: var(--text-main);
+      background: var(--btn-hover);
+      outline: none;
+    }
+
+    .level-btn:active {
+      transform: scale(0.97);
+    }
+
+    /* -------------------------------------------------------------
+       SPEAKING / READER VIEW
+    ------------------------------------------------------------- */
+    .reader-view {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      justify-content: space-between;
+      min-height: calc(100dvh - 48px);
+      gap: 14px;
+    }
+
+    .reader-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .back-btn {
+      min-height: 40px;
+      padding: 0 16px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: var(--btn-bg);
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+    }
+
+    .back-btn:hover, .back-btn:focus-visible {
+      background: var(--btn-hover);
+      border-color: var(--text-main);
+      outline: none;
+    }
+
+    .reader-meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .reader-topic-title {
+      font-weight: 600;
+      font-size: 0.94rem;
+      letter-spacing: -0.01em;
+    }
+
+    .reader-status-pill {
+      font-size: 0.74rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 4px 10px;
+      border-radius: 9999px;
+      background: var(--btn-hover);
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+    }
+
+    .reader-stage-wrap {
+      position: relative;
+      width: 100%;
+      max-width: 440px;
+      margin: 0 auto;
+      height: 42vh;
+      min-height: 250px;
+      max-height: 420px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      user-select: none;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      cursor: default;
+      caret-color: transparent;
+    }
+
+    .focus-guide-line {
+      position: absolute;
+      left: 10%;
+      right: 10%;
+      top: 50%;
+      height: 1px;
+      background-color: var(--focus-line);
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0.6;
+    }
+
+    .reader-viewport {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      z-index: 2;
+      -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 25%, #000 75%, transparent 100%);
+      mask-image: linear-gradient(to bottom, transparent 0%, #000 25%, #000 75%, transparent 100%);
+      user-select: none;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      cursor: default;
+      outline: none;
+      caret-color: transparent;
+    }
+
+    .scroll-content {
+      width: 100%;
+      will-change: transform;
+      transform: translate3d(0, 0px, 0);
+      user-select: none;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      pointer-events: none;
+      cursor: default;
+      caret-color: transparent;
+    }
+
+    .text-line {
+      display: block;
+      width: 100%;
+      text-align: center;
+      font-size: 32px;
+      line-height: 1.6;
+      margin-bottom: 16px;
+      font-weight: 500;
+      color: var(--text-main);
+      white-space: nowrap;
+      letter-spacing: -0.01em;
+      user-select: none;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      pointer-events: none;
+      cursor: default;
+      caret-color: transparent;
+      outline: none;
+    }
+
+    .countdown-overlay {
+      position: absolute;
+      z-index: 4;
+      background: rgba(255, 255, 255, 0.94);
+      padding: 8px 18px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text-main);
+      pointer-events: none;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+      backdrop-filter: blur(8px);
+    }
+
+    .reader-controls {
+      border-top: 1px solid var(--border);
+      padding-top: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .notice-text {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      min-height: 1.1em;
+      text-align: center;
+    }
+
+    .speed-box {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      background: var(--btn-hover);
+      padding: 8px 14px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+    }
+
+    .speed-tag {
+      font-size: 0.76rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+    }
+
+    input[type="range"] {
+      flex: 1;
+      height: 24px;
+      accent-color: var(--text-main);
+      cursor: pointer;
+    }
+
+    .speed-label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-main);
+      min-width: 65px;
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .music-bar {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      background: var(--btn-hover);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 8px 12px;
+    }
+
+    .music-top-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .music-selector-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .music-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--border);
+      flex-shrink: 0;
+      transition: background 0.3s ease;
+    }
+
+    .music-dot.playing {
+      background: var(--accent-green);
+      box-shadow: 0 0 8px rgba(16, 185, 129, 0.7);
+    }
+
+    .music-select {
+      flex: 1;
+      min-width: 0;
+      border: none;
+      background: transparent;
+      font-size: 0.84rem;
+      font-weight: 500;
+      color: var(--text-main);
+      cursor: pointer;
+      outline: none;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .music-mute-btn {
+      background: none;
+      border: none;
+      font-size: 0.95rem;
+      cursor: pointer;
+      padding: 4px;
+      opacity: 0.75;
+      display: inline-flex;
+      align-items: center;
+      transition: opacity 0.15s;
+    }
+
+    .music-mute-btn:hover {
+      opacity: 1;
+    }
+
+    .music-bottom-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .music-transport {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .music-btn {
+      min-height: 32px;
+      padding: 0 10px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: var(--btn-bg);
+      font-size: 0.8rem;
+      font-weight: 500;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      transition: all 0.15s ease;
+    }
+
+    .music-btn:hover {
+      background: #e4e4e7;
+    }
+
+    .music-btn.play-btn {
+      background: var(--text-main);
+      color: #ffffff;
+      border-color: var(--text-main);
+      padding: 0 14px;
+      font-weight: 600;
+    }
+
+    .music-btn.play-btn:hover {
+      opacity: 0.9;
+    }
+
+    .music-vol-wrap {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      max-width: 120px;
+    }
+
+    .music-vol-wrap span {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .music-vol-slider {
+      width: 70px;
+      height: 20px;
+      accent-color: var(--text-main);
+      cursor: pointer;
+    }
+
+    .control-buttons {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 10px;
+      width: 100%;
+    }
+
+    .action-btn {
+      min-height: 48px;
+      border-radius: var(--radius-md);
+      font-size: 1rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      letter-spacing: -0.01em;
+    }
+
+    .action-btn.primary {
+      background: var(--text-main);
+      color: #ffffff;
+      border: 1px solid var(--text-main);
+    }
+
+    .action-btn.primary:hover {
+      opacity: 0.92;
+    }
+
+    .action-btn.primary:active {
+      transform: scale(0.98);
+    }
+
+    .action-btn.secondary {
+      background: var(--btn-bg);
+      color: var(--text-main);
+      border: 1px solid var(--border);
+    }
+
+    .action-btn.secondary:hover {
+      background: var(--btn-hover);
+      border-color: var(--text-main);
+    }
+
+    .action-btn.secondary:active {
+      transform: scale(0.98);
+    }
+
+    /* -------------------------------------------------------------
+       LISTENING & QUIZ VIEW
+    ------------------------------------------------------------- */
+    .listening-view {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      gap: 18px;
+    }
+
+    .listen-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .listen-meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .score-badge {
+      font-size: 0.8rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 9999px;
+      background: var(--btn-hover);
+      border: 1px solid var(--border);
+      color: var(--text-main);
+    }
+
+    /* Audio Player Card */
+    .listen-audio-card {
+      background: var(--btn-hover);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 16px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .audio-main-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .listen-play-btn {
+      min-height: 46px;
+      padding: 0 20px;
+      border-radius: 9999px;
+      background: var(--text-main);
+      color: #ffffff;
+      border: none;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.15s ease;
+    }
+
+    .listen-play-btn:hover {
+      opacity: 0.9;
+    }
+
+    .listen-play-btn:active {
+      transform: scale(0.98);
+    }
+
+    .audio-rates {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      background: #ffffff;
+      padding: 3px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+    }
+
+    .rate-btn {
+      border: none;
+      background: transparent;
+      padding: 4px 8px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      border-radius: 4px;
+      cursor: pointer;
+      color: var(--text-muted);
+    }
+
+    .rate-btn.active {
+      background: var(--text-main);
+      color: #ffffff;
+    }
+
+    .wave-indicator {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      height: 16px;
+    }
+
+    .wave-bar {
+      width: 3px;
+      height: 6px;
+      background: var(--border);
+      border-radius: 2px;
+      transition: height 0.2s ease, background 0.2s ease;
+    }
+
+    .wave-indicator.playing .wave-bar {
+      background: var(--accent-green);
+      animation: wavePulse 0.8s ease-in-out infinite alternate;
+    }
+    .wave-indicator.playing .wave-bar:nth-child(2) { animation-delay: 0.2s; }
+    .wave-indicator.playing .wave-bar:nth-child(3) { animation-delay: 0.4s; }
+    .wave-indicator.playing .wave-bar:nth-child(4) { animation-delay: 0.1s; }
+
+    @keyframes wavePulse {
+      0% { height: 4px; }
+      100% { height: 16px; }
+    }
+
+    /* Voice Tone & Dropdown Controls */
+    .voice-tone-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+      padding-top: 4px;
+      border-top: 1px dashed var(--border);
+    }
+
+    .tone-pills {
+      display: flex;
+      gap: 6px;
+    }
+
+    .tone-btn {
+      min-height: 32px;
+      padding: 0 10px;
+      border: 1px solid var(--border);
+      background: #ffffff;
+      border-radius: 9999px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      color: var(--text-muted);
+      transition: all 0.15s ease;
+    }
+
+    .tone-btn:hover {
+      border-color: var(--text-main);
+      color: var(--text-main);
+    }
+
+    .tone-btn.active {
+      background: var(--text-main);
+      color: #ffffff;
+      border-color: var(--text-main);
+    }
+
+    .voice-dropdown {
+      border: 1px solid var(--border);
+      background: #ffffff;
+      border-radius: var(--radius-sm);
+      padding: 4px 8px;
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: var(--text-main);
+      outline: none;
+      max-width: 190px;
+      cursor: pointer;
+    }
+
+    /* Transcript Reveal Box */
+    .transcript-box {
+      border-top: 1px dashed var(--border);
+      padding-top: 10px;
+    }
+
+    .transcript-toggle {
+      background: none;
+      border: none;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .transcript-toggle:hover {
+      color: var(--text-main);
+    }
+
+    .transcript-content {
+      margin-top: 10px;
+      padding: 12px 14px;
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      font-size: 0.92rem;
+      line-height: 1.6;
+      color: var(--text-main);
+    }
+
+    /* Questions Container */
+    .questions-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .question-card {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      transition: border-color 0.2s ease;
+    }
+
+    .q-title {
+      font-size: 0.98rem;
+      font-weight: 600;
+      color: var(--text-main);
+      line-height: 1.45;
+    }
+
+    .q-options {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .opt-btn {
+      width: 100%;
+      min-height: 46px;
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: var(--btn-bg);
+      text-align: left;
+      font-size: 0.92rem;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: all 0.15s ease;
+    }
+
+    .opt-btn:hover:not(:disabled) {
+      background: var(--btn-hover);
+      border-color: var(--text-main);
+    }
+
+    .opt-btn.correct {
+      background: var(--green-bg) !important;
+      border-color: var(--green-border) !important;
+      color: #065f46;
+      font-weight: 600;
+    }
+
+    .opt-btn.wrong {
+      background: var(--red-bg) !important;
+      border-color: var(--red-border) !important;
+      color: #991b1b;
+    }
+
+    .opt-btn:disabled {
+      cursor: default;
+      opacity: 0.9;
+    }
+
+    .q-feedback {
+      font-size: 0.8rem;
+      padding: 8px 10px;
+      border-radius: var(--radius-sm);
+      display: none;
+      line-height: 1.4;
+    }
+
+    .q-feedback.show {
+      display: block;
+    }
+
+    .q-feedback.correct {
+      background: var(--green-bg);
+      color: #065f46;
+      border: 1px solid var(--green-border);
+    }
+
+    .q-feedback.wrong {
+      background: var(--red-bg);
+      color: #991b1b;
+      border: 1px solid var(--red-border);
+    }
+
+    /* Result Card */
+    .quiz-result-card {
+      background: var(--btn-hover);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      margin-top: 10px;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .result-score {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .result-msg {
+      font-size: 0.92rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    .result-buttons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      width: 100%;
+      margin-top: 6px;
+    }
+
+    /* MOBILE ADJUSTMENTS */
+    @media (max-width: 520px) {
+      .app-shell {
+        padding: calc(10px + env(safe-area-inset-top, 0px)) 14px calc(14px + env(safe-area-inset-bottom, 0px));
+      }
+      .home-title {
+        font-size: 1.65rem;
+      }
+      .mode-btn {
+        min-height: 42px;
+        font-size: 0.84rem;
+      }
+      .level-buttons {
+        gap: 8px;
+      }
+      .level-btn {
+        min-height: 46px;
+        padding: 5px 3px;
+      }
+      .reader-topbar, .listen-topbar {
+        padding-bottom: 10px;
+      }
+      .reader-stage-wrap {
+        height: 38vh;
+        min-height: 220px;
+      }
+      .control-buttons {
+        grid-template-columns: 2fr 1fr;
+        gap: 8px;
+      }
+      .action-btn {
+        min-height: 46px;
+        font-size: 0.94rem;
+      }
+      .listen-play-btn {
+        min-height: 44px;
+        padding: 0 16px;
+        font-size: 0.88rem;
+      }
+      .opt-btn {
+        min-height: 44px;
+        font-size: 0.88rem;
+        padding: 8px 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <!-- 1) BOSH SAHIFA -->
+    <main id="home-view">
+      <header class="home-header">
+        <h1 class="home-title">SpeakFlow</h1>
+        <p class="home-tagline" id="home-tagline">Practice English Speaking & Listening seamlessly.</p>
+      </header>
+
+      <!-- REJIM TANLAGICH (Speaking vs Listening) -->
+      <div class="mode-switch-wrap">
+        <button type="button" class="mode-btn active" id="mode-speaking-btn" data-mode="speaking">
+          <span>🎙️</span> Speaking
+        </button>
+        <button type="button" class="mode-btn" id="mode-listening-btn" data-mode="listening">
+          <span>🎧</span> Listening
+        </button>
+        <button type="button" class="mode-btn" id="mode-vocabulary-btn" data-mode="vocabulary">
+          <span>📖</span> Vocabulary
+        </button>
+      </div>
+
+      <section aria-label="Topics">
+        <div class="section-label">1. Select a Topic</div>
+        <ul id="topic-list" class="topic-list"></ul>
+      </section>
+
+      <section id="level-section" class="level-selector hidden" aria-label="Level selection">
+        <div class="section-label">2. Select Level (<span id="chosen-topic-label"></span>)</div>
+        <div class="level-buttons">
+          <button type="button" class="level-btn" data-level="A1">
+            <span class="lvl-name">A1</span>
+            <span class="lvl-sub">Beginner</span>
+          </button>
+          <button type="button" class="level-btn" data-level="A2">
+            <span class="lvl-name">A2</span>
+            <span class="lvl-sub">Elementary</span>
+          </button>
+          <button type="button" class="level-btn" data-level="B1">
+            <span class="lvl-name">B1</span>
+            <span class="lvl-sub">Intermediate</span>
+          </button>
+        </div>
+      </section>
+    </main>
+
+    <!-- 2) SPEAKING / READER VIEW -->
+    <section id="reader-view" class="reader-view hidden" aria-label="Reading Practice">
+      <header class="reader-topbar">
+        <button type="button" id="back-btn" class="back-btn">← Back</button>
+        <div class="reader-meta">
+          <div id="reader-topic-display" class="reader-topic-title">Daily Life — A1</div>
+          <span id="state-indicator" class="reader-status-pill">Ready</span>
+        </div>
+      </header>
+
+      <div class="reader-stage-wrap">
+        <div class="focus-guide-line" aria-hidden="true"></div>
+        <div id="countdown-badge" class="countdown-overlay hidden">Speak fast and clear</div>
+        <div id="reader-viewport" class="reader-viewport">
+          <div id="scroll-content" class="scroll-content"></div>
+        </div>
+      </div>
+
+      <footer class="reader-controls">
+        <div id="voice-notice" class="notice-text" aria-live="polite"></div>
+
+        <!-- TEZLIK PANEL -->
+        <div class="speed-box">
+          <span class="speed-tag">Speed</span>
+          <input type="range" id="speed-slider" min="0" max="1000" value="420" aria-label="Reading speed" />
+          <span class="speed-label" id="speed-value-label">38 px/s</span>
+        </div>
+
+        <!-- MINIMAL FON MUSIQASI (Minecraft Default C418) -->
+        <div class="music-bar">
+          <div class="music-top-row">
+            <div class="music-selector-wrap">
+              <span id="music-dot" class="music-dot" title="Music status"></span>
+              <select id="music-select" class="music-select" aria-label="Minecraft background track"></select>
+            </div>
+            <button type="button" id="music-mute-btn" class="music-mute-btn" title="Mute/Unmute">
+              <span id="mute-icon">🔊</span>
+            </button>
+          </div>
+          <div class="music-bottom-row">
+            <div class="music-transport">
+              <button type="button" id="music-prev-btn" class="music-btn" title="Previous">⏮</button>
+              <button type="button" id="music-play-btn" class="music-btn play-btn">
+                <span id="music-play-icon">▶</span>
+                <span id="music-play-text">Music</span>
+              </button>
+              <button type="button" id="music-next-btn" class="music-btn" title="Next">⏭</button>
+            </div>
+            <div class="music-vol-wrap">
+              <span>Vol</span>
+              <input type="range" id="music-volume" class="music-vol-slider" min="0" max="1" step="0.05" value="0.35" aria-label="Music volume" />
+            </div>
+          </div>
+        </div>
+
+        <!-- ASOSIY AMAL TUGMALARI -->
+        <div class="control-buttons">
+          <button type="button" id="main-action-btn" class="action-btn primary">Start</button>
+          <button type="button" id="restart-btn" class="action-btn secondary">Restart</button>
+        </div>
+      </footer>
+    </section>
+
+    <!-- 3) LISTENING & QUIZ VIEW -->
+    <section id="listening-view" class="listening-view hidden" aria-label="Listening Practice">
+      <header class="listen-topbar">
+        <button type="button" id="listen-back-btn" class="back-btn">← Back</button>
+        <div class="listen-meta">
+          <div id="listen-topic-display" class="reader-topic-title">Daily Life — A1</div>
+          <span id="listen-score-badge" class="score-badge">Score: 0 / 3</span>
+        </div>
+      </header>
+
+      <!-- Audio Player Card -->
+      <div class="listen-audio-card">
+        <div class="audio-main-row">
+          <button type="button" id="listen-play-btn" class="listen-play-btn">
+            <span id="listen-play-icon">▶</span>
+            <span id="listen-play-text">Listen Audio</span>
+          </button>
+          
+          <div class="wave-indicator" id="wave-indicator">
+            <div class="wave-bar"></div>
+            <div class="wave-bar"></div>
+            <div class="wave-bar"></div>
+            <div class="wave-bar"></div>
+          </div>
+
+          <div class="audio-rates">
+            <button type="button" class="rate-btn" data-rate="0.8">0.8x</button>
+            <button type="button" class="rate-btn active" data-rate="1.0">1.0x</button>
+            <button type="button" class="rate-btn" data-rate="1.2">1.2x</button>
+          </div>
+        </div>
+
+        <!-- Voice Style & Selection Controls -->
+        <div class="voice-tone-row">
+          <div class="tone-pills">
+            <button type="button" class="tone-btn active" data-pitch="1.20" data-rate="0.91">
+              <span>🌸</span> Sweet & Soft (18y)
+            </button>
+            <button type="button" class="tone-btn" data-pitch="1.12" data-rate="0.95">
+              <span>✨</span> Natural Warm
+            </button>
+          </div>
+          <select id="voice-select" class="voice-dropdown" aria-label="Choose voice"></select>
+        </div>
+
+        <!-- Transcript Accordion -->
+        <div class="transcript-box">
+          <button type="button" id="transcript-toggle-btn" class="transcript-toggle">
+            <span id="transcript-toggle-icon">👁</span>
+            <span id="transcript-toggle-text">Show Transcript</span>
+          </button>
+          <div id="transcript-content" class="transcript-content hidden"></div>
+        </div>
+      </div>
+
+      <!-- Questions List -->
+      <div id="questions-container" class="questions-wrap"></div>
+
+      <!-- Result Card (shown when quiz is completed) -->
+      <div id="quiz-result-card" class="quiz-result-card hidden">
+        <div id="result-score-text" class="result-score">3 / 3</div>
+        <div id="result-msg-text" class="result-msg">Tabriklaymiz! Barcha savollarga to'g'ri javob berdingiz.</div>
+        <div class="result-buttons">
+          <button type="button" id="quiz-retry-btn" class="action-btn secondary">↺ Qayta topshirish</button>
+          <button type="button" id="quiz-next-btn" class="action-btn primary">Keyingi mavzu →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- VOCABULARY VIEW -->
+    <section id="vocabulary-view" class="vocabulary-view hidden" aria-label="Vocabulary Practice">
+      <header class="vocab-topbar">
+        <button type="button" id="vocab-back-btn" class="back-btn">← Back</button>
+        <div class="vocab-meta">
+          <div id="vocab-topic-display" class="reader-topic-title">Daily Life — A1</div>
+          <span id="vocab-count-badge" class="score-badge">0 so'z</span>
+        </div>
+      </header>
+
+      <!-- Level Pills & Flashcard Toggle Toolbar -->
+      <div class="vocab-toolbar">
+        <div class="vocab-level-pills" role="tablist" aria-label="Select Level">
+          <button type="button" class="vocab-lvl-pill active" data-level="A1">A1</button>
+          <button type="button" class="vocab-lvl-pill" data-level="A2">A2</button>
+          <button type="button" class="vocab-lvl-pill" data-level="B1">B1</button>
+        </div>
+
+        <button type="button" id="vocab-toggle-tr-btn" class="vocab-toggle-btn" title="Yashirish / Ko'rsatish">
+          <span id="vocab-toggle-tr-icon">👁</span>
+          <span id="vocab-toggle-tr-text">Tarjimani yashirish</span>
+        </button>
+      </div>
+
+      <!-- Search input -->
+      <div class="vocab-search-wrap">
+        <span class="vocab-search-icon">🔍</span>
+        <input type="text" id="vocab-search-input" class="vocab-search-input" placeholder="So'z yoki tarjimani qidirish..." aria-label="Search words" />
+        <button type="button" id="vocab-search-clear" class="vocab-search-clear hidden" aria-label="Clear search">×</button>
+      </div>
+
+      <!-- Word Cards Container -->
+      <div id="vocab-cards-list" class="vocab-cards-list"></div>
+
+      <!-- Empty Search Results State -->
+      <div id="vocab-empty-state" class="vocab-empty-state hidden">
+        <p>Hech qanday so'z topilmadi.</p>
+      </div>
+
+      <!-- Bottom Navigation & Action Bar -->
+      <div class="vocab-bottom-actions">
+        <div class="vocab-mode-shortcuts">
+          <button type="button" id="vocab-to-speak-btn" class="action-btn secondary">🎙️ Shu matnni o'qish</button>
+          <button type="button" id="vocab-to-listen-btn" class="action-btn secondary">🎧 Tinglash va Test</button>
+        </div>
+        <button type="button" id="vocab-next-btn" class="action-btn primary">Keyingi mavzu →</button>
+      </div>
+    </section>
+  </div>
+
+  <script type="module">
+    // =========================================================================
+    // 1. MATNLAR BAZASI (10 mavzu x 3 daraja = 30 ta CEFR mos motivatsion matn)
+    // =========================================================================
+    const TOPICS = [
+      "Daily Life",
+      "My Family",
+      "Food and Cooking",
+      "Travel and Holidays",
+      "Education",
+      "Work and Career",
+      "Nature and Environment",
+      "Health and Fitness",
+      "Technology",
+      "Hobbies and Free Time"
+    ];
+
+    const TEXTS = {
+      "Daily Life": {
+        A1: "You wake up and open your eyes. Today is a new day for you. Maybe you feel a little tired now. That is okay. You drink warm water and breathe slowly. You do small things step by step. You wash your face and get dressed. You do not need to rush today. Every small action is good enough. You are here, and you are trying. Be kind to yourself this morning. Your calm routine gives you quiet strength.",
+        A2: "Yesterday was a long day, and you felt very tired at night. Still, you woke up this morning and started again. You made your bed and drank a warm cup of tea. Sometimes daily life feels heavy, so you can move slowly today. You looked out the window and took a deep breath. You did not give up on your routine. Even when nobody sees your effort, every small step you take matters so much.",
+        B1: "Although your daily routine can sometimes feel repetitive and exhausting, showing up for yourself every morning is a quiet victory. You might carry unspoken worries from yesterday, because life rarely goes exactly as planned. However, as you prepare your breakfast and organize your thoughts, you create a peaceful space inside your mind. You do not have to solve every problem before noon. Give yourself credit for handling ordinary moments with patience, grace, and steady courage."
+      },
+      "My Family": {
+        A1: "You think about the people you love. Family can bring warm feelings to you. Maybe your home is noisy or quiet. You sit together and share simple words. A kind voice makes your heart calm. Sometimes you miss someone very much today. That feeling shows your deep love. You can call them or smile now. You are never truly alone in life. Your heart holds good memories every day. Love stays with you wherever you go.",
+        A2: "Last week you thought about your family and remembered warm moments from the past. Life was simpler when you sat together at the table and laughed about small things. Sometimes family life is not perfect, and people do not always understand your feelings. Still, you learned kindness and patience from the people around you. When you feel lonely in a busy world, you can remember the gentle voices that always wished the best for you.",
+        B1: "Relationships within a family are not always effortless, because every person carries different hopes and quiet struggles. Even when distance separates you from the people you care about, a simple message can bridge the gap between your hearts. You have grown stronger through the support and lessons you received at home. Although misunderstandings happen from time to time, choosing forgiveness and warmth allows you to feel grounded, valued, and deeply connected."
+      },
+      "Food and Cooking": {
+        A1: "You stand in the kitchen right now. You wash fresh food with clean water. Cooking a simple meal is good care. You cut soft bread and warm soup. The nice smell fills the quiet room. You sit down and eat very slowly. Your body needs this warm energy today. Do not eat in a big hurry. Enjoy every small bite on your plate. You take care of yourself with love. Simple food brings comfort to your day.",
+        A2: "Today you decided to cook a warm meal for yourself instead of skipping dinner. You chopped fresh vegetables and listened to the quiet sound of boiling water. When you felt stressed earlier, your mind was full of noise, but cooking helped your hands stay calm. You sat by the table and tasted the food slowly. Taking time to feed your body was a gentle way to say that your health and peace matter.",
+        B1: "Preparing a meal from simple ingredients is one of the most comforting ways to slow down after a demanding day. Because you often rush through your schedule, pausing to cook allows your mind to rest while your hands focus on something warm and real. Even if the dish is humble, the care you put into nourishing yourself restores both your energy and your spirit. Sit down peacefully and appreciate this quiet moment."
+      },
+      "Travel and Holidays": {
+        A1: "You pack a small bag for rest. Your mind wants a quiet new place. You look at the wide blue sky. Walking on a new street feels good. You leave your heavy worries behind you. You see green trees and old houses. Every step gives your mind fresh air. You do not need a far trip. A short walk is a small holiday. You breathe deep and feel free now. Let your tired heart rest a little.",
+        A2: "A few months ago you wished for a quiet break because your daily schedule felt too crowded. Even when you could not travel far away, you walked through a peaceful park and watched the clouds move slowly. You left your phone in your pocket and noticed the cool wind on your face. That short journey reminded you that rest is always possible when you allow your mind to pause and wander freely.",
+        B1: "Traveling to an unfamiliar place reminds you how wide and welcoming the world can be beyond your daily worries. Although you cannot always leave your responsibilities behind for a long vacation, stepping into a new environment refreshes your perspective. Because your mind works so hard every single week, you truly deserve moments of stillness and curiosity. Let yourself breathe deeply, observe the beauty around you, and return home with a lighter heart."
+      },
+      "Education": {
+        A1: "You open your book and read slowly. Learning a new language takes quiet time. Today you know more than yesterday. Maybe a word feels hard right now. Do not worry about small mistakes today. Every mistake helps your brain grow strong. You speak out loud with a clear voice. Your voice sounds good and brave now. Step by step you learn new things. Be proud of your daily study time. You are doing a great job.",
+        A2: "When you started learning English, many sentences looked difficult and unfamiliar to you. Yesterday you practiced for ten minutes even though you felt tired after work. You made a few mistakes, but you kept reading aloud with patience. Nobody becomes fluent in a single day, so your steady effort is the real success. Every word you pronounce today builds your confidence and opens a new door for your future.",
+        B1: "Learning a language requires patience with yourself, especially on days when your progress feels invisible. Although you might hesitate before speaking aloud, remember that fluency grows from consistent practice rather than perfection. Because you chose to open this page and train your voice today, you are already moving forward. Trust the quiet process of learning, forgive every stumble along the way, and celebrate the courage it takes to keep growing."
+      },
+      "Work and Career": {
+        A1: "You work hard every single day. Sometimes your tasks feel very big now. Stop for one minute and breathe deep. You are more than your daily job. You do your best with honest effort. If you feel tired, take a break. Drink some water and relax your shoulders. You do not need to be perfect. Your calm focus is enough for today. Step by step you finish your work. Be gentle with your tired mind tonight.",
+        A2: "This week you faced many tasks at work, and you felt pressure to finish everything quickly. Still, you stayed patient and completed one task at a time. When something felt confusing, you took a short pause and tried again with a clear mind. Your worth is not measured only by how busy you are. You worked with honesty today, and now you deserve a peaceful evening without guilt or worry.",
+        B1: "Building a career often brings moments of self-doubt, especially when you compare your quiet journey to someone else's highlight reel. Although your workload may feel overwhelming right now, remember that steady effort always outlasts frantic rushing. Because you care deeply about doing meaningful work, you sometimes forget to protect your own peace. Take a slow breath, recognize how far you have already come, and allow yourself to rest without apology."
+      },
+      "Nature and Environment": {
+        A1: "You step outside and feel the air. The green trees stand tall and quiet. Nature does not hurry at all today. Soft wind touches your face gently now. You listen to birds in the morning. The sky is wide above your head. Your problems feel smaller under the sky. You walk slowly on the warm earth. Peace is all around you right now. Breathe in the fresh air with calm. Let nature heal your tired thoughts.",
+        A2: "Earlier today you looked at the trees outside your window and noticed how calmly they moved in the wind. Nature never rushes, yet everything grows in its own season. When your thoughts felt loud and heavy, spending a few minutes near green plants helped your heart slow down. You listened to the quiet world around you and remembered that you are also allowed to grow slowly and peacefully.",
+        B1: "Whenever the modern world feels too loud and demanding, turning your attention toward nature restores a sense of quiet balance. Because trees, rivers, and seasons never rush their own growth, observing the natural world teaches you to be patient with your own life. Although you may carry heavy responsibilities indoors, stepping beneath the open sky reminds you that peace is still available in every slow breath you take."
+      },
+      "Health and Fitness": {
+        A1: "You listen to your body right now. Your body works hard for you daily. You stretch your arms up very slowly. A short walk makes your heart strong. You do not need hard exercise today. Gentle movement is good for your health. You drink clean water and rest well. Sleep helps your mind feel fresh again. Thank your body for carrying you today. Every deep breath brings new calm energy. Take care of your health gently.",
+        A2: "You felt low on energy earlier, bust instead of criticizing yourself, you chose gentle movement today. You stood up, stretched your back, and walked around the room for a few minutes. Taking care of your health is not about punishment or extreme effort. It is about respecting your body when it asks for movement or rest. Because you listened to your body today, you feel a little lighter and calmer now.",
+        B1: "Caring for your physical health is an act of kindness toward your future self, not a test you have to pass every day. Although you may feel exhausted when life gets busy, even five minutes of gentle stretching or mindful breathing can release the tension in your shoulders. Because your body carries you through every challenge, treat it with patience, nourishing food, and the deep rest it truly deserves."
+      },
+      "Technology": {
+        A1: "You look at your bright screen today. Technology helps you learn and talk now. Right now you use it for good. You read warm words on this page. Sometimes too much news makes you tired. You can put the phone down later. Your real life is here and calm. Use your screen to grow your mind. Then close your eyes and rest well. You are in control of your time. Choose peace over noise every single day.",
+        A2: "All day long, messages and notifications tried to pull your attention in ten different directions. It was easy to feel overwhelmed by the endless noise on your screen. However, you chose to pause the scrolling and use your device for something calm and meaningful instead. By practicing your voice right here, you turned technology into a peaceful tool for self-improvement. Later tonight, you can turn off the screen and rest deeply.",
+        B1: "Although modern technology keeps you connected to the entire world, constant digital noise can quietly drain your focus and emotional energy. Because your attention is precious, choosing to spend these few minutes reading aloud is a wonderful way to reclaim your calm. You do not have to answer every notification immediately or follow every stressful headline. Step back whenever you need silence, and let your mind enjoy real stillness."
+      },
+      "Hobbies and Free Time": {
+        A1: "You have free time for yourself now. You do something that makes you smile. Maybe you read, draw, or listen quietly. This quiet time belongs only to you. You do not need to earn rest. Joy is important for your warm heart. Let your hands do something simple today. Forget your long list of work now. A peaceful hobby brings light to you. Enjoy this quiet hour with a smile. You deserve happy moments every single day.",
+        A2: "For a long time you stayed busy with duties and forgot to save time for the things you simply enjoy. Today you gave yourself permission to slow down and spend twenty minutes on a quiet hobby. You did not worry about being productive or making money from it. That simple moment of curiosity reminded you how good it feels to relax, breathe freely, and enjoy your own company.",
+        B1: "In a culture that constantly asks you to be productive, setting aside free time for a gentle hobby is essential for your well-being. Whether you enjoy listening to calm music, sketching, or practicing a language at your own pace, these quiet moments refill your emotional energy. Because you are a human being rather than a machine, allow yourself to enjoy simple pleasures without feeling any pressure to be perfect."
+      }
+    };
+
+    // =========================================================================
+    // 2. LISTENING SAVOLLARI BAZASI (30 matn x 3 savol = 90 savol)
+    // =========================================================================
+    const LISTENING_QUIZ = {
+      "Daily Life": {
+        A1: [
+          { q: "What do you drink in the morning?", options: ["Cold soda", "Warm water", "Black coffee", "Apple juice"], answer: 1, tip: "Matnda: 'You drink warm water and breathe slowly.'" },
+          { q: "How should you do your tasks today?", options: ["All at once in a hurry", "Step by step", "Without caring", "Late at night"], answer: 1, tip: "Matnda: 'You do small things step by step.'" },
+          { q: "What gives you quiet strength?", options: ["Your loud voice", "Running fast", "Your calm routine", "Skipping rest"], answer: 2, tip: "Matnda: 'Your calm routine gives you quiet strength.'" }
+        ],
+        A2: [
+          { q: "How did you feel last night?", options: ["Very energetic", "Very tired", "Angry", "Excited"], answer: 1, tip: "Matnda: 'Yesterday was a long day, and you felt very tired at night.'" },
+          { q: "What did you drink this morning?", options: ["A warm cup of tea", "Cold milk", "Hot chocolate", "Energy drink"], answer: 0, tip: "Matnda: 'You made your bed and drank a warm cup of tea.'" },
+          { q: "What matters even if nobody sees your effort?", options: ["Only big trophies", "Every small step you take", "Staying in bed", "Buying new things"], answer: 1, tip: "Matnda: 'Even when nobody sees your effort, every small step you take matters so much.'" }
+        ],
+        B1: [
+          { q: "What is described as a 'quiet victory'?", options: ["Winning a match", "Showing up for yourself every morning", "Finishing work at midnight", "Solving problems before noon"], answer: 1, tip: "Matnda: '...showing up for yourself every morning is a quiet victory.'" },
+          { q: "What do you create inside your mind while preparing breakfast?", options: ["A long list of worries", "A peaceful space", "An angry reaction", "A busy schedule"], answer: 1, tip: "Matnda: '...you create a peaceful space inside your mind.'" },
+          { q: "What advice does the speaker give regarding problems?", options: ["Solve every problem before noon", "Ignore problems forever", "You do not have to solve every problem before noon", "Worry as much as possible"], answer: 2, tip: "Matnda: 'You do not have to solve every problem before noon.'" }
+        ]
+      },
+      "My Family": {
+        A1: [
+          { q: "What kind of feelings can family bring to you?", options: ["Warm feelings", "Cold feelings", "Fear", "Stress only"], answer: 0, tip: "Matnda: 'Family can bring warm feelings to you.'" },
+          { q: "What can you do if you miss someone today?", options: ["Forget about them", "Call them or smile", "Be angry", "Stay silent all day"], answer: 1, tip: "Matnda: 'You can call them or smile now.'" },
+          { q: "Where does love stay with you?", options: ["Only at home", "Only on holidays", "Wherever you go", "Nowhere"], answer: 2, tip: "Matnda: 'Love stays with you wherever you go.'" }
+        ],
+        A2: [
+          { q: "When was life simpler according to the speaker?", options: ["When sitting together at the table and laughing", "When living alone", "During heavy traffic", "When busy at work"], answer: 0, tip: "Matnda: 'Life was simpler when you sat together at the table and laughed...'" },
+          { q: "What two qualities did you learn from people around you?", options: ["Speed and wealth", "Kindness and patience", "Doubt and fear", "Pride and power"], answer: 1, tip: "Matnda: 'Still, you learned kindness and patience from the people around you.'" },
+          { q: "What can you remember when you feel lonely?", options: ["Old complaints", "The gentle voices that wished the best for you", "Loud music", "Work deadlines"], answer: 1, tip: "Matnda: '...you can remember the gentle voices that always wished the best for you.'" }
+        ],
+        B1: [
+          { q: "Why are relationships within a family not always effortless?", options: ["People never talk", "Every person carries different hopes and struggles", "Family members don't like food", "Because distance is impossible"], answer: 1, tip: "Matnda: '...because every person carries different hopes and quiet struggles.'" },
+          { q: "What can bridge the gap between separated hearts?", options: ["An expensive gift", "A simple message", "Waiting for years", "A long argument"], answer: 1, tip: "Matnda: '...a simple message can bridge the gap between your hearts.'" },
+          { q: "What allows you to feel grounded, valued, and connected?", options: ["Holding on to anger", "Ignoring relatives", "Choosing forgiveness and warmth", "Changing your name"], answer: 2, tip: "Matnda: '...choosing forgiveness and warmth allows you to feel grounded, valued, and deeply connected.'" }
+        ]
+      },
+      "Food and Cooking": {
+        A1: [
+          { q: "Where are you standing right now?", options: ["In the bedroom", "In the kitchen", "In a garage", "On a bus"], answer: 1, tip: "Matnda: 'You stand in the kitchen right now.'" },
+          { q: "How should you eat the food on your plate?", options: ["Very slowly and enjoy every bite", "In a huge rush", "While standing up quickly", "Without tasting"], answer: 0, tip: "Matnda: 'You sit down and eat very slowly. Do not eat in a big hurry.'" },
+          { q: "What does simple food bring to your day?", options: ["Noise", "Comfort", "Trouble", "Cold feelings"], answer: 1, tip: "Matnda: 'Simple food brings comfort to your day.'" }
+        ],
+        A2: [
+          { q: "What did you decide to do instead of skipping dinner?", options: ["Order junk food", "Cook a warm meal for yourself", "Go to sleep hungry", "Drink only coffee"], answer: 1, tip: "Matnda: 'Today you decided to cook a warm meal for yourself instead of skipping dinner.'" },
+          { q: "What quiet sound did you listen to while cooking?", options: ["Loud radio", "Boiling water", "Cars passing", "Rain on the roof"], answer: 1, tip: "Matnda: '...and listened to the quiet sound of boiling water.'" },
+          { q: "Taking time to feed your body was a gentle way to say what?", options: ["Cooking is boring", "Your health and peace matter", "Food is expensive", "You want to sleep"], answer: 1, tip: "Matnda: '...was a gentle way to say that your health and peace matter.'" }
+        ],
+        B1: [
+          { q: "Why is cooking a comforting activity after a demanding day?", options: ["It lets your mind rest while hands focus on something warm and real", "It burns calories", "It makes you stay awake late", "It replaces exercise"], answer: 0, tip: "Matnda: '...pausing to cook allows your mind to rest while your hands focus on something warm and real.'" },
+          { q: "Even if a meal is humble, what does your care restore?", options: ["Both energy and spirit", "Only physical weight", "Expensive tools", "Lost time"], answer: 0, tip: "Matnda: '...the care you put into nourishing yourself restores both your energy and your spirit.'" },
+          { q: "What does the speaker recommend doing at the end?", options: ["Wash dishes immediately", "Sit down peacefully and appreciate this quiet moment", "Plan tomorrow's breakfast", "Check work emails"], answer: 1, tip: "Matnda: 'Sit down peacefully and appreciate this quiet moment.'" }
+        ]
+      },
+      "Travel and Holidays": {
+        A1: [
+          { q: "What does your mind want?", options: ["A loud party", "A quiet new place", "A pile of work", "To stay in an office"], answer: 1, tip: "Matnda: 'Your mind wants a quiet new place.'" },
+          { q: "What can be a 'small holiday'?", options: ["A short walk", "Buying a new car", "A 14-hour flight", "Working overtime"], answer: 0, tip: "Matnda: 'A short walk is a small holiday.'" },
+          { q: "What do you leave behind you?", options: ["Your wallet", "Your shoes", "Your heavy worries", "Your lunch"], answer: 2, tip: "Matnda: 'You leave your heavy worries behind you.'" }
+        ],
+        A2: [
+          { q: "Where did you walk when you could not travel far away?", options: ["In a noisy supermarket", "Through a peaceful park", "Along a highway", "In a crowded subway"], answer: 1, tip: "Matnda: '...you walked through a peaceful park and watched the clouds move slowly.'" },
+          { q: "Where was your phone during the walk?", options: ["In your hand taking photos", "In your pocket", "Lost in the grass", "At the repair shop"], answer: 1, tip: "Matnda: 'You left your phone in your pocket and noticed the cool wind on your face.'" },
+          { q: "What did that short journey remind you?", options: ["Rest is impossible", "Rest is always possible when you allow your mind to pause", "You need more money to travel", "Parks are boring"], answer: 1, tip: "Matnda: 'That short journey reminded you that rest is always possible...'" }
+        ],
+        B1: [
+          { q: "What does traveling to an unfamiliar place remind you of?", options: ["How small your house is", "How wide and welcoming the world can be beyond your worries", "That maps are confusing", "That home is noisy"], answer: 1, tip: "Matnda: '...reminds you how wide and welcoming the world can be beyond your daily worries.'" },
+          { q: "Why do you deserve stillness and curiosity?", options: ["Because your mind works so hard every single week", "Because holidays are mandatory", "Because tickets were on sale", "Because work is cancelled"], answer: 0, tip: "Matnda: 'Because your mind works so hard every single week, you truly deserve moments of stillness and curiosity.'" },
+          { q: "How will you return home after stepping into nature?", options: ["With heavy luggage", "With a lighter heart", "Exhausted and angry", "Regretting your choices"], answer: 1, tip: "Matnda: '...and return home with a lighter heart.'" }
+        ]
+      },
+      "Education": {
+        A1: [
+          { q: "How should you read your book?", options: ["As fast as possible", "Slowly", "With your eyes closed", "Without reading words"], answer: 1, tip: "Matnda: 'You open your book and read slowly.'" },
+          { q: "What helps your brain grow strong?", options: ["Every mistake", "Only getting 100%", "Never trying", "Giving up early"], answer: 0, tip: "Matnda: 'Every mistake helps your brain grow strong.'" },
+          { q: "How does your speaking voice sound now?", options: ["Frightened", "Good and brave", "Silent", "Confused"], answer: 1, tip: "Matnda: 'Your voice sounds good and brave now.'" }
+        ],
+        A2: [
+          { q: "How long did you practice yesterday even though you felt tired?", options: ["For ten minutes", "For two hours", "For one minute", "Not at all"], answer: 0, tip: "Matnda: 'Yesterday you practiced for ten minutes even though you felt tired after work.'" },
+          { q: "Does anyone become fluent in a single day?", options: ["Yes, everyone does", "No, steady effort is the real success", "Only if they are rich", "Yes, in 24 hours"], answer: 1, tip: "Matnda: 'Nobody becomes fluent in a single day, so your steady effort is the real success.'" },
+          { q: "What does every word you pronounce today do for you?", options: ["Builds confidence and opens doors for the future", "Causes embarrassment", "Wastes your breath", "Makes you forget grammar"], answer: 0, tip: "Matnda: 'Every word you pronounce today builds your confidence and opens a new door for your future.'" }
+        ],
+        B1: [
+          { q: "When is patience with yourself especially important?", options: ["On exam days only", "On days when progress feels invisible", "When watching movies", "When you get an 'A' grade"], answer: 1, tip: "Matnda: 'Learning a language requires patience with yourself, especially on days when your progress feels invisible.'" },
+          { q: "Where does true language fluency grow from?", options: ["Memorizing dictionary pages", "Consistent practice rather than perfection", "Never opening a book", "Criticizing yourself"], answer: 1, tip: "Matnda: '...fluency grows from consistent practice rather than perfection.'" },
+          { q: "What does the speaker encourage celebrating?", options: ["Only final test certificates", "The courage it takes to keep growing", "Never making errors", "Quitting when tired"], answer: 1, tip: "Matnda: '...and celebrate the courage it takes to keep growing.'" }
+        ]
+      },
+      "Work and Career": {
+        A1: [
+          { q: "What should you do if your tasks feel very big?", options: ["Stop for one minute and breathe deep", "Panic and yell", "Work all night without sleep", "Hide under the table"], answer: 0, tip: "Matnda: 'Stop for one minute and breathe deep.'" },
+          { q: "What is enough for today?", options: ["Being flawless", "Your calm focus", "Pleasing everyone", "Working 16 hours"], answer: 1, tip: "Matnda: 'Your calm focus is enough for today.'" },
+          { q: "How should you treat your mind tonight?", options: ["Harshly", "Gently", "With criticism", "With more work"], answer: 1, tip: "Matnda: 'Be gentle with your tired mind tonight.'" }
+        ],
+        A2: [
+          { q: "How did you complete tasks this week despite pressure?", options: ["All at the same second", "One task at a time", "By skipping everything", "By complaining"], answer: 1, tip: "Matnda: 'Still, you stayed patient and completed one task at a time.'" },
+          { q: "What is your self-worth NOT measured by only?", options: ["Your kindness", "How busy you are", "Your honest effort", "Your health"], answer: 1, tip: "Matnda: 'Your worth is not measured only by how busy you are.'" },
+          { q: "What do you deserve this evening?", options: ["More emails", "A peaceful evening without guilt or worry", "A difficult meeting", "Self-blame"], answer: 1, tip: "Matnda: '...and now you deserve a peaceful evening without guilt or worry.'" }
+        ],
+        B1: [
+          { q: "What often triggers moments of self-doubt in building a career?", options: ["Taking vacation", "Comparing your quiet journey to someone else's highlight reel", "Getting paid on time", "Drinking fresh water"], answer: 1, tip: "Matnda: '...especially when you compare your quiet journey to someone else\'s highlight reel.'" },
+          { q: "What always outlasts frantic rushing?", options: ["Complaining loudly", "Steady effort", "Quitting immediately", "Taking shortcuts"], answer: 1, tip: "Matnda: '...steady effort always outlasts frantic rushing.'" },
+          { q: "What should you allow yourself to do without apology?", options: ["Overwork every weekend", "Rest", "Ignore personal safety", "Work in the dark"], answer: 1, tip: "Matnda: '...and allow yourself to rest without apology.'" }
+        ]
+      },
+      "Nature and Environment": {
+        A1: [
+          { q: "How do the green trees stand?", options: ["Noisy and fast", "Tall and quiet", "Bent and sad", "Hidden away"], answer: 1, tip: "Matnda: 'The green trees stand tall and quiet.'" },
+          { q: "Does nature hurry today?", options: ["Yes, nature runs fast", "Nature does not hurry at all", "Only in the evening", "Only when raining"], answer: 1, tip: "Matnda: 'Nature does not hurry at all today.'" },
+          { q: "How do your problems feel under the wide sky?", options: ["Twice as big", "Smaller", "Unsolvable", "Heavy like stones"], answer: 1, tip: "Matnda: 'Your problems feel smaller under the sky.'" }
+        ],
+        A2: [
+          { q: "What did you observe about trees outside your window?", options: ["They fell down", "They moved calmly in the wind", "They were dry", "They were loud"], answer: 1, tip: "Matnda: '...and noticed how calmly they moved in the wind.'" },
+          { q: "What does nature's rhythm teach us about growth?", options: ["We must rush to grow fast", "We are allowed to grow slowly and peacefully", "Growth stops forever", "Growth requires anger"], answer: 1, tip: "Matnda: '...you are also allowed to grow slowly and peacefully.'" },
+          { q: "What helped your heart slow down when thoughts were heavy?", options: ["Watching fast videos", "Spending a few minutes near green plants", "Drinking coffee", "Checking social media"], answer: 1, tip: "Matnda: '...spending a few minutes near green plants helped your heart slow down.'" }
+        ],
+        B1: [
+          { q: "What does turning your attention toward nature restore?", options: ["A sense of quiet balance", "Extreme tiredness", "Financial success", "A desire to hurry"], answer: 0, tip: "Matnda: '...turning your attention toward nature restores a sense of quiet balance.'" },
+          { q: "Why are trees and rivers meaningful teachers?", options: ["They never hurry their own growth", "They can talk", "They grow in straight lines", "They produce noise"], answer: 0, tip: "Matnda: 'Because trees, rivers, and seasons never rush their own growth...'" },
+          { q: "Where is peace still available according to the passage?", options: ["Only on remote islands", "In every slow breath you take", "Only when sleeping", "In crowded malls"], answer: 1, tip: "Matnda: '...peace is still available in every slow breath you take.'" }
+        ]
+      },
+      "Health and Fitness": {
+        A1: [
+          { q: "What makes your heart strong?", options: ["A short walk", "Eating candy", "Staying awake late", "Drinking cold soda"], answer: 0, tip: "Matnda: 'A short walk makes your heart strong.'" },
+          { q: "Do you need hard, extreme exercise today?", options: ["Yes, 4 hours minimum", "No, gentle movement is good for your health", "Exercise is forbidden", "Only lift 100 kg"], answer: 1, tip: "Matnda: 'You do not need hard exercise today. Gentle movement is good for your health.'" },
+          { q: "What helps your mind feel fresh again?", options: ["Screen time", "Sleep", "Loud alarms", "Worrying"], answer: 1, tip: "Matnda: 'Sleep helps your mind feel fresh again.'" }
+        ],
+        A2: [
+          { q: "What did you choose today instead of criticizing yourself?", options: ["Skipping meals", "Gentle movement", "Heavy weights", "Sitting still all day"], answer: 1, tip: "Matnda: '...bust instead of criticizing yourself, you chose gentle movement today.'" },
+          { q: "What is taking care of health NOT about?", options: ["Nourishing your body", "Punishment or extreme effort", "Resting well", "Walking"], answer: 1, tip: "Matnda: 'Taking care of your health is not about punishment or extreme effort.'" },
+          { q: "How do you feel after listening to your body?", options: ["A little lighter and calmer", "Extremely stressed", "Angry", "Sick"], answer: 0, tip: "Matnda: 'Because you listened to your body today, you feel a little lighter and calmer now.'" }
+        ],
+        B1: [
+          { q: "How should caring for your physical health be viewed?", options: ["As a test you must pass daily", "As an act of kindness toward your future self", "As a chore for doctors", "As wasted time"], answer: 1, tip: "Matnda: 'Caring for your physical health is an act of kindness toward your future self, not a test...'" },
+          { q: "How much time is enough to release shoulder tension?", options: ["Even five minutes of gentle stretching or mindful breathing", "Three hours of cardio", "Two whole days", "Only surgery"], answer: 0, tip: "Matnda: '...even five minutes of gentle stretching or mindful breathing can release the tension in your shoulders.'" },
+          { q: "Because your body carries you through challenges, how should you treat it?", options: ["With strict demands", "With patience, nourishing food, and deep rest", "With excessive caffeine", "By ignoring pain"], answer: 1, tip: "Matnda: '...treat it with patience, nourishing food, and the deep rest it truly deserves.'" }
+        ]
+      },
+      "Technology": {
+        A1: [
+          { q: "What are you using technology for right now?", options: ["To play violent games", "To read warm words and grow your mind", "To argue with strangers", "To waste money"], answer: 1, tip: "Matnda: 'Right now you use it for good. You read warm words on this page.'" },
+          { q: "What can make you feel tired?", options: ["Too much news", "Fresh air", "Drinking clean water", "Smiling"], answer: 0, tip: "Matnda: 'Sometimes too much news makes you tired.'" },
+          { q: "What should you choose over digital noise?", options: ["More loud videos", "Peace", "Endless alerts", "Dark rooms"], answer: 1, tip: "Matnda: 'Choose peace over noise every single day.'" }
+        ],
+        A2: [
+          { q: "What did notifications try to do all day long?", options: ["Give you free gifts", "Pull your attention in ten different directions", "Turn off your screen", "Help you sleep"], answer: 1, tip: "Matnda: 'All day long, messages and notifications tried to pull your attention in ten different directions.'" },
+          { q: "What did you choose to do instead of endless scrolling?", options: ["Throw the phone away", "Use your device for something calm and meaningful", "Read negative comments", "Buy more devices"], answer: 1, tip: "Matnda: 'However, you chose to pause the scrolling and use your device for something calm and meaningful instead.'" },
+          { q: "What can you do later tonight with your screen?", options: ["Watch movies until morning", "Turn off the screen and rest deeply", "Charge it 5 times", "Leave it blinking"], answer: 1, tip: "Matnda: 'Later tonight, you can turn off the screen and rest deeply.'" }
+        ],
+        B1: [
+          { q: "What can constant digital noise quietly drain?", options: ["Battery percentage only", "Focus and emotional energy", "Phone memory", "Internet balance"], answer: 1, tip: "Matnda: '...constant digital noise can quietly drain your focus and emotional energy.'" },
+          { q: "Why is spending time reading aloud considered a wonderful choice?", options: ["To win an argument online", "To reclaim your calm", "To get 1000 likes", "To increase typing speed"], answer: 1, tip: "Matnda: '...choosing to spend these few minutes reading aloud is a wonderful way to reclaim your calm.'" },
+          { q: "Do you have to answer every notification immediately?", options: ["Yes, immediately within 5 seconds", "No, step back whenever you need silence", "Only during the night", "Always follow every headline"], answer: 1, tip: "Matnda: 'You do not have to answer every notification immediately or follow every stressful headline.'" }
+        ]
+      },
+      "Hobbies and Free Time": {
+        A1: [
+          { q: "Do you need to 'earn' rest?", options: ["Yes, only after 12 hours of work", "No, you do not need to earn rest", "Only on Sundays", "Rest is not allowed"], answer: 1, tip: "Matnda: 'You do not need to earn rest. Joy is important for your warm heart.'" },
+          { q: "What does a peaceful hobby bring to you?", options: ["Confusion", "Light and comfort", "Stress and deadlines", "Heavy feelings"], answer: 1, tip: "Matnda: 'A peaceful hobby brings light to you.'" },
+          { q: "What do you deserve every single day?", options: ["Endless chores", "Happy moments", "Arguments", "Zero sleep"], answer: 1, tip: "Matnda: 'You deserve happy moments every single day.'" }
+        ],
+        A2: [
+          { q: "How much time did you give yourself permission to enjoy a hobby?", options: ["Twenty minutes", "A whole week", "Five seconds", "Never"], answer: 0, tip: "Matnda: 'Today you gave yourself permission to slow down and spend twenty minutes on a quiet hobby.'" },
+          { q: "Did you worry about being productive or making money from your hobby?", options: ["Yes, you felt guilty", "No, you did not worry about productivity or money", "You sold your art", "You counted every penny"], answer: 1, tip: "Matnda: 'You did not worry about being productive or making money from it.'" },
+          { q: "What did that moment of curiosity remind you?", options: ["How good it feels to relax and enjoy your own company", "That hobbies are expensive", "That time was wasted", "That you should get back to work"], answer: 0, tip: "Matnda: 'That simple moment of curiosity reminded you how good it feels to relax, breathe freely, and enjoy your own company.'" }
+        ],
+        B1: [
+          { q: "What does modern culture constantly pressure individuals to be?", options: ["Relaxed and quiet", "Constantly productive", "Lazy", "Silent"], answer: 1, tip: "Matnda: 'In a culture that constantly asks you to be productive, setting aside free time for a gentle hobby is essential...' " },
+          { q: "What do quiet moments of creative hobbies refill?", options: ["Your wallet", "Your emotional energy", "Your physical luggage", "Your computer storage"], answer: 1, tip: "Matnda: '...these quiet moments refill your emotional energy.'" },
+          { q: "Why shouldn't you feel any pressure to be perfect in simple pleasures?", options: ["Because mistakes are illegal", "Because you are a human being rather than a machine", "Because perfection is cheap", "Because nobody is looking"], answer: 1, tip: "Matnda: 'Because you are a human being rather than a machine, allow yourself to enjoy simple pleasures without feeling any pressure to be perfect.'" }
+        ]
+      }
+    };
+
+    // =========================================================================
+    // 3. MINECRAFT DEFAULT FON MUSIQASI (Lokal C418 MP3)
+    // =========================================================================
+    const MUSIC_TRACKS = [
+      { id: "mc-sweden", title: "Minecraft — Sweden (Calm 3)", url: "assets/audio/sweden.mp3" },
+      { id: "mc-wethands", title: "Minecraft — Wet Hands", url: "assets/audio/wet-hands.mp3" },
+      { id: "mc-subwoofer", title: "Minecraft — Subwoofer Lullaby", url: "assets/audio/subwoofer-lullaby.mp3" },
+      { id: "mc-mice", title: "Minecraft — Mice on Venus", url: "assets/audio/mice-on-venus.mp3" },
+      { id: "mc-minecraft", title: "Minecraft — Minecraft (Calm 1)", url: "assets/audio/minecraft.mp3" },
+      { id: "mc-haggstrom", title: "Minecraft — Haggstrom", url: "assets/audio/haggstrom.mp3" }
+    ];
+
+    // =========================================================================
+    // 4. MINIMAL AMBIENT MUSIC CONTROLLER
+    // =========================================================================
+    class AmbientMusicController {
+      constructor(elements) {
+        this.el = elements;
+        this.tracks = MUSIC_TRACKS;
+        this.currentIndex = 0;
+        this.isPlaying = false;
+        this.isMuted = false;
+        this.volume = 0.35;
+
+        this.audio = new Audio();
+        this.audio.preload = "none";
+        this.audio.volume = this.volume;
+
+        this.audio.addEventListener("ended", () => this.nextTrack());
+        this.audio.addEventListener("error", (e) => {
+          if (this.el.notice) {
+            this.el.notice.textContent = "Audio yuklanmoqda...";
+            setTimeout(() => { if (this.el.notice) this.el.notice.textContent = ""; }, 3000);
+          }
+          this.setPlayingState(false);
+        });
+
+        this.initUI();
+      }
+
+      initUI() {
+        this.el.select.innerHTML = "";
+        this.tracks.forEach((t, i) => {
+          const opt = document.createElement("option");
+          opt.value = String(i);
+          opt.textContent = t.title;
+          this.el.select.appendChild(opt);
+        });
+
+        this.el.select.addEventListener("change", (e) => {
+          this.currentIndex = Number(e.target.value);
+          this.loadAndPlay(this.isPlaying);
+        });
+
+        this.el.playBtn.addEventListener("click", () => this.togglePlay());
+        this.el.prevBtn.addEventListener("click", () => this.prevTrack());
+        this.el.nextBtn.addEventListener("click", () => this.nextTrack());
+        this.el.muteBtn.addEventListener("click", () => this.toggleMute());
+
+        this.el.volSlider.value = String(this.volume);
+        this.el.volSlider.addEventListener("input", (e) => {
+          this.volume = Number(e.target.value);
+          if (this.isMuted) this.isMuted = false;
+          this.updateVolume();
+        });
+      }
+
+      updateVolume() {
+        this.audio.volume = this.isMuted ? 0 : this.volume;
+        this.el.muteIcon.textContent = this.isMuted || this.volume === 0 ? "🔇" : "🔊";
+      }
+
+      toggleMute() {
+        this.isMuted = !this.isMuted;
+        this.updateVolume();
+      }
+
+      setPlayingState(playing) {
+        this.isPlaying = playing;
+        this.el.playIcon.textContent = playing ? "⏸" : "▶";
+        this.el.playText.textContent = playing ? "Pause" : "Music";
+        if (playing) {
+          this.el.dot.classList.add("playing");
+        } else {
+          this.el.dot.classList.remove("playing");
+        }
+      }
+
+      async loadAndPlay(shouldPlay = true) {
+        const track = this.tracks[this.currentIndex];
+        this.el.select.value = String(this.currentIndex);
+        this.audio.src = track.url;
+        this.updateVolume();
+
+        if (shouldPlay) {
+          try {
+            await this.audio.play();
+            this.setPlayingState(true);
+          } catch (err) {
+            this.setPlayingState(false);
+          }
+        } else {
+          this.setPlayingState(false);
+        }
+      }
+
+      async togglePlay() {
+        if (this.isPlaying) {
+          this.audio.pause();
+          this.setPlayingState(false);
+        } else {
+          if (!this.audio.src || this.audio.src === "") {
+            await this.loadAndPlay(true);
+          } else {
+            try {
+              await this.audio.play();
+              this.setPlayingState(true);
+            } catch (err) {
+              await this.loadAndPlay(true);
+            }
+          }
+        }
+      }
+
+      prevTrack() {
+        this.currentIndex = (this.currentIndex - 1 + this.tracks.length) % this.tracks.length;
+        this.loadAndPlay(this.isPlaying);
+      }
+
+      nextTrack() {
+        this.currentIndex = (this.currentIndex + 1) % this.tracks.length;
+        this.loadAndPlay(this.isPlaying);
+      }
+
+      pause() {
+        if (this.isPlaying) {
+          this.audio.pause();
+          this.setPlayingState(false);
+        }
+      }
+    }
+
+    // =========================================================================
+    // 5. QATORLAR VA SHRIFT BOSHQARUVCHISI (Maksimum 4 so'z, ResizeObserver)
+    // =========================================================================
+    class TextLayoutManager {
+      constructor(viewportEl, contentEl) {
+        this.viewportEl = viewportEl;
+        this.contentEl = contentEl;
+        this.rawText = "";
+        this.lines = [];
+        this.measureCanvas = document.createElement("canvas");
+        this.measureCtx = this.measureCanvas.getContext("2d");
+      }
+
+      setText(text) {
+        this.rawText = text.trim();
+        this.lines = this.splitIntoFourWordLines(this.rawText);
+        this.renderLines();
+        this.fitFontToContainer();
+      }
+
+      splitIntoFourWordLines(text) {
+        const words = text.split(/\s+/).filter(Boolean);
+        const chunks = [];
+        for (let i = 0; i < words.length; i += 4) {
+          chunks.push(words.slice(i, i + 4).join(" "));
+        }
+        return chunks;
+      }
+
+      renderLines() {
+        this.contentEl.innerHTML = "";
+        const vh = this.viewportEl.clientHeight || 300;
+        const pad = Math.round(vh * 0.45);
+        this.contentEl.style.paddingTop = `${pad}px`;
+        this.contentEl.style.paddingBottom = `${pad}px`;
+
+        const frag = document.createDocumentFragment();
+        for (const lineText of this.lines) {
+          const div = document.createElement("div");
+          div.className = "text-line";
+          div.textContent = lineText;
+          frag.appendChild(div);
+        }
+        this.contentEl.appendChild(frag);
+      }
+
+      fitFontToContainer() {
+        if (!this.lines.length) return;
+        const availableWidth = Math.max(220, (this.viewportEl.clientWidth || 340) - 16);
+        let fontSize = window.innerWidth <= 420 ? 27 : 31;
+        const minFontSize = 16;
+
+        let longestLine = "";
+        for (const line of this.lines) {
+          if (line.length > longestLine.length) longestLine = line;
+        }
+
+        while (fontSize > minFontSize) {
+          this.measureCtx.font = `500 ${fontSize}px system-ui, -apple-system, sans-serif`;
+          if (this.measureCtx.measureText(longestLine).width <= availableWidth) {
+            break;
+          }
+          fontSize -= 1;
+        }
+
+        const lineEls = this.contentEl.querySelectorAll(".text-line");
+        lineEls.forEach(el => {
+          el.style.fontSize = `${fontSize}px`;
+        });
+      }
+
+      recalculateLayout() {
+        const vh = this.viewportEl.clientHeight || 300;
+        const pad = Math.round(vh * 0.45);
+        this.contentEl.style.paddingTop = `${pad}px`;
+        this.contentEl.style.paddingBottom = `${pad}px`;
+        this.fitFontToContainer();
+      }
+    }
+
+    // =========================================================================
+    // 6. UZLUKSIZ SMOOTH SCROLL ENGINE
+    // =========================================================================
+    class SmoothScroller {
+      constructor(viewportEl, contentEl, onStateChange) {
+        this.viewportEl = viewportEl;
+        this.contentEl = contentEl;
+        this.onStateChange = onStateChange;
+
+        this.y = 0.0;
+        this.maxScrollY = 0.0;
+        this.speed = 38.0;
+        this.state = "Ready";
+        this.rafId = null;
+        this.lastTimestamp = 0;
+
+        this.tick = this.tick.bind(this);
+      }
+
+      measureBounds() {
+        const contentHeight = this.contentEl.scrollHeight;
+        const viewportHeight = this.viewportEl.clientHeight;
+        this.maxScrollY = Math.max(0, contentHeight - viewportHeight * 0.55);
+      }
+
+      setSpeed(pxPerSec) {
+        this.speed = Math.max(8, Math.min(140, Number(pxPerSec) || 38));
+      }
+
+      getProgressRatio() {
+        if (this.maxScrollY <= 0) return 0;
+        return Math.max(0, Math.min(1, this.y / this.maxScrollY));
+      }
+
+      restoreFromProgressRatio(ratio) {
+        this.measureBounds();
+        this.y = ratio * this.maxScrollY;
+        this.applyTransform();
+      }
+
+      applyTransform() {
+        this.contentEl.style.transform = `translate3d(0, -${this.y}px, 0)`;
+      }
+
+      start() {
+        if (this.state === "Playing") return;
+        this.measureBounds();
+        if (this.y >= this.maxScrollY) {
+          this.y = 0.0;
+          this.applyTransform();
+        }
+        this.setState("Playing");
+        this.lastTimestamp = 0;
+        if (!this.rafId) {
+          this.rafId = requestAnimationFrame(this.tick);
+        }
+      }
+
+      pause() {
+        if (this.state !== "Playing") return;
+        if (this.rafId) {
+          cancelAnimationFrame(this.rafId);
+          this.rafId = null;
+        }
+        this.lastTimestamp = 0;
+        this.setState("Paused");
+      }
+
+      resume() {
+        if (this.state !== "Paused") return;
+        this.setState("Playing");
+        this.lastTimestamp = 0;
+        if (!this.rafId) {
+          this.rafId = requestAnimationFrame(this.tick);
+        }
+      }
+
+      restart() {
+        if (this.rafId) {
+          cancelAnimationFrame(this.rafId);
+          this.rafId = null;
+        }
+        this.lastTimestamp = 0;
+        this.y = 0.0;
+        this.measureBounds();
+        this.applyTransform();
+        this.setState("Ready");
+      }
+
+      tick(timestamp) {
+        if (this.state !== "Playing") {
+          this.rafId = null;
+          return;
+        }
+
+        if (!this.lastTimestamp) {
+          this.lastTimestamp = timestamp;
+        }
+
+        let deltaTime = (timestamp - this.lastTimestamp) / 1000;
+        this.lastTimestamp = timestamp;
+
+        if (deltaTime < 0 || deltaTime > 0.05) {
+          deltaTime = 0.016;
+        }
+
+        this.y += this.speed * deltaTime;
+
+        if (this.y >= this.maxScrollY) {
+          this.y = this.maxScrollY;
+          this.applyTransform();
+          this.rafId = null;
+          this.setState("Completed");
+          return;
+        }
+
+        this.applyTransform();
+        this.rafId = requestAnimationFrame(this.tick);
+      }
+
+      setState(nextState) {
+        this.state = nextState;
+        if (this.onStateChange) this.onStateChange(this.state);
+      }
+    }
+
+    // =========================================================================
+    // 7. AYOL OVOZI (Intro)
+    // =========================================================================
+    // =========================================================================
+    // 7. YOSH VA MAYIN QIZ OVOZINI TANLASH (18-20 yoshlar, nozik tembr)
+    // =========================================================================
+    function getAvailableEnglishVoices() {
+      if (!("speechSynthesis" in window)) return [];
+      return window.speechSynthesis.getVoices().filter(v => /^en/i.test(v.lang));
+    }
+
+    function getBestYoungFemaleVoice() {
+      const voices = getAvailableEnglishVoices();
+      if (!voices.length) return null;
+
+      // 1. Natural / Neural yosh qiz ovozlari (Edge & Chrome Natural)
+      const neuralYoung = voices.find(v =>
+        /natural/i.test(v.name) &&
+        /(jenny|ava|ana|aria|emma|maisie|sonia|michelle)/i.test(v.name)
+      );
+      if (neuralYoung) return neuralYoung;
+
+      // 2. Google US / UK English Natural
+      const googleYoung = voices.find(v =>
+        /(google us english|google uk english female)/i.test(v.name)
+      );
+      if (googleYoung) return googleYoung;
+
+      // 3. Apple yosh ovozlar (Ava, Zoe, Serena, Samantha)
+      const appleYoung = voices.find(v =>
+        /(ava|zoe|serena|samantha|allison|karen|victoria)/i.test(v.name)
+      );
+      if (appleYoung) return appleYoung;
+
+      // 4. Windows Zira yoki har qanday ingliz ayol ovozi
+      const anyFemale = voices.find(v =>
+        /(female|zira|jenny|aria|eva|girl|woman)/i.test(v.name)
+      );
+      if (anyFemale) return anyFemale;
+
+      // 5. Erkak ovoz bo'lmagan birinchi ingliz ovozi
+      const nonMale = voices.find(v => !/(male|david|george|mark|stefan|guy)/i.test(v.name));
+      if (nonMale) return nonMale;
+
+      return voices[0];
+    }
+
+    class IntroVoiceManager {
+      constructor() {
+        this.cancelled = false;
+      }
+
+      cancel() {
+        this.cancelled = true;
+        if ("speechSynthesis" in window) {
+          window.speechSynthesis.cancel();
+        }
+      }
+
+      playIntroSpeech(noticeEl) {
+        this.cancelled = false;
+        return new Promise((resolve) => {
+          if (!("speechSynthesis" in window)) {
+            if (noticeEl) noticeEl.textContent = "Voice prompt unavailable; starting reading.";
+            resolve();
+            return;
+          }
+
+          try {
+            window.speechSynthesis.cancel();
+            const utter = new SpeechSynthesisUtterance("Speak fast and clear");
+            utter.lang = "en-US";
+            utter.rate = 0.92;
+            utter.pitch = 1.18; // Mayin, yosh qiz ovozi tembri
+
+            const youngVoice = getBestYoungFemaleVoice();
+            if (youngVoice) utter.voice = youngVoice;
+
+            let done = false;
+            const finish = () => {
+              if (!done) {
+                done = true;
+                resolve();
+              }
+            };
+
+            const safetyTimeout = setTimeout(finish, 2600);
+            utter.onend = () => { clearTimeout(safetyTimeout); finish(); };
+            utter.onerror = () => { clearTimeout(safetyTimeout); finish(); };
+
+            window.speechSynthesis.speak(utter);
+          } catch (e) {
+            resolve();
+          }
+        });
+      }
+    }
+
+    // =========================================================================
+    // 8. LISTENING CONTROLLER (Ovozli o'qish, test savollari va baholash)
+    // =========================================================================
+    class ListeningPracticeController {
+      constructor(elements) {
+        this.el = elements;
+        this.currentTopic = null;
+        this.currentLevel = null;
+        this.currentText = "";
+        this.questions = [];
+        this.score = 0;
+        this.answeredCount = 0;
+        this.isPlaying = false;
+        this.rate = 1.0;
+        this.pitch = 1.20; // 18 yoshli nozik qiz tembri
+        this.toneRateMultiplier = 0.91; // Mayin, shoshilmaydigan jozibali tezlik
+        this.selectedVoice = null;
+        this.isTranscriptShown = false;
+
+        this.initVoiceSelector();
+        this.initListeners();
+      }
+
+      initVoiceSelector() {
+        const populate = () => {
+          if (!this.el.voiceSelect) return;
+          const voices = getAvailableEnglishVoices();
+          this.el.voiceSelect.innerHTML = "";
+
+          const best = getBestYoungFemaleVoice();
+          if (!this.selectedVoice) this.selectedVoice = best;
+
+          voices.forEach(v => {
+            const opt = document.createElement("option");
+            opt.value = v.name;
+            let label = v.name.replace(/Microsoft |Online |(Natural) |English /gi, "").trim();
+            if (/natural|google|ava|jenny/i.test(v.name)) label = "🌸 " + label;
+            opt.textContent = label;
+            if (this.selectedVoice && v.name === this.selectedVoice.name) {
+              opt.selected = true;
+            }
+            this.el.voiceSelect.appendChild(opt);
+          });
+        };
+
+        populate();
+        if ("speechSynthesis" in window) {
+          window.speechSynthesis.onvoiceschanged = populate;
+        }
+
+        if (this.el.voiceSelect) {
+          this.el.voiceSelect.addEventListener("change", (e) => {
+            const voices = getAvailableEnglishVoices();
+            this.selectedVoice = voices.find(v => v.name === e.target.value) || null;
+            if (this.isPlaying) {
+              this.stopSpeech();
+              this.startSpeech();
+            }
+          });
+        }
+
+        if (this.el.toneBtns) {
+          this.el.toneBtns.forEach(btn => {
+            btn.addEventListener("click", () => {
+              this.el.toneBtns.forEach(b => b.classList.remove("active"));
+              btn.classList.add("active");
+              this.pitch = parseFloat(btn.dataset.pitch) || 1.20;
+              this.toneRateMultiplier = parseFloat(btn.dataset.rate) || 0.91;
+              if (this.isPlaying) {
+                this.stopSpeech();
+                this.startSpeech();
+              }
+            });
+          });
+        }
+      }
+
+      initListeners() {
+        this.el.playBtn.addEventListener("click", () => this.toggleSpeech());
+
+        this.el.rateBtns.forEach(btn => {
+          btn.addEventListener("click", () => {
+            this.el.rateBtns.forEach(b => b.classList.remove("active"));
+            btn.classList.add("active");
+            this.rate = parseFloat(btn.dataset.rate) || 1.0;
+            if (this.isPlaying) {
+              this.stopSpeech();
+              this.startSpeech();
+            }
+          });
+        });
+
+        this.el.transcriptToggleBtn.addEventListener("click", () => {
+          this.isTranscriptShown = !this.isTranscriptShown;
+          this.el.transcriptContent.classList.toggle("hidden", !this.isTranscriptShown);
+          this.el.transcriptToggleText.textContent = this.isTranscriptShown ? "Hide Transcript" : "Show Transcript";
+          this.el.transcriptToggleIcon.textContent = this.isTranscriptShown ? "✕" : "👁";
+        });
+
+        this.el.retryBtn.addEventListener("click", () => {
+          this.startSession(this.currentTopic, this.currentLevel);
+        });
+
+        this.el.nextBtn.addEventListener("click", () => {
+          const currentIndex = TOPICS.indexOf(this.currentTopic);
+          const nextIndex = (currentIndex + 1) % TOPICS.length;
+          const nextTopic = TOPICS[nextIndex];
+          this.startSession(nextTopic, this.currentLevel);
+        });
+      }
+
+      startSession(topic, level) {
+        this.currentTopic = topic;
+        this.currentLevel = level;
+        this.currentText = TEXTS[topic][level];
+        this.questions = LISTENING_QUIZ[topic][level] || [];
+        this.score = 0;
+        this.answeredCount = 0;
+        this.isTranscriptShown = false;
+
+        this.stopSpeech();
+
+        this.el.topicDisplay.textContent = `${topic} — ${level}`;
+        this.el.scoreBadge.textContent = `Score: 0 / ${this.questions.length}`;
+        this.el.transcriptContent.textContent = this.currentText;
+        this.el.transcriptContent.classList.add("hidden");
+        this.el.transcriptToggleText.textContent = "Show Transcript";
+        this.el.transcriptToggleIcon.textContent = "👁";
+        this.el.resultCard.classList.add("hidden");
+
+        this.renderQuestions();
+      }
+
+      renderQuestions() {
+        this.el.questionsContainer.innerHTML = "";
+
+        this.questions.forEach((qItem, qIndex) => {
+          const card = document.createElement("div");
+          card.className = "question-card";
+
+          const title = document.createElement("div");
+          title.className = "q-title";
+          title.textContent = `${qIndex + 1}. ${qItem.q}`;
+          card.appendChild(title);
+
+          const optsWrap = document.createElement("div");
+          optsWrap.className = "q-options";
+
+          const letters = ["A", "B", "C", "D"];
+          const optionButtons = [];
+
+          const feedbackEl = document.createElement("div");
+          feedbackEl.className = "q-feedback";
+
+          qItem.options.forEach((optText, optIndex) => {
+            const btn = document.createElement("button");
+            btn.type = "button";
+            btn.className = "opt-btn";
+            btn.innerHTML = `<span><strong>${letters[optIndex]})</strong> ${optText}</span>`;
+
+            btn.addEventListener("click", () => {
+              if (btn.disabled) return;
+              optionButtons.forEach(b => b.disabled = true);
+
+              this.answeredCount += 1;
+              const isCorrect = (optIndex === qItem.answer);
+
+              if (isCorrect) {
+                btn.classList.add("correct");
+                btn.innerHTML += `<span>✓</span>`;
+                this.score += 1;
+                feedbackEl.className = "q-feedback show correct";
+                feedbackEl.innerHTML = `<strong>To'g'ri!</strong> ${qItem.tip}`;
+              } else {
+                btn.classList.add("wrong");
+                btn.innerHTML += `<span>✕</span>`;
+                optionButtons[qItem.answer].classList.add("correct");
+                feedbackEl.className = "q-feedback show wrong";
+                feedbackEl.innerHTML = `<strong>Noto'g'ri.</strong> ${qItem.tip}`;
+              }
+
+              this.el.scoreBadge.textContent = `Score: ${this.score} / ${this.questions.length}`;
+
+              if (this.answeredCount === this.questions.length) {
+                this.showResults();
+              }
+            });
+
+            optionButtons.push(btn);
+            optsWrap.appendChild(btn);
+          });
+
+          card.appendChild(optsWrap);
+          card.appendChild(feedbackEl);
+          this.el.questionsContainer.appendChild(card);
+        });
+      }
+
+      showResults() {
+        const total = this.questions.length;
+        const pct = Math.round((this.score / total) * 100);
+        this.el.resultScoreText.textContent = `${this.score} / ${total} (${pct}%)`;
+
+        if (pct === 100) {
+          this.el.resultMsgText.textContent = "Ajoyib natija! Siz barcha savollarga xatosiz javob berdingiz!";
+        } else if (pct >= 60) {
+          this.el.resultMsgText.textContent = "Yaxshi natija! Xatolarni tushunish uchun matnni ochib tekshirib ko'rishingiz mumkin.";
+        } else {
+          this.el.resultMsgText.textContent = "Hali mashq qilish kerak. Qayta tinglab, sinovni qayta topshiring!";
+        }
+
+        this.el.resultCard.classList.remove("hidden");
+        this.el.resultCard.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      }
+
+      toggleSpeech() {
+        if (this.isPlaying) {
+          this.stopSpeech();
+        } else {
+          this.startSpeech();
+        }
+      }
+
+      startSpeech() {
+        if (!("speechSynthesis" in window)) {
+          alert("Kechirasiz, brauzeringiz ovozli o'qish (Web Speech) funksiyasini qo'llab-quvvatlamaydi.");
+          return;
+        }
+
+        this.stopSpeech();
+
+        const utter = new SpeechSynthesisUtterance(this.currentText);
+        utter.lang = "en-US";
+        utter.rate = this.rate * this.toneRateMultiplier; // Mayin va samimiy tezlik
+        utter.pitch = this.pitch; // 18 yoshli nozik qiz tembri (1.20)
+
+        const voiceToUse = this.selectedVoice || getBestYoungFemaleVoice();
+        if (voiceToUse) {
+          utter.voice = voiceToUse;
+        }
+
+        utter.onstart = () => {
+          this.isPlaying = true;
+          this.el.playIcon.textContent = "⏸";
+          this.el.playText.textContent = "Pause Audio";
+          this.el.waveIndicator.classList.add("playing");
+        };
+
+        const onFinish = () => {
+          this.isPlaying = false;
+          this.el.playIcon.textContent = "▶";
+          this.el.playText.textContent = "Replay Audio";
+          this.el.waveIndicator.classList.remove("playing");
+        };
+
+        utter.onend = onFinish;
+        utter.onerror = onFinish;
+
+        window.speechSynthesis.speak(utter);
+      }
+
+      stopSpeech() {
+        this.isPlaying = false;
+        if ("speechSynthesis" in window) {
+          window.speechSynthesis.cancel();
+        }
+        this.el.playIcon.textContent = "▶";
+        this.el.playText.textContent = "Listen Audio";
+        this.el.waveIndicator.classList.remove("playing");
+      }
+    }
+
+    // =========================================================================
+    // 9. ASOSIY ILOVA BOSHQARUVI
+    // =========================================================================
+    const SPEED_STORAGE_KEY = "speakflow_speed_px_s";
+
+    function sliderToSpeed(sliderVal) {
+      const t = Math.max(0, Math.min(1, Number(sliderVal) / 1000));
+      return Math.round(8 + Math.pow(t, 2) * (140 - 8));
+    }
+
+    function speedToSlider(speedPx) {
+      const clamped = Math.max(8, Math.min(140, Number(speedPx)));
+      const t = Math.sqrt((clamped - 8) / (140 - 8));
+      return Math.round(t * 1000);
+    }
+
+
+    // =========================================================================
+    // 2.1 VOCABULARY DATA (10 mavzu x 3 daraja = 180 ta so'z, misol va tarjima)
+    // =========================================================================
+    const VOCABULARY_DATA = {
+  "Daily Life": {
+    "A1": [
+      {
+        "w": "Breathe",
+        "pos": "verb",
+        "tr": "Nafas olmoq",
+        "ex": "You drink warm water and breathe slowly.",
+        "exTr": "Siz iliq suv ichasiz va sekin nafas olasiz."
+      },
+      {
+        "w": "Routine",
+        "pos": "noun",
+        "tr": "Kundalik tartib",
+        "ex": "Your calm routine gives you quiet strength.",
+        "exTr": "Sizning osoyishta kundalik tartibingiz sizga sokin kuch beradi."
+      },
+      {
+        "w": "Rush",
+        "pos": "verb",
+        "tr": "Shoshilmoq",
+        "ex": "You do not need to rush today.",
+        "exTr": "Bugun shoshilishingiz shart emas."
+      },
+      {
+        "w": "Tired",
+        "pos": "adjective",
+        "tr": "Charchagan",
+        "ex": "Maybe you feel a little tired now.",
+        "exTr": "Balki hozir o'zingizni biroz charchagan his qilayotgandirsiz."
+      },
+      {
+        "w": "Action",
+        "pos": "noun",
+        "tr": "Harakat, amal",
+        "ex": "Every small action is good enough.",
+        "exTr": "Har bir kichik harakat yetarlidir."
+      },
+      {
+        "w": "Strength",
+        "pos": "noun",
+        "tr": "Kuch, quvvat",
+        "ex": "A quiet morning routine gives you inner strength.",
+        "exTr": "Sokin tonggi tartib sizga ichki kuch bag'ishlaydi."
+      }
+    ],
+    "A2": [
+      {
+        "w": "Heavy",
+        "pos": "adjective",
+        "tr": "Og'ir, bosimli",
+        "ex": "Sometimes daily life feels heavy, so you can move slowly.",
+        "exTr": "Ba'zida kundalik hayot og'ir tuyuladi, shuning uchun sekinroq harakatlanishingiz mumkin."
+      },
+      {
+        "w": "Effort",
+        "pos": "noun",
+        "tr": "Say-harakat, urinish",
+        "ex": "Even when nobody sees your effort, every small step matters.",
+        "exTr": "Hatto say-harakatingizni hech kim ko'rmasa ham, har bir kichik qadamingiz muhimdir."
+      },
+      {
+        "w": "Deep",
+        "pos": "adjective",
+        "tr": "Chuqur",
+        "ex": "You looked out the window and took a deep breath.",
+        "exTr": "Siz derazadan tashqariga qaradingiz va chuqur nafas oldingiz."
+      },
+      {
+        "w": "Matter",
+        "pos": "verb",
+        "tr": "Ahamiyatga ega bo'lmoq",
+        "ex": "Every single step you take matters so much.",
+        "exTr": "Siz qo'ygan har bir qadam juda katta ahamiyatga ega."
+      },
+      {
+        "w": "Give up",
+        "pos": "phrase",
+        "tr": "Taslim bo'lmoq, voz kechmoq",
+        "ex": "You did not give up on your healthy routine.",
+        "exTr": "Siz sog'lom tartibingizdan voz kechmadingiz."
+      },
+      {
+        "w": "Window",
+        "pos": "noun",
+        "tr": "Deraza",
+        "ex": "She looked out the window to enjoy the morning sunlight.",
+        "exTr": "U tonggi quyosh nurlaridan bahra olish uchun derazadan qaradi."
+      }
+    ],
+    "B1": [
+      {
+        "w": "Repetitive",
+        "pos": "adjective",
+        "tr": "Bir xil, takrorlanuvchi",
+        "ex": "Daily routines can sometimes feel repetitive and exhausting.",
+        "exTr": "Kundalik tartib ba'zida takrorlanuvchi va charchatuvchi tuyulishi mumkin."
+      },
+      {
+        "w": "Victory",
+        "pos": "noun",
+        "tr": "G'alaba",
+        "ex": "Showing up for yourself every morning is a quiet victory.",
+        "exTr": "Har kuni ertalab o'zingiz uchun harakat qilish sokin bir g'alabadir."
+      },
+      {
+        "w": "Worries",
+        "pos": "noun",
+        "tr": "Tashvishlar, xavotirlar",
+        "ex": "You might carry unspoken worries from yesterday.",
+        "exTr": "Siz kechadan qolgan aytilmagan xavotirlarni ko'tarib yurishingiz mumkin."
+      },
+      {
+        "w": "Organize",
+        "pos": "verb",
+        "tr": "Tartibga solmoq",
+        "ex": "As you organize your thoughts, you create peace in your mind.",
+        "exTr": "Fikrlaringizni tartibga solganingiz sari, ongingizda xotirjamlik yaratasiz."
+      },
+      {
+        "w": "Patience",
+        "pos": "noun",
+        "tr": "Sabr-toqat",
+        "ex": "Give yourself credit for handling difficult moments with patience.",
+        "exTr": "Qiyin vaziyatlarni sabr-toqat bilan yengayotganingiz uchun o'zingizga tan bering."
+      },
+      {
+        "w": "Courage",
+        "pos": "noun",
+        "tr": "Jasorat",
+        "ex": "Facing each new day with quiet courage makes you stronger.",
+        "exTr": "Har bir yangi kunni sokin jasorat bilan kutib olish sizni kuchliroq qiladi."
+      }
+    ]
+  },
+  "My Family": {
+    "A1": [
+      {
+        "w": "Memory",
+        "pos": "noun",
+        "tr": "Xotira",
+        "ex": "Your heart holds good memories every day.",
+        "exTr": "Qalbingiz har kuni yaxshi xotiralarni saqlaydi."
+      },
+      {
+        "w": "Calm",
+        "pos": "adjective",
+        "tr": "Osoyishta, xotirjam",
+        "ex": "A kind voice makes your heart calm.",
+        "exTr": "Mehribon ovoz qalbingizni xotirjam qiladi."
+      },
+      {
+        "w": "Miss",
+        "pos": "verb",
+        "tr": "Sog'inmoq",
+        "ex": "Sometimes you miss someone very much today.",
+        "exTr": "Ba'zida siz bugun kimnidir juda sog'inasiz."
+      },
+      {
+        "w": "Share",
+        "pos": "verb",
+        "tr": "Bo'lishmoq, ulashmoq",
+        "ex": "You sit together and share simple words.",
+        "exTr": "Siz birga o'tirib, samimiy so'zlarni bo'lishasiz."
+      },
+      {
+        "w": "Voice",
+        "pos": "noun",
+        "tr": "Ovoz",
+        "ex": "A familiar voice brings immediate warmth and peace.",
+        "exTr": "Tanish ovoz bir zumda iliqlik va xotirjamlik bag'ishlaydi."
+      },
+      {
+        "w": "Alone",
+        "pos": "adjective",
+        "tr": "Yolg'iz",
+        "ex": "You are never truly alone when love lives in your heart.",
+        "exTr": "Qalbingizda mehr yashar ekan, siz hech qachon yolg'iz emassiz."
+      }
+    ],
+    "A2": [
+      {
+        "w": "Gentle",
+        "pos": "adjective",
+        "tr": "Muloyim, mayin",
+        "ex": "You can remember the gentle voices that wished the best for you.",
+        "exTr": "Sizga doim yaxshilik tilagan muloyim ovozlarni eslashingiz mumkin."
+      },
+      {
+        "w": "Perfect",
+        "pos": "adjective",
+        "tr": "Mukammal",
+        "ex": "Family life is not always perfect, but love is real.",
+        "exTr": "Oila hayoti doim ham mukammal emas, ammo mehr haqiqiydir."
+      },
+      {
+        "w": "Understand",
+        "pos": "verb",
+        "tr": "Tushunmoq",
+        "ex": "People do not always understand your feelings right away.",
+        "exTr": "Odamlar sizning his-tuyg'ularingizni doim ham darhol tushunishmaydi."
+      },
+      {
+        "w": "Lonely",
+        "pos": "adjective",
+        "tr": "Yolg'iz, g'arib",
+        "ex": "When you feel lonely in a busy world, remember your family.",
+        "exTr": "Band dunyoda o'zingizni yolg'iz his qilganingizda, oilangizni eslang."
+      },
+      {
+        "w": "Kindness",
+        "pos": "noun",
+        "tr": "Mehribonlik",
+        "ex": "You learned kindness and patience from the people around you.",
+        "exTr": "Siz atrofingizdagi insonlardan mehribonlik va sabrni o'rgandingiz."
+      },
+      {
+        "w": "Wish",
+        "pos": "verb",
+        "tr": "Tilamoq, orzu qilmoq",
+        "ex": "They always wished the best for your future.",
+        "exTr": "Ular doimo sizning kelajagingiz uchun eng yaxshisini tilashgan."
+      }
+    ],
+    "B1": [
+      {
+        "w": "Relationship",
+        "pos": "noun",
+        "tr": "Munosabat, aloqa",
+        "ex": "Relationships within a family require ongoing care and attention.",
+        "exTr": "Oiladagi munosabatlar doimiy g'amxo'rlik va e'tiborni talab qiladi."
+      },
+      {
+        "w": "Effortless",
+        "pos": "adjective",
+        "tr": "Oson, qiyinchiliksiz",
+        "ex": "Family relationships are not always effortless.",
+        "exTr": "Oilaviy munosabatlar har doim ham oson kechmaydi."
+      },
+      {
+        "w": "Bridge the gap",
+        "pos": "phrase",
+        "tr": "Oraliq masofani qisqartirmoq",
+        "ex": "A simple phone call can bridge the gap between two hearts.",
+        "exTr": "Oddiy telefon qo'ng'irog'i ikki qalb orasidagi masofani qisqartirishi mumkin."
+      },
+      {
+        "w": "Forgiveness",
+        "pos": "noun",
+        "tr": "Kechirimlilik",
+        "ex": "Choosing forgiveness allows you to feel peaceful and connected.",
+        "exTr": "Kechirimli bo'lishni tanlash sizga xotirjamlik va birdamlik hissini beradi."
+      },
+      {
+        "w": "Grounded",
+        "pos": "adjective",
+        "tr": "Barqaror, mustahkam",
+        "ex": "Family warmth helps you feel grounded and secure in life.",
+        "exTr": "Oila mehr-oqibati sizga hayotda mustahkam va xotirjam bo'lishingizga yordam beradi."
+      },
+      {
+        "w": "Struggle",
+        "pos": "noun",
+        "tr": "Qiyinchilik, kurash",
+        "ex": "Every person carries different hopes and quiet struggles.",
+        "exTr": "Har bir inson turli umidlar va yashirin qiyinchiliklarni ko'tarib yuradi."
+      }
+    ]
+  },
+  "Food and Cooking": {
+    "A1": [
+      {
+        "w": "Comfort",
+        "pos": "noun",
+        "tr": "Taskin, orom",
+        "ex": "Simple food brings comfort to your day.",
+        "exTr": "Oddiy taom kuningizga taskin va xotirjamlik olib keladi."
+      },
+      {
+        "w": "Energy",
+        "pos": "noun",
+        "tr": "Quvvat, energiya",
+        "ex": "Your body needs this warm energy today.",
+        "exTr": "Bugun tanangizga ushbu iliq quvvat zarur."
+      },
+      {
+        "w": "Hungry",
+        "pos": "adjective",
+        "tr": "Och qolgan",
+        "ex": "Do not wait until you are too hungry to eat.",
+        "exTr": "Ovqatlanish uchun juda och qolishni kutmang."
+      },
+      {
+        "w": "Fresh",
+        "pos": "adjective",
+        "tr": "Barra, yangi",
+        "ex": "You wash fresh food with clean water.",
+        "exTr": "Siz barra mahsulotlarni toza suv bilan yuvasiz."
+      },
+      {
+        "w": "Bite",
+        "pos": "noun",
+        "tr": "Luqma",
+        "ex": "Enjoy every small bite on your plate.",
+        "exTr": "Tarelkaningizdagi har bir kichik luqmadan rohatlaning."
+      },
+      {
+        "w": "Hurry",
+        "pos": "noun",
+        "tr": "Shoshqaloqlik",
+        "ex": "Do not eat your meal in a big hurry.",
+        "exTr": "Taomingizni katta shoshqaloqlik bilan yemang."
+      }
+    ],
+    "A2": [
+      {
+        "w": "Chop",
+        "pos": "verb",
+        "tr": "Maydalanmoq, to'g'ramoq",
+        "ex": "You chopped fresh vegetables for a healthy soup.",
+        "exTr": "Siz sog'lom sho'rva uchun barra sabzavotlarni to'g'radingiz."
+      },
+      {
+        "w": "Boil",
+        "pos": "verb",
+        "tr": "Qaynamoq",
+        "ex": "She listened to the quiet sound of boiling water.",
+        "exTr": "U qaynab turgan suvning osoyishta ovozini tingladi."
+      },
+      {
+        "w": "Stressed",
+        "pos": "adjective",
+        "tr": "Siqilgan, tarang",
+        "ex": "Cooking helped you stay calm when you felt stressed.",
+        "exTr": "O'zingizni siqilgan his qilganingizda pishirish sizga xotirjam bo'lishga yordam berdi."
+      },
+      {
+        "w": "Skip",
+        "pos": "verb",
+        "tr": "O'tkazib yubormoq",
+        "ex": "You cooked a warm meal instead of skipping dinner.",
+        "exTr": "Kechki ovqatni o'tkazib yubormasdan, o'zingizga iliq ovqat pishirdingiz."
+      },
+      {
+        "w": "Gentle",
+        "pos": "adjective",
+        "tr": "Muloyim, yoqimli",
+        "ex": "Eating slowly is a gentle way to care for your stomach.",
+        "exTr": "Sekin ovqatlanish oshqozoningizga g'amxo'rlik qilishning yaxshi usulidir."
+      },
+      {
+        "w": "Taste",
+        "pos": "verb",
+        "tr": "Ta'tib ko'rmoq",
+        "ex": "He tasted the soup and added a pinch of salt.",
+        "exTr": "U sho'rvani tatib ko'rdi va bir chimdim tuz qo'shdi."
+      }
+    ],
+    "B1": [
+      {
+        "w": "Ingredient",
+        "pos": "noun",
+        "tr": "Masalliq, tarkibiy qism",
+        "ex": "Preparing a meal from simple ingredients warms your heart.",
+        "exTr": "Oddiy masalliqlardan taom tayyorlash qalbingizni ilitadi."
+      },
+      {
+        "w": "Nourish",
+        "pos": "verb",
+        "tr": "Oziqlantirmoq",
+        "ex": "The care you put into nourishing yourself restores your energy.",
+        "exTr": "O'zingizni to'g'ri oziqlantirishga qaratgan g'amxo'rligingiz quvvatingizni tiklaydi."
+      },
+      {
+        "w": "Demanding",
+        "pos": "adjective",
+        "tr": "Mashaqqatli, talabchan",
+        "ex": "Cooking helps you slow down after a demanding workday.",
+        "exTr": "Taom pishirish mashaqqatli ish kunidan so'ng sur'atingizni sekinlashtirishga yordam beradi."
+      },
+      {
+        "w": "Restore",
+        "pos": "verb",
+        "tr": "Qayta tiklamoq",
+        "ex": "A home-cooked meal restores both your strength and spirit.",
+        "exTr": "Uyda pishirilgan taom ham kuchingizni, ham ruhingizni tiklaydi."
+      },
+      {
+        "w": "Humble",
+        "pos": "adjective",
+        "tr": "Oddiy, kamtarona",
+        "ex": "Even if the dish is humble, made with care it tastes delicious.",
+        "exTr": "Taom kamtarona bo'lsa ham, mehr bilan tayyorlansa juda mazali bo'ladi."
+      },
+      {
+        "w": "Spirit",
+        "pos": "noun",
+        "tr": "Ruhiyat, kayfiyat",
+        "ex": "A quiet dinner with family uplifts the human spirit.",
+        "exTr": "Oila bilan osoyishta kechki ovqat inson kayfiyatini ko'taradi."
+      }
+    ]
+  },
+  "Travel and Holidays": {
+    "A1": [
+      {
+        "w": "Trip",
+        "pos": "noun",
+        "tr": "Sayohat, safar",
+        "ex": "You do not need a far trip to feel peaceful.",
+        "exTr": "Osoyishtalikni his qilish uchun uzoq sayohat shart emas."
+      },
+      {
+        "w": "Leave",
+        "pos": "verb",
+        "tr": "Qoldirmoq, tark etmoq",
+        "ex": "You leave your heavy worries behind you.",
+        "exTr": "Siz og'ir tashvishlaringizni ortda qoldirasiz."
+      },
+      {
+        "w": "Breathe",
+        "pos": "verb",
+        "tr": "Nafas olmoq",
+        "ex": "You breathe deep and feel free in the open air.",
+        "exTr": "Siz toza havoda chuqur nafas olasiz va erkinlikni his qilasiz."
+      },
+      {
+        "w": "Holiday",
+        "pos": "noun",
+        "tr": "Ta'til, dam olish kuni",
+        "ex": "A short walk in the evening is like a small holiday.",
+        "exTr": "Kechki qisqa sayr xuddi kichik ta'tilday tuyuladi."
+      },
+      {
+        "w": "Pack",
+        "pos": "verb",
+        "tr": "Joylamoq (sumkani)",
+        "ex": "You pack a small bag for an afternoon trip.",
+        "exTr": "Siz tushdan keyingi sayohat uchun kichik sumka joylaysiz."
+      },
+      {
+        "w": "Wide",
+        "pos": "adjective",
+        "tr": "Keng, bepoyon",
+        "ex": "You look at the wide blue sky above you.",
+        "exTr": "Siz boshingiz uzra keng moviy osmonga qaraysiz."
+      }
+    ],
+    "A2": [
+      {
+        "w": "Schedule",
+        "pos": "noun",
+        "tr": "Jadval, reja",
+        "ex": "Your daily schedule felt crowded and tiring.",
+        "exTr": "Sizning kunlik jadvalingiz juda to'la va charchatuvchi edi."
+      },
+      {
+        "w": "Crowded",
+        "pos": "adjective",
+        "tr": "Gavjum, tirband",
+        "ex": "The city street was crowded with people hurrying home.",
+        "exTr": "Shahar ko'chasi uyga shoshayotgan odamlar bilan gavjum edi."
+      },
+      {
+        "w": "Notice",
+        "pos": "verb",
+        "tr": "Payqamoq, sezmoq",
+        "ex": "You noticed the cool wind blowing through the trees.",
+        "exTr": "Siz daraxtlar orasidan esayotgan salqin shamolni payqadingiz."
+      },
+      {
+        "w": "Wander",
+        "pos": "verb",
+        "tr": "Sayr qilmoq, aylanmoq",
+        "ex": "Allow your mind to wander freely without any rush.",
+        "exTr": "Hech qanday shoshilishsiz ongingizga erkin sayr qilishga imkon bering."
+      },
+      {
+        "w": "Pocket",
+        "pos": "noun",
+        "tr": "Cho'ntak",
+        "ex": "He kept his smartphone in his pocket to enjoy nature.",
+        "exTr": "U tabiatdan zavqlanish uchun smartfonini cho'ntagida qoldirdi."
+      },
+      {
+        "w": "Journey",
+        "pos": "noun",
+        "tr": "Safar, sayohat",
+        "ex": "That short journey refreshed both your mind and body.",
+        "exTr": "Bu qisqa safar ongingiz va tanangizni tetiklashtirdi."
+      }
+    ],
+    "B1": [
+      {
+        "w": "Unfamiliar",
+        "pos": "adjective",
+        "tr": "Notanish",
+        "ex": "Traveling to an unfamiliar place expands your world.",
+        "exTr": "Notanish joyga sayohat qilish dunyoqarashingizni kengaytiradi."
+      },
+      {
+        "w": "Perspective",
+        "pos": "noun",
+        "tr": "Nuqtai nazar, dunyoqarash",
+        "ex": "Stepping into a new environment refreshes your perspective.",
+        "exTr": "Yangi muhitga qadam qo'yish sizning nuqtai nazaringizni yangilaydi."
+      },
+      {
+        "w": "Curiosity",
+        "pos": "noun",
+        "tr": "Qiziquvchanlik",
+        "ex": "Explore new streets with childlike wonder and curiosity.",
+        "exTr": "Yangi ko'chalarni bolalarcha hayrat va qiziquvchanlik bilan kashf eting."
+      },
+      {
+        "w": "Deserve",
+        "pos": "verb",
+        "tr": "Munosib bo'lmoq, loyiq bo'lmoq",
+        "ex": "You truly deserve moments of stillness and rest.",
+        "exTr": "Siz sukunat va dam olish lahzalariga chin dildan loyiqsiz."
+      },
+      {
+        "w": "Stillness",
+        "pos": "noun",
+        "tr": "Sukunat, osoyishtalik",
+        "ex": "Embrace the stillness of the countryside on your vacation.",
+        "exTr": "Ta'tilda qishloqning osoyishta sukunatidan bahra oling."
+      },
+      {
+        "w": "Observe",
+        "pos": "verb",
+        "tr": "Kuzatmoq",
+        "ex": "Observe the quiet beauty of old architecture.",
+        "exTr": "Qadimiy me'morchilikning sokin go'zalligini kuzating."
+      }
+    ]
+  },
+  "Education": {
+    "A1": [
+      {
+        "w": "Learn",
+        "pos": "verb",
+        "tr": "O'rganmoq",
+        "ex": "Learning a new language takes quiet time.",
+        "exTr": "Yangi tilni o'rganish xotirjam vaqt talab qiladi."
+      },
+      {
+        "w": "Mistake",
+        "pos": "noun",
+        "tr": "Xato",
+        "ex": "Do not worry about making small mistakes today.",
+        "exTr": "Bugun kichik xatolar qilishdan xavotir olmang."
+      },
+      {
+        "w": "Brave",
+        "pos": "adjective",
+        "tr": "Jasur, dovyurak",
+        "ex": "Your voice sounds clear and brave right now.",
+        "exTr": "Sizning ovozingiz hozir jarangdor va jasur eshitilyapti."
+      },
+      {
+        "w": "Loud",
+        "pos": "adverb",
+        "tr": "Baland ovozda",
+        "ex": "Speak each sentence out loud with confidence.",
+        "exTr": "Har bir gapni ishonch bilan baland ovozda ayting."
+      },
+      {
+        "w": "Proud",
+        "pos": "adjective",
+        "tr": "Faxrlanadigan, mamnun",
+        "ex": "Be proud of your steady daily study habits.",
+        "exTr": "O'zingizning muntazam kunlik o'qish odatingizdan faxrlaning."
+      },
+      {
+        "w": "Language",
+        "pos": "noun",
+        "tr": "Til",
+        "ex": "English is a powerful language that connects people globally.",
+        "exTr": "Ingliz tili insonlarni butun dunyo bo'ylab bog'laydigan qudratli tildir."
+      }
+    ],
+    "A2": [
+      {
+        "w": "Fluent",
+        "pos": "adjective",
+        "tr": "Ravon, erkin gapiruvchi",
+        "ex": "Nobody becomes fluent in a foreign language overnight.",
+        "exTr": "Hech kim chet tilida bir kechada ravon so'zlashib ketmaydi."
+      },
+      {
+        "w": "Confidence",
+        "pos": "noun",
+        "tr": "Ishonch",
+        "ex": "Every sentence you pronounce builds your speaking confidence.",
+        "exTr": "Siz talaffuz qilgan har bir gap nutqiy ishonchingizni mustahkamlaydi."
+      },
+      {
+        "w": "Future",
+        "pos": "noun",
+        "tr": "Kelajak",
+        "ex": "Mastering English opens bright new doors for your career future.",
+        "exTr": "Ingliz tilini egallash sizning kelajak faoliyatingiz uchun yangi eshiklar ochadi."
+      },
+      {
+        "w": "Pronounce",
+        "pos": "verb",
+        "tr": "Talaffuz qilmoq",
+        "ex": "Pronounce every consonant and vowel with care.",
+        "exTr": "Har bir undosh va unli tovushni e'tibor bilan talaffuz qiling."
+      },
+      {
+        "w": "Difficult",
+        "pos": "adjective",
+        "tr": "Qiyin, murakkab",
+        "ex": "Even difficult grammar rules become natural with practice.",
+        "exTr": "Hatto murakkab grammatika qoidalari ham amaliyot bilan tabiiy bo'lib qoladi."
+      },
+      {
+        "w": "Success",
+        "pos": "noun",
+        "tr": "Muvaffaqiyat",
+        "ex": "Your persistent daily effort is the true measure of success.",
+        "exTr": "Sizning qat'iyatli kunlik harakatingiz muvaffaqiyatning asl o'lchovidir."
+      }
+    ],
+    "B1": [
+      {
+        "w": "Hesitate",
+        "pos": "verb",
+        "tr": "Ikkilanmoq, tortinmoq",
+        "ex": "Do not hesitate before speaking English out loud.",
+        "exTr": "Ingliz tilida baland ovozda gapirishdan oldin ikkilanmang."
+      },
+      {
+        "w": "Consistency",
+        "pos": "noun",
+        "tr": "Izchillik, muntazamlik",
+        "ex": "Fluency grows from consistency rather than raw perfection.",
+        "exTr": "Ravonlik shunchaki mukammallikdan emas, balki izchillikdan shakllanadi."
+      },
+      {
+        "w": "Invisible",
+        "pos": "adjective",
+        "tr": "Ko'rinmas",
+        "ex": "Progress in language learning sometimes feels invisible.",
+        "exTr": "Til o'rganishdagi o'sish ba'zida ko'zga ko'rinmas bo'lib tuyuladi."
+      },
+      {
+        "w": "Stumble",
+        "pos": "noun",
+        "tr": "Qoqilish, xato qilish",
+        "ex": "Forgive every stumble you make while learning new phrases.",
+        "exTr": "Yangi iboralarni o'rganayotganda qilgan har bir xatoyingizni kechiring."
+      },
+      {
+        "w": "Celebrate",
+        "pos": "verb",
+        "tr": "Qadrlamoq, nishonlamoq",
+        "ex": "Celebrate small victories like understanding a podcast.",
+        "exTr": "Podkastni tushunish kabi kichik g'alabalarni ham qadrlang."
+      },
+      {
+        "w": "Fluency",
+        "pos": "noun",
+        "tr": "Ravonlik",
+        "ex": "True fluency means expressing your feelings with ease.",
+        "exTr": "Haqiqiy ravonlik o'z his-tuyg'ularingizni erkin ifodalashni anglatadi."
+      }
+    ]
+  },
+  "Work and Career": {
+    "A1": [
+      {
+        "w": "Task",
+        "pos": "noun",
+        "tr": "Vazifa, topshiriq",
+        "ex": "Finish one simple task before starting another.",
+        "exTr": "Boshqasini boshlashdan oldin bitta oddiy vazifani tugating."
+      },
+      {
+        "w": "Effort",
+        "pos": "noun",
+        "tr": "G'ayrat, mehnat",
+        "ex": "You do your best with honest and calm effort.",
+        "exTr": "Siz halol va sokin g'ayrat bilan qo'lingizdan kelganicha harakat qilasiz."
+      },
+      {
+        "w": "Relax",
+        "pos": "verb",
+        "tr": "Bo'shashmoq, hordiq chiqarmoq",
+        "ex": "Drink warm water and relax your tense shoulders.",
+        "exTr": "Iliq suv iching va tarang yelkalaringizni bo'shashtiring."
+      },
+      {
+        "w": "Perfect",
+        "pos": "adjective",
+        "tr": "Mukammal",
+        "ex": "You do not need to be perfect to do good work.",
+        "exTr": "Yaxshi ish bajarish uchun mukammal bo'lishingiz shart emas."
+      },
+      {
+        "w": "Honest",
+        "pos": "adjective",
+        "tr": "Halol, to'g'riso'z",
+        "ex": "Honest hard work always brings dignity and self-respect.",
+        "exTr": "Halol va mashaqqatli mehnat doimo qadr-qimmat olib keladi."
+      },
+      {
+        "w": "Break",
+        "pos": "noun",
+        "tr": "Tanaffus",
+        "ex": "Take a five-minute break to clear your head.",
+        "exTr": "Boshingizni bo'shatish uchun besh daqiqalik tanaffus qiling."
+      }
+    ],
+    "A2": [
+      {
+        "w": "Pressure",
+        "pos": "noun",
+        "tr": "Bosim",
+        "ex": "You felt pressure to complete every assignment quickly.",
+        "exTr": "Siz har bir topshiriqni tezda bajarish bosimini his qildingiz."
+      },
+      {
+        "w": "Worth",
+        "pos": "noun",
+        "tr": "Qadr-qimmat",
+        "ex": "Your worth as a human is not measured only by your job.",
+        "exTr": "Sizning inson sifatidagi qadringiz faqat ishingiz bilan o'lchanmaydi."
+      },
+      {
+        "w": "Deserve",
+        "pos": "verb",
+        "tr": "Munosib bo'lmoq",
+        "ex": "You worked honestly and deserve a restful evening.",
+        "exTr": "Siz halol ishladingiz va osoyishta oqshomga munosibsiz."
+      },
+      {
+        "w": "Guilt",
+        "pos": "noun",
+        "tr": "Aybdorlik hissi",
+        "ex": "Enjoy your free time without feeling any guilt.",
+        "exTr": "Hech qanday aybdorlik hissisiz bo'sh vaqtingizdan zavqlaning."
+      },
+      {
+        "w": "Complete",
+        "pos": "verb",
+        "tr": "Tugatmoq, yakunlamoq",
+        "ex": "She completed the urgent report before leaving the office.",
+        "exTr": "U ofisdan ketishdan oldin shoshilinch hisobotni yakunladi."
+      },
+      {
+        "w": "Pause",
+        "pos": "noun",
+        "tr": "Qisqa tanaffus",
+        "ex": "Taking a brief pause helps you think much more clearly.",
+        "exTr": "Qisqa tanaffus qilish sizga ancha tiniqroq fikrlashga yordam beradi."
+      }
+    ],
+    "B1": [
+      {
+        "w": "Overwhelming",
+        "pos": "adjective",
+        "tr": "Haddan tashqari og'ir, bosimli",
+        "ex": "Workload can feel overwhelming when deadlines approach.",
+        "exTr": "Muddati yaqinlashganda ish yuki juda bosimli tuyulishi mumkin."
+      },
+      {
+        "w": "Self-doubt",
+        "pos": "noun",
+        "tr": "O'ziga ishonchsizlik",
+        "ex": "Building a career often brings moments of self-doubt.",
+        "exTr": "Karyera qurish ko'pincha o'ziga ishonchsizlik lahzalarini keltirib chiqaradi."
+      },
+      {
+        "w": "Outlast",
+        "pos": "verb",
+        "tr": "Bardoshliroq bo'lmoq, ustun kelmoq",
+        "ex": "Steady effort always outlasts frantic rushing in the long run.",
+        "exTr": "Uzoq muddatda muntazam harakat doimo besaranjom shoshqaloqlikdan ustun keladi."
+      },
+      {
+        "w": "Meaningful",
+        "pos": "adjective",
+        "tr": "Mazmunli, ahamiyatli",
+        "ex": "Focusing on meaningful projects gives deep career satisfaction.",
+        "exTr": "Mazmunli loyihalarga e'tibor qaratish chuqur kasbiy mamnuniyat baxsh etadi."
+      },
+      {
+        "w": "Frantic",
+        "pos": "adjective",
+        "tr": "Betoqat, sarosimali",
+        "ex": "Avoid frantic multi-tasking and concentrate on one goal.",
+        "exTr": "Sarosimali bir vaqtda ko'p ish qilishdan qoching va bir maqsadga e'tibor qarating."
+      },
+      {
+        "w": "Apology",
+        "pos": "noun",
+        "tr": "Uzr, kechirim",
+        "ex": "Rest deeply on weekends without any need for apology.",
+        "exTr": "Dam olish kunlarida hech qanday uzrlarsiz to'liq hordiq chiqaring."
+      }
+    ]
+  },
+  "Nature and Environment": {
+    "A1": [
+      {
+        "w": "Earth",
+        "pos": "noun",
+        "tr": "Yer, tuproq",
+        "ex": "You walk barefoot on the warm, clean earth.",
+        "exTr": "Siz iliq va toza tuproqda yalangoyoq yurasiz."
+      },
+      {
+        "w": "Breathe",
+        "pos": "verb",
+        "tr": "Nafas olmoq",
+        "ex": "Breathe in the fresh mountain air with open lungs.",
+        "exTr": "Ochiq o'pka bilan toza tog' havosidan nafas oling."
+      },
+      {
+        "w": "Gentle",
+        "pos": "adjective",
+        "tr": "Mayin, yoqimli",
+        "ex": "A gentle morning breeze touches your warm cheeks.",
+        "exTr": "Mayin tonggi shabada iliq yuzlaringizni silab o'tadi."
+      },
+      {
+        "w": "Heal",
+        "pos": "verb",
+        "tr": "Davolamoq, shifo bermoq",
+        "ex": "Quiet walks in nature heal tired and anxious minds.",
+        "exTr": "Tabiatdagi sokin sayrlar charchagan va bezovta ongni davolaydi."
+      },
+      {
+        "w": "Tree",
+        "pos": "noun",
+        "tr": "Daraxt",
+        "ex": "Old tall trees give welcome shade on hot sunny days.",
+        "exTr": "Eski baland daraxtlar issiq quyoshli kunlarda xush ko'lanka beradi."
+      },
+      {
+        "w": "Listen",
+        "pos": "verb",
+        "tr": "Tinglamoq, quloq tutmoq",
+        "ex": "Listen to the birds singing in the early dawn.",
+        "exTr": "Tong saharda qushlarning sayrashini tinglang."
+      }
+    ],
+    "A2": [
+      {
+        "w": "Notice",
+        "pos": "verb",
+        "tr": "Payqamoq, sezmoq",
+        "ex": "He noticed how the bright leaves danced in the wind.",
+        "exTr": "U yorqin barglarning shamolda qanday raqsga tushishini payqadi."
+      },
+      {
+        "w": "Season",
+        "pos": "noun",
+        "tr": "Fasl, mavsum",
+        "ex": "Every flower blooms in its own natural season.",
+        "exTr": "Har bir gul o'zining tabiiy faslida ochiladi."
+      },
+      {
+        "w": "Calmly",
+        "pos": "adverb",
+        "tr": "Xotirjam, osoyishta holda",
+        "ex": "Trees stand calmly through heavy winter rain.",
+        "exTr": "Daraxtlar qahraton qish yomg'irida ham xotirjam qad rostlab turadi."
+      },
+      {
+        "w": "Spend",
+        "pos": "verb",
+        "tr": "O'tkazmoq (vaqtni)",
+        "ex": "Spending time near green plants reduces mental stress.",
+        "exTr": "Yashil o'simliklar yonida vaqt o'tkazish aqliy stressni kamaytiradi."
+      },
+      {
+        "w": "Allow",
+        "pos": "verb",
+        "tr": "Ruxsat bermoq, imkon bermoq",
+        "ex": "Allow yourself to grow patiently without rushing.",
+        "exTr": "Shoshilmasdan, sabr bilan o'sishga o'zingizga imkon bering."
+      },
+      {
+        "w": "Breeze",
+        "pos": "noun",
+        "tr": "Mayin shabada",
+        "ex": "The cool evening breeze brought sweet floral scents.",
+        "exTr": "Kechki salqin shabada yoqimli gul iforini olib keldi."
+      }
+    ],
+    "B1": [
+      {
+        "w": "Balance",
+        "pos": "noun",
+        "tr": "Muvozanat",
+        "ex": "Spending time outdoors restores your emotional balance.",
+        "exTr": "Ochiq havoda vaqt o'tkazish sizning ruhiy muvozanatingizni tiklaydi."
+      },
+      {
+        "w": "Observe",
+        "pos": "verb",
+        "tr": "Kuzatmoq",
+        "ex": "Observing rivers teaches us to flow around obstacles.",
+        "exTr": "Daryolarni kuzatish to'siqlarni aylanib o'tishni o'rgatadi."
+      },
+      {
+        "w": "Demanding",
+        "pos": "adjective",
+        "tr": "Mashaqqatli, talabchan",
+        "ex": "Nature offers refuge from our modern demanding society.",
+        "exTr": "Tabiat bizning zamonaviy mashaqqatli jamiyatimizdan boshpana beradi."
+      },
+      {
+        "w": "Available",
+        "pos": "adjective",
+        "tr": "Mavjud, erishimli",
+        "ex": "Tranquility is always available if you pause to breathe.",
+        "exTr": "Agar to'xtab nafas olsangiz, osoyishtalik doimo mavjuddir."
+      },
+      {
+        "w": "Refuge",
+        "pos": "noun",
+        "tr": "Boshpana, qo'nim joy",
+        "ex": "A quiet forest path was his favorite mental refuge.",
+        "exTr": "Sokin o'rmon yo'lkasi uning sevimli ruhiy panohi edi."
+      },
+      {
+        "w": "Beneath",
+        "pos": "preposition",
+        "tr": "Ostida, tagida",
+        "ex": "Standing beneath the open sky reminds you of life's vastness.",
+        "exTr": "Ochiq osmon ostida turish sizga hayotning cheksizligini eslatadi."
+      }
+    ]
+  },
+  "Health and Fitness": {
+    "A1": [
+      {
+        "w": "Stretch",
+        "pos": "verb",
+        "tr": "Cho'zilmoq, kerishmoq",
+        "ex": "You stretch your arms up slowly after waking up.",
+        "exTr": "Uyqudan uyg'ongach, qo'llaringizni sekin yuqoriga cho'zasiz."
+      },
+      {
+        "w": "Movement",
+        "pos": "noun",
+        "tr": "Harakat",
+        "ex": "Gentle daily movement keeps your joints flexible.",
+        "exTr": "Yengil kunlik harakat bo'g'imlaringizni egiluvchan saqlaydi."
+      },
+      {
+        "w": "Fresh",
+        "pos": "adjective",
+        "tr": "Tetik, yangi",
+        "ex": "A good night's sleep makes you feel fresh and alert.",
+        "exTr": "Yaxshi tungi uyqu sizni tetik va sergak his qildiradi."
+      },
+      {
+        "w": "Carry",
+        "pos": "verb",
+        "tr": "Ko'tarmoq, olib yurmoq",
+        "ex": "Thank your strong body for carrying you every day.",
+        "exTr": "Sizni har kuni ko'tarib yurgani uchun baquvvat tanangizga rahmat ayting."
+      },
+      {
+        "w": "Water",
+        "pos": "noun",
+        "tr": "Suv",
+        "ex": "Drinking enough water throughout the day protects your energy.",
+        "exTr": "Kun davomida yetarlicha suv ichish quvvatingizni asraydi."
+      },
+      {
+        "w": "Gentle",
+        "pos": "adjective",
+        "tr": "Yengil, mayin",
+        "ex": "A gentle evening walk helps digestion and promotes sleep.",
+        "exTr": "Kechki yengil sayr hazm qilishga yordam beradi va uyquni yaxshilaydi."
+      }
+    ],
+    "A2": [
+      {
+        "w": "Energy",
+        "pos": "noun",
+        "tr": "Quvvat, darmon",
+        "ex": "She was low on energy, so she went for a refreshing walk.",
+        "exTr": "Uning quvvati kam edi, shuning uchun tetiklashtiruvchi sayrga chiqdi."
+      },
+      {
+        "w": "Respect",
+        "pos": "verb",
+        "tr": "Hurmat qilmoq, rioya qilmoq",
+        "ex": "Respect your body when it clearly asks for deep rest.",
+        "exTr": "Tanangiz to'liq dam olishni so'raganida uni hurmat qiling."
+      },
+      {
+        "w": "Punishment",
+        "pos": "noun",
+        "tr": "Jazo",
+        "ex": "Exercise should never feel like a harsh punishment.",
+        "exTr": "Jismoniy mashqlar hech qachon qattiq jazo kabi tuyulmasligi kerak."
+      },
+      {
+        "w": "Extreme",
+        "pos": "adjective",
+        "tr": "Haddan tashqari, keskin",
+        "ex": "Avoid extreme diets that harm your metabolism.",
+        "exTr": "Moddalar almashinuviga zarar yetkazadigan keskin parhezlardan saqlaning."
+      },
+      {
+        "w": "Criticize",
+        "pos": "verb",
+        "tr": "Tanqid qilmoq",
+        "ex": "Instead of criticizing your mistakes, encourage yourself.",
+        "exTr": "Xatolaringizni tanqid qilish o'rniga, o'zingizni rag'batlantiring."
+      },
+      {
+        "w": "Calmer",
+        "pos": "adjective",
+        "tr": "Tinchroq, osoyishtaroq",
+        "ex": "After simple deep breathing, she felt significantly calmer.",
+        "exTr": "Oddiy chuqur nafas mashqidan so'ng, u ancha tinchroq bo'lib qoldi."
+      }
+    ],
+    "B1": [
+      {
+        "w": "Physical",
+        "pos": "adjective",
+        "tr": "Jismoniy",
+        "ex": "Caring for your physical body supports mental clarity.",
+        "exTr": "Jismoniy tanangizga g'amxo'rlik qilish aqliy tiniqlikni ta'minlaydi."
+      },
+      {
+        "w": "Tension",
+        "pos": "noun",
+        "tr": "Taranglik",
+        "ex": "Gentle yoga stretches release tension from your neck.",
+        "exTr": "Yengil yoga mashqlari bo'yindagi taranglikni bo'shashtiradi."
+      },
+      {
+        "w": "Nourishing",
+        "pos": "adjective",
+        "tr": "To'yimli, foydali",
+        "ex": "Fuel your body with wholesome and nourishing meals.",
+        "exTr": "Tanangizni to'yimli va foydali taomlar bilan quvvatlang."
+      },
+      {
+        "w": "Challenge",
+        "pos": "noun",
+        "tr": "Sinov, qiyinchilik",
+        "ex": "Your body supports you through every demanding challenge.",
+        "exTr": "Tanangiz har bir murakkab sinovda sizni qo'llab-quvvatlaydi."
+      },
+      {
+        "w": "Mindful",
+        "pos": "adjective",
+        "tr": "E'tiborli, hushyor",
+        "ex": "Mindful breathing slows down a racing heartbeat.",
+        "exTr": "E'tiborli nafas olish tez urayotgan yurak urishini sekinlashtiradi."
+      },
+      {
+        "w": "Release",
+        "pos": "verb",
+        "tr": "Chiqarib yubormoq, bo'shatmoq",
+        "ex": "Exhale slowly to release built-up stress.",
+        "exTr": "Yig'ilib qolgan stressni chiqarib yuborish uchun sekin nafas chiqaring."
+      }
+    ]
+  },
+  "Technology": {
+    "A1": [
+      {
+        "w": "Screen",
+        "pos": "noun",
+        "tr": "Ekran",
+        "ex": "You look at your bright screen to read inspiring words.",
+        "exTr": "Ilhomlantiruvchi so'zlarni o'qish uchun yorqin ekranga qaraysiz."
+      },
+      {
+        "w": "Connect",
+        "pos": "verb",
+        "tr": "Bog'lamoq, ulamoq",
+        "ex": "The internet connects learners from all around the globe.",
+        "exTr": "Internet butun dunyodagi o'quvchilarni o'zaro bog'laydi."
+      },
+      {
+        "w": "Control",
+        "pos": "noun",
+        "tr": "Nazorat, boshqaruv",
+        "ex": "You are in control of how you spend your screen time.",
+        "exTr": "Ekran vaqtingizni qanday o'tkazishni o'zingiz nazorat qilasiz."
+      },
+      {
+        "w": "Noise",
+        "pos": "noun",
+        "tr": "Shovqin, g'ala-g'ovur",
+        "ex": "Choose peaceful silence over social media noise today.",
+        "exTr": "Bugun ijtimoiy tarmoq shovqinidan ko'ra osoyishta sukunatni tanlang."
+      },
+      {
+        "w": "Bright",
+        "pos": "adjective",
+        "tr": "Yorqin",
+        "ex": "Dim your bright screen in the evening to protect your eyes.",
+        "exTr": "Ko'zlaringizni asrash uchun kechqurun yorqin ekranni xiralashtiring."
+      },
+      {
+        "w": "Tool",
+        "pos": "noun",
+        "tr": "Asbob, vosita",
+        "ex": "Your phone is a wonderful educational tool when used wisely.",
+        "exTr": "Telefoningiz to'g'ri foydalanilganda ajoyib ta'limiy vositadir."
+      }
+    ],
+    "A2": [
+      {
+        "w": "Device",
+        "pos": "noun",
+        "tr": "Qurilma, gadjet",
+        "ex": "You used your digital device for meaningful English study.",
+        "exTr": "Siz raqamli qurilmangizdan mazmunli ingliz tili mashg'ulotlari uchun foydalandingiz."
+      },
+      {
+        "w": "Endless",
+        "pos": "adjective",
+        "tr": "Cheksiz, bitmas-tuganmas",
+        "ex": "Do not waste precious hours scrolling endless news feeds.",
+        "exTr": "Cheksiz yangiliklar tasmasini varaqlab, qimmatli soatlarni behuda sarflamang."
+      },
+      {
+        "w": "Notification",
+        "pos": "noun",
+        "tr": "Bildirishnoma, xabarnoma",
+        "ex": "Turn off non-essential notifications to maintain focus.",
+        "exTr": "Diqqatni saqlab qolish uchun muhim bo'lmagan bildirishnomalarni o'chirib qo'ying."
+      },
+      {
+        "w": "Overwhelmed",
+        "pos": "adjective",
+        "tr": "Bosim ostida qolgan, charchagan",
+        "ex": "It is easy to feel overwhelmed by constant incoming alerts.",
+        "exTr": "Doimiy keluvchi ogohlantirishlardan holdan toyish juda oson."
+      },
+      {
+        "w": "Meaningful",
+        "pos": "adjective",
+        "tr": "Mazmunli, foydali",
+        "ex": "Spending 15 minutes on meaningful reading improves focus.",
+        "exTr": "Mazmunli o'qishga 15 daqiqa ajratish diqqatni yaxshilaydi."
+      },
+      {
+        "w": "Scroll",
+        "pos": "verb",
+        "tr": "Ekranni surmoq, varaqlamoq",
+        "ex": "Pause the mindless scrolling and take three deep breaths.",
+        "exTr": "Ekranni bekorchi varaqlashni to'xtating va uch marta chuqur nafas oling."
+      }
+    ],
+    "B1": [
+      {
+        "w": "Drain",
+        "pos": "verb",
+        "tr": "So'rib olmoq, quritmoq",
+        "ex": "Constant social media consumption can drain your energy.",
+        "exTr": "Ijtimoiy tarmoqlardan tinimsiz foydalanish quvvatingizni so'rib olishi mumkin."
+      },
+      {
+        "w": "Reclaim",
+        "pos": "verb",
+        "tr": "Qaytarib olmoq",
+        "ex": "Daily reading helps you reclaim your personal attention.",
+        "exTr": "Kunlik mutolaa shaxsiy diqqatingizni qaytarib olishga yordam beradi."
+      },
+      {
+        "w": "Precious",
+        "pos": "adjective",
+        "tr": "Qimmatbaho, noyob",
+        "ex": "Your mental focus is too precious to waste on petty debates.",
+        "exTr": "Sizning aqliy diqqatingiz arzimas bahslarga sarflash uchun juda qimmatlidir."
+      },
+      {
+        "w": "Constant",
+        "pos": "adjective",
+        "tr": "Doimiy, to'xtovsiz",
+        "ex": "Constant digital connectivity often causes mental fatigue.",
+        "exTr": "Doimiy raqamli aloqa ko'pincha aqliy toliqishni keltirib chiqaradi."
+      },
+      {
+        "w": "Fatigue",
+        "pos": "noun",
+        "tr": "Toliqish, charchoq",
+        "ex": "Turn off screens early to prevent chronic eye fatigue.",
+        "exTr": "Surunkali ko'z toliqishining oldini olish uchun ekranlarni erta o'chiring."
+      },
+      {
+        "w": "Stillness",
+        "pos": "noun",
+        "tr": "Sukunat, xotirjamlik",
+        "ex": "Allow your mind to enjoy real stillness away from screens.",
+        "exTr": "Ekranlardan uzoqda ongingizga haqiqiy sukunatdan bahra olishga imkon bering."
+      }
+    ]
+  },
+  "Hobbies and Free Time": {
+    "A1": [
+      {
+        "w": "Smile",
+        "pos": "verb",
+        "tr": "Tabassum qilmoq, jilmaymoq",
+        "ex": "Do something joyful that makes you smile today.",
+        "exTr": "Bugun o'zingizni jilmaytiradigan quvonchli ish bilan shug'ullaning."
+      },
+      {
+        "w": "Belong",
+        "pos": "verb",
+        "tr": "Tegishli bo'lmoq",
+        "ex": "This peaceful evening hour belongs entirely to you.",
+        "exTr": "Bu osoyishta kechki soat butunlay sizga tegishlidir."
+      },
+      {
+        "w": "Earn",
+        "pos": "verb",
+        "tr": "Ishlab topmoq, haqli bo'lmoq",
+        "ex": "You do not need to earn your rest by burning out.",
+        "exTr": "Dam olish huquqiga ega bo'lish uchun o'zingizni holdan toydirishingiz shart emas."
+      },
+      {
+        "w": "Joy",
+        "pos": "noun",
+        "tr": "Quvonch, shodlik",
+        "ex": "Creative hobbies bring genuine joy to your heart.",
+        "exTr": "Ijodiy sevimli mashg'ulotlar qalbingizga samimiy quvonch olib keladi."
+      },
+      {
+        "w": "Draw",
+        "pos": "verb",
+        "tr": "Chizmoq, rasm solmoq",
+        "ex": "Draw simple shapes to unwind after a busy day.",
+        "exTr": "Band kundan so'ng tinchlanish uchun oddiy shakllarni chizing."
+      },
+      {
+        "w": "Hobby",
+        "pos": "noun",
+        "tr": "Sevimli mashg'ulot",
+        "ex": "A calm hobby is the best antidote to daily tension.",
+        "exTr": "Sokin sevimli mashg'ulot kundalik taranglikka qarshi eng yaxshi vositadir."
+      }
+    ],
+    "A2": [
+      {
+        "w": "Productive",
+        "pos": "adjective",
+        "tr": "Samarali, unumli",
+        "ex": "You do not always have to be productive in your free time.",
+        "exTr": "Bo'sh vaqtingizda doim ham sermahsul bo'lishingiz shart emas."
+      },
+      {
+        "w": "Company",
+        "pos": "noun",
+        "tr": "Hamrohlik, do'stlik",
+        "ex": "Learn to enjoy your own company during quiet evenings.",
+        "exTr": "Sokin oqshomlarda o'z o'zingiz bilan vaqt o'tkazishdan rohatlanishni o'rganing."
+      },
+      {
+        "w": "Duty",
+        "pos": "noun",
+        "tr": "Burch, vazifa",
+        "ex": "Step away from heavy duties and listen to your heart.",
+        "exTr": "Og'ir vazifalardan biroz uzoqlashing va qalbingizga quloq soling."
+      },
+      {
+        "w": "Permission",
+        "pos": "noun",
+        "tr": "Ruxsat, ijozat",
+        "ex": "Give yourself permission to pause without feeling lazy.",
+        "exTr": "Dangasalik hissisiz to'xtab nafas olishga o'zingizga ruxsat bering."
+      },
+      {
+        "w": "Curiosity",
+        "pos": "noun",
+        "tr": "Qiziquvchanlik",
+        "ex": "Approach art and music with innocent curiosity.",
+        "exTr": "San'at va musiqaga beg'ubor qiziquvchanlik bilan yondashing."
+      },
+      {
+        "w": "Relax",
+        "pos": "verb",
+        "tr": "Hordiq chiqarmoq, tinchlanmoq",
+        "ex": "Reading a paperback novel helps you relax completely.",
+        "exTr": "Qog'oz kitob o'qish sizga to'liq hordiq chiqarishga yordam beradi."
+      }
+    ],
+    "B1": [
+      {
+        "w": "Essential",
+        "pos": "adjective",
+        "tr": "Juda zarur, muhim",
+        "ex": "Setting aside free time is essential for mental health.",
+        "exTr": "Bo'sh vaqt ajratish ruhiy salomatlik uchun juda muhimdir."
+      },
+      {
+        "w": "Pleasure",
+        "pos": "noun",
+        "tr": "Rohat, huzur",
+        "ex": "Savor the simple pleasure of brewing fresh green tea.",
+        "exTr": "Barra ko'k choy damlashning oddiygina huzurini tuying."
+      },
+      {
+        "w": "Refill",
+        "pos": "verb",
+        "tr": "Qayta to'ldirmoq",
+        "ex": "Creative hobbies refill your depleted emotional energy.",
+        "exTr": "Ijodiy mashg'ulotlar kamayib qolgan ruhiy quvvatingizni qayta to'ldiradi."
+      },
+      {
+        "w": "Culture",
+        "pos": "noun",
+        "tr": "Madaniyat, ijtimoiy muhit",
+        "ex": "Modern culture places too much emphasis on non-stop hustle.",
+        "exTr": "Zamonaviy muhit to'xtovsiz shoshqaloq ishlashga haddan ortiq urg'u beradi."
+      },
+      {
+        "w": "Sketch",
+        "pos": "verb",
+        "tr": "Qoralama chizmoq",
+        "ex": "Sketching natural landscapes calms racing thoughts.",
+        "exTr": "Tabiat manzaralarini chizish shoshqaloq fikrlarni tinchlantiradi."
+      },
+      {
+        "w": "Depleted",
+        "pos": "adjective",
+        "tr": "Holdan toygan, tugagan",
+        "ex": "Restore your depleted spirits through restorative leisure.",
+        "exTr": "Dam beruvchi hordiq orqali holdan toygan ruhingizni qayta tiklang."
+      }
+    ]
+  }
+};
+
+    // =========================================================================
+    // 8.1 VOCABULARY CONTROLLER (Lug'at, misollar, tarjimalar va ovozli talaffuz)
+    // =========================================================================
+    class VocabularyPracticeController {
+      constructor(elements) {
+        this.el = elements;
+        this.currentTopic = null;
+        this.currentLevel = null;
+        this.hideTranslations = false;
+        this.searchQuery = "";
+        this.currentlySpeakingBtn = null;
+
+        this.initListeners();
+      }
+
+      initListeners() {
+        if (this.el.levelPills) {
+          this.el.levelPills.forEach(pill => {
+            pill.addEventListener("click", () => {
+              this.el.levelPills.forEach(p => p.classList.remove("active"));
+              pill.classList.add("active");
+              this.currentLevel = pill.dataset.level;
+              this.render();
+            });
+          });
+        }
+
+        if (this.el.toggleTrBtn) {
+          this.el.toggleTrBtn.addEventListener("click", () => {
+            this.hideTranslations = !this.hideTranslations;
+            this.updateToggleBtnState();
+            this.render();
+          });
+        }
+
+        if (this.el.searchInput) {
+          this.el.searchInput.addEventListener("input", (e) => {
+            this.searchQuery = e.target.value.trim().toLowerCase();
+            if (this.el.searchClear) {
+              if (this.searchQuery.length > 0) {
+                this.el.searchClear.classList.remove("hidden");
+              } else {
+                this.el.searchClear.classList.add("hidden");
+              }
+            }
+            this.render();
+          });
+        }
+
+        if (this.el.searchClear) {
+          this.el.searchClear.addEventListener("click", () => {
+            this.el.searchInput.value = "";
+            this.searchQuery = "";
+            this.el.searchClear.classList.add("hidden");
+            this.render();
+          });
+        }
+
+        if (this.el.nextBtn) {
+          this.el.nextBtn.addEventListener("click", () => {
+            const currentIndex = TOPICS.indexOf(this.currentTopic);
+            const nextIndex = (currentIndex + 1) % TOPICS.length;
+            this.startSession(TOPICS[nextIndex], this.currentLevel);
+          });
+        }
+      }
+
+      updateToggleBtnState() {
+        if (!this.el.toggleTrBtn) return;
+        if (this.hideTranslations) {
+          this.el.toggleTrBtn.classList.add("active");
+          if (this.el.toggleTrText) this.el.toggleTrText.textContent = "Tarjimani ko'rsatish";
+          if (this.el.toggleTrIcon) this.el.toggleTrIcon.textContent = "👁️‍🗨️";
+        } else {
+          this.el.toggleTrBtn.classList.remove("active");
+          if (this.el.toggleTrText) this.el.toggleTrText.textContent = "Tarjimani yashirish";
+          if (this.el.toggleTrIcon) this.el.toggleTrIcon.textContent = "👁";
+        }
+      }
+
+      startSession(topic, level) {
+        this.currentTopic = topic;
+        this.currentLevel = level;
+        this.searchQuery = "";
+        if (this.el.searchInput) this.el.searchInput.value = "";
+        if (this.el.searchClear) this.el.searchClear.classList.add("hidden");
+
+        if (this.el.levelPills) {
+          this.el.levelPills.forEach(pill => {
+            if (pill.dataset.level === level) pill.classList.add("active");
+            else pill.classList.remove("active");
+          });
+        }
+
+        this.render();
+      }
+
+      stopSpeech() {
+        if ("speechSynthesis" in window) {
+          window.speechSynthesis.cancel();
+        }
+        if (this.currentlySpeakingBtn) {
+          this.currentlySpeakingBtn.classList.remove("speaking");
+          this.currentlySpeakingBtn = null;
+        }
+      }
+
+      speak(text, rate = 0.91, btn = null) {
+        if (!("speechSynthesis" in window)) return;
+        this.stopSpeech();
+
+        try {
+          const utter = new SpeechSynthesisUtterance(text);
+          utter.lang = "en-US";
+          utter.pitch = 1.20; // 18 yoshli mayin qiz tembri
+          utter.rate = rate;
+
+          const voice = getBestYoungFemaleVoice();
+          if (voice) utter.voice = voice;
+
+          if (btn) {
+            this.currentlySpeakingBtn = btn;
+            btn.classList.add("speaking");
+          }
+
+          utter.onend = () => {
+            if (btn) btn.classList.remove("speaking");
+            this.currentlySpeakingBtn = null;
+          };
+          utter.onerror = () => {
+            if (btn) btn.classList.remove("speaking");
+            this.currentlySpeakingBtn = null;
+          };
+
+          window.speechSynthesis.speak(utter);
+        } catch (e) {
+          console.warn("Speech error:", e);
+        }
+      }
+
+      render() {
+        if (!this.currentTopic || !this.currentLevel) return;
+
+        if (this.el.topicDisplay) {
+          this.el.topicDisplay.textContent = `${this.currentTopic} — ${this.currentLevel}`;
+        }
+
+        const topicVocab = VOCABULARY_DATA[this.currentTopic] || {};
+        const wordsList = topicVocab[this.currentLevel] || [];
+
+        let filtered = wordsList;
+        if (this.searchQuery) {
+          filtered = wordsList.filter(item =>
+            item.w.toLowerCase().includes(this.searchQuery) ||
+            item.tr.toLowerCase().includes(this.searchQuery) ||
+            item.ex.toLowerCase().includes(this.searchQuery) ||
+            item.exTr.toLowerCase().includes(this.searchQuery)
+          );
+        }
+
+        if (this.el.countBadge) {
+          this.el.countBadge.textContent = `${filtered.length} ta so'z`;
+        }
+
+        if (!this.el.cardsList) return;
+        this.el.cardsList.innerHTML = "";
+
+        if (filtered.length === 0) {
+          if (this.el.emptyState) this.el.emptyState.classList.remove("hidden");
+          return;
+        } else {
+          if (this.el.emptyState) this.el.emptyState.classList.add("hidden");
+        }
+
+        filtered.forEach(item => {
+          const card = document.createElement("article");
+          card.className = "vocab-card";
+          card.dataset.word = item.w;
+
+          const blurClass = this.hideTranslations ? "blurred" : "";
+          const blurTitle = this.hideTranslations ? "Ko'rish uchun bosing" : "";
+
+          card.innerHTML = `
+            <div class="vocab-card-header">
+              <div class="vocab-word-info">
+                <h3 class="vocab-word-title">${item.w}</h3>
+                <span class="vocab-pos-badge">${item.pos}</span>
+              </div>
+              <button type="button" class="vocab-speak-btn" title="Tinglash" aria-label="Pronounce ${item.w}">
+                <span class="speak-icon">🔊</span>
+                <span class="speak-label">O'qish</span>
+              </button>
+            </div>
+
+            <div class="vocab-tr-box">
+              <span class="vocab-tr-label">Tarjimasi:</span>
+              <span class="vocab-tr-text ${blurClass}" title="${blurTitle}">${item.tr}</span>
+            </div>
+
+            <div class="vocab-example-card">
+              <div class="vocab-example-top">
+                <div class="vocab-example-en">
+                  <span class="example-quote">“</span>${item.ex}<span class="example-quote">”</span>
+                </div>
+                <button type="button" class="vocab-ex-speak-btn" title="Misolni tinglash" aria-label="Listen sentence">
+                  🔊
+                </button>
+              </div>
+              <div class="vocab-example-uz ${blurClass}" title="${blurTitle}">${item.exTr}</div>
+            </div>
+          `;
+
+          const speakBtn = card.querySelector(".vocab-speak-btn");
+          speakBtn.addEventListener("click", () => {
+            this.speak(item.w, 0.88, speakBtn);
+          });
+
+          const exSpeakBtn = card.querySelector(".vocab-ex-speak-btn");
+          exSpeakBtn.addEventListener("click", () => {
+            this.speak(item.ex, 0.91, exSpeakBtn);
+          });
+
+          const trText = card.querySelector(".vocab-tr-text");
+          trText.addEventListener("click", () => {
+            if (trText.classList.contains("blurred")) {
+              trText.classList.toggle("revealed");
+            }
+          });
+
+          const exUz = card.querySelector(".vocab-example-uz");
+          exUz.addEventListener("click", () => {
+            if (exUz.classList.contains("blurred")) {
+              exUz.classList.toggle("revealed");
+            }
+          });
+
+          this.el.cardsList.appendChild(card);
+        });
+      }
+    }
+
+    // DOM Elements
+    const homeView = document.getElementById("home-view");
+    const readerView = document.getElementById("reader-view");
+    const listeningView = document.getElementById("listening-view");
+    const topicListEl = document.getElementById("topic-list");
+    const levelSectionEl = document.getElementById("level-section");
+    const chosenTopicLabel = document.getElementById("chosen-topic-label");
+    const homeTagline = document.getElementById("home-tagline");
+
+    const vocabularyView = document.getElementById("vocabulary-view");
+
+    // Mode Buttons (Speaking, Listening, Vocabulary)
+    const modeSpeakingBtn = document.getElementById("mode-speaking-btn");
+    const modeListeningBtn = document.getElementById("mode-listening-btn");
+    const modeVocabularyBtn = document.getElementById("mode-vocabulary-btn");
+    let currentMode = "speaking"; // "speaking", "listening", or "vocabulary"
+
+    modeSpeakingBtn.addEventListener("click", () => {
+      currentMode = "speaking";
+      modeSpeakingBtn.classList.add("active");
+      modeListeningBtn.classList.remove("active");
+      modeVocabularyBtn.classList.remove("active");
+      homeTagline.textContent = "Read aloud smoothly at your own pace. Voice prompt & auto-scrolling.";
+    });
+
+    modeListeningBtn.addEventListener("click", () => {
+      currentMode = "listening";
+      modeListeningBtn.classList.add("active");
+      modeSpeakingBtn.classList.remove("active");
+      modeVocabularyBtn.classList.remove("active");
+      homeTagline.textContent = "Listen to clear English audio, test comprehension with interactive questions.";
+    });
+
+    modeVocabularyBtn.addEventListener("click", () => {
+      currentMode = "vocabulary";
+      modeVocabularyBtn.classList.add("active");
+      modeSpeakingBtn.classList.remove("active");
+      modeListeningBtn.classList.remove("active");
+      homeTagline.textContent = "Learn essential words, natural examples, and Uzbek translations with native audio.";
+    });
+
+    // Speaking Reader Elements
+    const backBtn = document.getElementById("back-btn");
+    const readerTopicDisplay = document.getElementById("reader-topic-display");
+    const stateIndicator = document.getElementById("state-indicator");
+    const countdownBadge = document.getElementById("countdown-badge");
+    const viewportEl = document.getElementById("reader-viewport");
+    const scrollContentEl = document.getElementById("scroll-content");
+
+    const mainActionBtn = document.getElementById("main-action-btn");
+    const restartBtn = document.getElementById("restart-btn");
+    const speedSlider = document.getElementById("speed-slider");
+    const speedValueLabel = document.getElementById("speed-value-label");
+    const voiceNotice = document.getElementById("voice-notice");
+
+    // Matn ustiga bosganda kursor/chiziqcha chiqishini butunlay bloklash
+    viewportEl.addEventListener("mousedown", (e) => e.preventDefault());
+    viewportEl.addEventListener("selectstart", (e) => e.preventDefault());
+    readerView.addEventListener("mousedown", (e) => {
+      if (e.target.tagName !== "INPUT" && e.target.tagName !== "SELECT" && e.target.tagName !== "BUTTON") {
+        e.preventDefault();
+      }
+    });
+
+    // Ambient Music Elements
+    const ambientMusic = new AmbientMusicController({
+      select: document.getElementById("music-select"),
+      dot: document.getElementById("music-dot"),
+      playBtn: document.getElementById("music-play-btn"),
+      playIcon: document.getElementById("music-play-icon"),
+      playText: document.getElementById("music-play-text"),
+      prevBtn: document.getElementById("music-prev-btn"),
+      nextBtn: document.getElementById("music-next-btn"),
+      muteBtn: document.getElementById("music-mute-btn"),
+      muteIcon: document.getElementById("mute-icon"),
+      volSlider: document.getElementById("music-volume"),
+      notice: voiceNotice
+    });
+
+    // Listening View Elements
+    const listeningPractice = new ListeningPracticeController({
+      topbar: document.getElementById("listen-topbar"),
+      topicDisplay: document.getElementById("listen-topic-display"),
+      scoreBadge: document.getElementById("listen-score-badge"),
+      playBtn: document.getElementById("listen-play-btn"),
+      playIcon: document.getElementById("listen-play-icon"),
+      playText: document.getElementById("listen-play-text"),
+      waveIndicator: document.getElementById("wave-indicator"),
+      rateBtns: document.querySelectorAll(".rate-btn"),
+      voiceSelect: document.getElementById("voice-select"),
+      toneBtns: document.querySelectorAll(".tone-btn"),
+      transcriptToggleBtn: document.getElementById("transcript-toggle-btn"),
+      transcriptToggleIcon: document.getElementById("transcript-toggle-icon"),
+      transcriptToggleText: document.getElementById("transcript-toggle-text"),
+      transcriptContent: document.getElementById("transcript-content"),
+      questionsContainer: document.getElementById("questions-container"),
+      resultCard: document.getElementById("quiz-result-card"),
+      resultScoreText: document.getElementById("result-score-text"),
+      resultMsgText: document.getElementById("result-msg-text"),
+      retryBtn: document.getElementById("quiz-retry-btn"),
+      nextBtn: document.getElementById("quiz-next-btn")
+    });
+
+    document.getElementById("listen-back-btn").addEventListener("click", () => {
+      listeningPractice.stopSpeech();
+      listeningView.classList.add("hidden");
+      homeView.classList.remove("hidden");
+    });
+
+    // Vocabulary View Elements & Controller
+    const vocabPractice = new VocabularyPracticeController({
+      topbar: document.getElementById("vocab-topbar"),
+      topicDisplay: document.getElementById("vocab-topic-display"),
+      countBadge: document.getElementById("vocab-count-badge"),
+      levelPills: document.querySelectorAll(".vocab-lvl-pill"),
+      toggleTrBtn: document.getElementById("vocab-toggle-tr-btn"),
+      toggleTrIcon: document.getElementById("vocab-toggle-tr-icon"),
+      toggleTrText: document.getElementById("vocab-toggle-tr-text"),
+      searchInput: document.getElementById("vocab-search-input"),
+      searchClear: document.getElementById("vocab-search-clear"),
+      cardsList: document.getElementById("vocab-cards-list"),
+      emptyState: document.getElementById("vocab-empty-state"),
+      nextBtn: document.getElementById("vocab-next-btn")
+    });
+
+    document.getElementById("vocab-back-btn").addEventListener("click", () => {
+      vocabPractice.stopSpeech();
+      vocabularyView.classList.add("hidden");
+      homeView.classList.remove("hidden");
+    });
+
+    document.getElementById("vocab-to-speak-btn").addEventListener("click", () => {
+      vocabPractice.stopSpeech();
+      openReaderView(vocabPractice.currentTopic, vocabPractice.currentLevel);
+    });
+
+    document.getElementById("vocab-to-listen-btn").addEventListener("click", () => {
+      vocabPractice.stopSpeech();
+      openListeningView(vocabPractice.currentTopic, vocabPractice.currentLevel);
+    });
+
+    // Cursor / caret bloklash (Vocabulary view)
+    vocabularyView.addEventListener("mousedown", (e) => {
+      if (e.target.tagName !== "INPUT" && e.target.tagName !== "SELECT" && e.target.tagName !== "BUTTON") {
+        e.preventDefault();
+      }
+    });
+    vocabularyView.addEventListener("selectstart", (e) => {
+      if (e.target.tagName !== "INPUT") {
+        e.preventDefault();
+      }
+    });
+
+    let selectedTopic = null;
+    let selectedLevel = null;
+    let isIntroRunning = false;
+    let countdownTimer = null;
+
+    const layoutManager = new TextLayoutManager(viewportEl, scrollContentEl);
+    const voiceManager = new IntroVoiceManager();
+
+    const scroller = new SmoothScroller(viewportEl, scrollContentEl, (newState) => {
+      stateIndicator.textContent = newState;
+      if (newState === "Playing") {
+        mainActionBtn.textContent = "Pause";
+      } else if (newState === "Paused") {
+        mainActionBtn.textContent = "Resume";
+      } else if (newState === "Completed") {
+        mainActionBtn.textContent = "Restart";
+      } else {
+        mainActionBtn.textContent = "Start";
+      }
+    });
+
+    // Render 10 Topics
+    TOPICS.forEach((topic) => {
+      const li = document.createElement("li");
+      li.className = "topic-item";
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "topic-btn";
+      btn.innerHTML = `<span>${topic}</span><span style="font-size:0.82rem;color:var(--text-muted)">Select →</span>`;
+      btn.addEventListener("click", () => {
+        selectedTopic = topic;
+        document.querySelectorAll(".topic-btn").forEach(b => b.classList.remove("selected"));
+        btn.classList.add("selected");
+        chosenTopicLabel.textContent = topic;
+        levelSectionEl.classList.remove("hidden");
+        levelSectionEl.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      });
+      li.appendChild(btn);
+      topicListEl.appendChild(li);
+    });
+
+    // Level Buttons
+    document.querySelectorAll(".level-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        if (!selectedTopic) return;
+        selectedLevel = btn.dataset.level;
+
+        if (currentMode === "speaking") {
+          openReaderView(selectedTopic, selectedLevel);
+        } else if (currentMode === "listening") {
+          openListeningView(selectedTopic, selectedLevel);
+        } else {
+          openVocabularyView(selectedTopic, selectedLevel);
+        }
+      });
+    });
+
+    // Speed Slider Setup
+    const savedSpeed = Number(localStorage.getItem(SPEED_STORAGE_KEY)) || 38;
+    speedSlider.value = String(speedToSlider(savedSpeed));
+    scroller.setSpeed(savedSpeed);
+    speedValueLabel.textContent = `${savedSpeed} px/s`;
+
+    speedSlider.addEventListener("input", () => {
+      const pxPerSec = sliderToSpeed(speedSlider.value);
+      scroller.setSpeed(pxPerSec);
+      speedValueLabel.textContent = `${pxPerSec} px/s`;
+      localStorage.setItem(SPEED_STORAGE_KEY, String(pxPerSec));
+    });
+
+    function clearIntroSequence() {
+      isIntroRunning = false;
+      voiceManager.cancel();
+      if (countdownTimer) {
+        clearInterval(countdownTimer);
+        countdownTimer = null;
+      }
+      countdownBadge.classList.add("hidden");
+    }
+
+    function openReaderView(topic, level) {
+      clearIntroSequence();
+      vocabPractice.stopSpeech();
+      homeView.classList.add("hidden");
+      listeningView.classList.add("hidden");
+      vocabularyView.classList.add("hidden");
+      readerView.classList.remove("hidden");
+      readerTopicDisplay.textContent = `${topic} — ${level}`;
+      voiceNotice.textContent = "";
+
+      const passage = TEXTS[topic][level];
+      requestAnimationFrame(() => {
+        layoutManager.setText(passage);
+        scroller.restart();
+      });
+    }
+
+    function openListeningView(topic, level) {
+      clearIntroSequence();
+      vocabPractice.stopSpeech();
+      scroller.pause();
+      ambientMusic.pause();
+      homeView.classList.add("hidden");
+      readerView.classList.add("hidden");
+      vocabularyView.classList.add("hidden");
+      listeningView.classList.remove("hidden");
+
+      listeningPractice.startSession(topic, level);
+    }
+
+    function openVocabularyView(topic, level) {
+      clearIntroSequence();
+      scroller.pause();
+      ambientMusic.pause();
+      listeningPractice.stopSpeech();
+      homeView.classList.add("hidden");
+      readerView.classList.add("hidden");
+      listeningView.classList.add("hidden");
+      vocabularyView.classList.remove("hidden");
+
+      vocabPractice.startSession(topic, level);
+    }
+
+    backBtn.addEventListener("click", () => {
+      clearIntroSequence();
+      scroller.pause();
+      ambientMusic.pause();
+      readerView.classList.add("hidden");
+      homeView.classList.remove("hidden");
+    });
+
+    async function startWithVoiceAndCountdown() {
+      if (isIntroRunning) return;
+      isIntroRunning = true;
+      mainActionBtn.disabled = true;
+      stateIndicator.textContent = "Preparing...";
+      countdownBadge.textContent = "Speak fast and clear";
+      countdownBadge.classList.remove("hidden");
+
+      await voiceManager.playIntroSpeech(voiceNotice);
+      if (!isIntroRunning) {
+        mainActionBtn.disabled = false;
+        return;
+      }
+
+      let count = 3;
+      countdownBadge.textContent = String(count);
+
+      countdownTimer = setInterval(() => {
+        count -= 1;
+        if (count > 0) {
+          countdownBadge.textContent = String(count);
+        } else {
+          clearInterval(countdownTimer);
+          countdownTimer = null;
+          countdownBadge.classList.add("hidden");
+          isIntroRunning = false;
+          mainActionBtn.disabled = false;
+          scroller.start();
+        }
+      }, 650);
+    }
+
+    mainActionBtn.addEventListener("click", () => {
+      if (isIntroRunning) return;
+      if (scroller.state === "Ready" || scroller.state === "Completed") {
+        if (scroller.state === "Completed") scroller.restart();
+        startWithVoiceAndCountdown();
+      } else if (scroller.state === "Playing") {
+        scroller.pause();
+      } else if (scroller.state === "Paused") {
+        scroller.resume();
+      }
+    });
+
+    restartBtn.addEventListener("click", () => {
+      clearIntroSequence();
+      mainActionBtn.disabled = false;
+      scroller.restart();
+    });
+
+    // Keyboard: Space = Pause/Resume
+    window.addEventListener("keydown", (e) => {
+      if (!readerView.classList.contains("hidden")) {
+        if (e.code === "Space" && document.activeElement?.tagName !== "BUTTON" && document.activeElement?.tagName !== "INPUT" && document.activeElement?.tagName !== "SELECT") {
+          e.preventDefault();
+          if (scroller.state === "Playing") scroller.pause();
+          else if (scroller.state === "Paused") scroller.resume();
+        }
+      }
+    });
+
+    // Tab visibility safety pause
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) {
+        if (scroller.state === "Playing") scroller.pause();
+        listeningPractice.stopSpeech();
+        vocabPractice.stopSpeech();
+      }
+    });
+
+    // ResizeObserver
+    let resizeTimeout = null;
+    const ro = new ResizeObserver(() => {
+      if (readerView.classList.contains("hidden")) return;
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(() => {
+        const ratio = scroller.getProgressRatio();
+        layoutManager.recalculateLayout();
+        scroller.restoreFromProgressRatio(ratio);
+      }, 90);
+    });
+    ro.observe(viewportEl);
+  </script>
+</body>
+</html>
