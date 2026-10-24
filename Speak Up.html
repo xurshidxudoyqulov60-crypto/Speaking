@@ -998,6 +998,7 @@
       font-weight: 600;
     }
 
+        /* TOPIC LIST & INLINE LEVEL PILLS */
     .topic-list {
       list-style: none;
       border-top: 1px solid var(--border);
@@ -1006,97 +1007,67 @@
 
     .topic-item {
       border-bottom: 1px solid var(--border);
-    }
-
-    .topic-btn {
-      width: 100%;
-      min-height: 52px;
-      text-align: left;
-      background: var(--btn-bg);
-      border: none;
-      padding: 14px 10px;
-      cursor: pointer;
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      transition: background-color 0.15s ease, padding-left 0.15s ease;
-      font-size: 1rem;
-      font-weight: 500;
-    }
-
-    .topic-btn:hover, .topic-btn:focus-visible {
-      background-color: var(--btn-hover);
-      padding-left: 14px;
-      outline: none;
-    }
-
-    .topic-btn.selected {
-      background-color: var(--btn-active);
-      color: var(--btn-active-text);
-      font-weight: 600;
-      border-radius: var(--radius-sm);
-    }
-
-    .topic-btn.selected span {
-      color: var(--btn-active-text) !important;
-    }
-
-    .level-selector {
-      padding: 18px 0 10px;
-      border-top: 1px solid var(--border);
-      display: flex;
-      flex-direction: column;
+      justify-content: space-between;
+      padding: 12px 10px;
       gap: 12px;
-      animation: fadeIn 0.2s ease-out;
+      transition: background-color 0.15s ease;
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(4px); }
-      to { opacity: 1; transform: translateY(0); }
+    .topic-item:hover {
+      background-color: var(--btn-hover);
     }
 
-    .level-buttons {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-    }
-
-    .level-btn {
-      min-height: 54px;
-      padding: 8px 6px;
-      border: 1px solid var(--border);
-      background: var(--btn-bg);
+    .topic-name {
+      font-size: 0.98rem;
+      font-weight: 600;
       color: var(--text-main);
       cursor: pointer;
-      border-radius: var(--radius-md);
+      flex: 1;
+      user-select: none;
+      transition: color 0.15s ease;
+    }
+
+    .topic-name:hover {
+      color: #000000;
+    }
+
+    .topic-levels {
       display: flex;
-      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    .topic-lvl-pill {
+      min-width: 44px;
+      height: 34px;
+      padding: 0 10px;
+      border: 1px solid var(--border);
+      background: #ffffff;
+      color: var(--text-main);
+      font-size: 0.82rem;
+      font-weight: 700;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 2px;
       transition: all 0.15s ease;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
     }
 
-    .level-btn .lvl-name {
-      font-size: 1rem;
-      font-weight: 700;
-      letter-spacing: -0.01em;
-    }
-
-    .level-btn .lvl-sub {
-      font-size: 0.72rem;
-      color: var(--text-muted);
-      font-weight: 500;
-    }
-
-    .level-btn:hover, .level-btn:focus-visible {
+    .topic-lvl-pill:hover {
+      background: var(--text-main);
+      color: #ffffff;
       border-color: var(--text-main);
-      background: var(--btn-hover);
-      outline: none;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
     }
 
-    .level-btn:active {
-      transform: scale(0.97);
+    .topic-lvl-pill:active {
+      transform: scale(0.95);
     }
 
     /* -------------------------------------------------------------
@@ -1858,12 +1829,21 @@
         min-height: 42px;
         font-size: 0.84rem;
       }
-      .level-buttons {
+      .topic-item {
+        padding: 10px 6px;
         gap: 8px;
       }
-      .level-btn {
-        min-height: 46px;
-        padding: 5px 3px;
+      .topic-name {
+        font-size: 0.92rem;
+      }
+      .topic-levels {
+        gap: 4px;
+      }
+      .topic-lvl-pill {
+        min-width: 38px;
+        height: 32px;
+        padding: 0 6px;
+        font-size: 0.78rem;
       }
       .reader-topbar, .listen-topbar {
         padding-bottom: 10px;
@@ -1919,26 +1899,8 @@
       </div>
 
       <section aria-label="Topics">
-        <div class="section-label">1. Select a Topic</div>
+        <div class="section-label">Select a Topic & Level</div>
         <ul id="topic-list" class="topic-list"></ul>
-      </section>
-
-      <section id="level-section" class="level-selector hidden" aria-label="Level selection">
-        <div class="section-label">2. Select Level (<span id="chosen-topic-label"></span>)</div>
-        <div class="level-buttons">
-          <button type="button" class="level-btn" data-level="A1">
-            <span class="lvl-name">A1</span>
-            <span class="lvl-sub">Beginner</span>
-          </button>
-          <button type="button" class="level-btn" data-level="A2">
-            <span class="lvl-name">A2</span>
-            <span class="lvl-sub">Elementary</span>
-          </button>
-          <button type="button" class="level-btn" data-level="B1">
-            <span class="lvl-name">B1</span>
-            <span class="lvl-sub">Intermediate</span>
-          </button>
-        </div>
       </section>
     </main>
 
@@ -5223,8 +5185,6 @@
     const readerView = document.getElementById("reader-view");
     const listeningView = document.getElementById("listening-view");
     const topicListEl = document.getElementById("topic-list");
-    const levelSectionEl = document.getElementById("level-section");
-    const chosenTopicLabel = document.getElementById("chosen-topic-label");
     const homeTagline = document.getElementById("home-tagline");
 
     const vocabularyView = document.getElementById("vocabulary-view");
@@ -5490,43 +5450,50 @@
       }
     });
 
-    // Render 10 Topics
+        function startPractice(topic, level) {
+      selectedTopic = topic;
+      selectedLevel = level;
+
+      if (currentMode === "speaking") {
+        openReaderView(topic, level);
+      } else if (currentMode === "listening") {
+        openListeningView(topic, level);
+      } else if (currentMode === "vocabulary") {
+        openVocabularyView(topic, level);
+      } else {
+        openFlashcardsView(topic, level);
+      }
+    }
+
+    // Render 10 Topics with inline level pills
     TOPICS.forEach((topic) => {
       const li = document.createElement("li");
       li.className = "topic-item";
-      const btn = document.createElement("button");
-      btn.type = "button";
-      btn.className = "topic-btn";
-      btn.innerHTML = `<span>${topic}</span><span style="font-size:0.82rem;color:var(--text-muted)">Select →</span>`;
-      btn.addEventListener("click", () => {
-        selectedTopic = topic;
-        document.querySelectorAll(".topic-btn").forEach(b => b.classList.remove("selected"));
-        btn.classList.add("selected");
-        chosenTopicLabel.textContent = topic;
-        levelSectionEl.classList.remove("hidden");
-        levelSectionEl.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      li.innerHTML = `
+        <span class="topic-name" title="${topic} (A1)">${topic}</span>
+        <div class="topic-levels" role="group" aria-label="${topic} levels">
+          <button type="button" class="topic-lvl-pill" data-level="A1" title="${topic} — A1 (Beginner)">A1</button>
+          <button type="button" class="topic-lvl-pill" data-level="A2" title="${topic} — A2 (Elementary)">A2</button>
+          <button type="button" class="topic-lvl-pill" data-level="B1" title="${topic} — B1 (Intermediate)">B1</button>
+        </div>
+      `;
+
+      // Clicking topic name opens A1 directly
+      const nameEl = li.querySelector(".topic-name");
+      nameEl.addEventListener("click", () => {
+        startPractice(topic, "A1");
       });
-      li.appendChild(btn);
+
+      // Clicking any pill opens that specific level directly
+      li.querySelectorAll(".topic-lvl-pill").forEach(pill => {
+        pill.addEventListener("click", (e) => {
+          e.stopPropagation();
+          startPractice(topic, pill.dataset.level);
+        });
+      });
+
       topicListEl.appendChild(li);
-    });
-
-    // Level Buttons
-    document.querySelectorAll(".level-btn").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        if (!selectedTopic) return;
-        selectedLevel = btn.dataset.level;
-
-        if (currentMode === "speaking") {
-          openReaderView(selectedTopic, selectedLevel);
-        } else if (currentMode === "listening") {
-          openListeningView(selectedTopic, selectedLevel);
-        } else if (currentMode === "vocabulary") {
-          openVocabularyView(selectedTopic, selectedLevel);
-        } else {
-          openFlashcardsView(selectedTopic, selectedLevel);
-        }
-      });
-    });
+    });
 
     // Speed Slider Setup
     const savedSpeed = Number(localStorage.getItem(SPEED_STORAGE_KEY)) || 38;
