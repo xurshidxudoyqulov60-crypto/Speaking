@@ -1,6 +1,6 @@
-# SpeakFlow — English Speaking, Listening & Vocabulary
+# SpeakFlow — English Speaking, Listening, Vocabulary & Flashcards
 
-Minimalist va qulay ingliz tili amaliyoti veb-ilovasi. Foydalanuvchilar o'qish tezligini nazorat qilish, eshitish qobiliyatini sinash va yangi so'zlarni audio hamda misollar orqali o'rganishlari mumkin.
+Minimalist va qulay ingliz tili amaliyoti veb-ilovasi. Foydalanuvchilar o'qish tezligini nazorat qilish, eshitish qobiliyatini sinash, yangi so'zlarni o'rganish va interaktiv kartochkalar (Flashcards) orqali takrorlashlari mumkin.
 
 ---
 
@@ -19,7 +19,7 @@ Minimalist va qulay ingliz tili amaliyoti veb-ilovasi. Foydalanuvchilar o'qish t
 - **Transkript** — matnni audio bilan birga ko'rish yoki yashirish imkoniyati.
 - **Interaktiv testlar** — har bir matn uchun 3 tadan, jami 90 ta savol, tezkor tekshiruv va tushuntirishlar.
 
-### 3. 📖 Vocabulary (Lug'at va Flashcard)
+### 3. 📖 Vocabulary (Lug'at va Ro'yxat)
 - **180 ta muhim so'z va iboralar** — har bir mavzu va daraja uchun saralangan.
 - **Har bir so'z uchun**:
   - So'z turkumi (*noun, verb, adjective, phrase*).
@@ -29,6 +29,21 @@ Minimalist va qulay ingliz tili amaliyoti veb-ilovasi. Foydalanuvchilar o'qish t
   - Misolning o'zbekcha tarjimasi.
 - **Flashcard yashirish/ko'rsatish** — yodlashni tekshirish uchun tarjimalarni xiralashtirish (blur / tap-to-reveal).
 - **Jonli qidiruv** — so'z yoki tarjimani bir zumda filtrlash.
+
+### 4. 🃏 Flashcards (Kartochkalar orqali takrorlash)
+- **Silliq 3D Flip Card** — kartani bosganda yoki Space/Enter tugmasida 3D aylanadi.
+- **Old tomon (Front)**: Katta inglizcha so'z, so'z turkumi va avtomatik/alohida audio talaffuz (🔊).
+- **Orqa tomon (Back)**: O'zbekcha aniq tarjima, misol gap va uning tarjimasi hamda audio talaffuzi.
+- **Xotira va takrorlash nazorati**:
+  - `🔄 Qaytarish` — so'zni o'rganishda qoldiradi va qayta takrorlash uchun navbat oxiriga qo'shadi.
+  - `✅ Yodladim` — so'zni o'zlashtirilgan deb belgilaydi va hisoblagichga qo'shadi.
+- **Progress va Statistika** — jonli progress-bar, jami, yodlangan va o'rganilayotgan kartalar soni.
+- **Tasodifiy aralashtirish (🔀 Shuffle)** — kartalarni aralashtirib mashq qilish.
+- **Klaviatura orqali qulay boshqaruv**:
+  - `Space` / `Enter` — kartani aylantirish (Flip)
+  - `←` / `→` — oldingi / keyingi karta
+  - `↓` / `1` — Qaytarish (Again)
+  - `↑` / `2` — Yodladim (Know)
 
 ---
 
@@ -47,7 +62,7 @@ Hech qanday qo'shimcha o'rnatish talab etilmaydi. Shunchaki brauzerda oching:
 ## 📁 Loyiha tuzilmasi
 
 ```text
-├── index.html          # Asosiy veb-ilova (barcha rejimlar va funksiyalar)
+├── index.html          # Asosiy veb-ilova (Speaking, Listening, Vocabulary, Flashcards)
 ├── Speak Up.html       # Zaxira nusxa
 ├── assets/
 │   └── audio/          # Mahalliy Minecraft fon musiqalari (.mp3)

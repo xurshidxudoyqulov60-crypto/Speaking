@@ -90,7 +90,7 @@
     /* MODE SWITCHER (3 COLUMNS) */
     .mode-switch-wrap {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(4, 1fr);
       gap: 4px;
       background: var(--btn-hover);
       padding: 4px;
@@ -382,6 +382,509 @@
       font-weight: 600;
       color: var(--text-main);
       transition: filter 0.2s ease, opacity 0.2s ease;
+    }
+
+
+    /* -------------------------------------------------------------
+       FLASHCARDS PRACTICE VIEW (Interaktiv 3D takrorlash)
+    ------------------------------------------------------------- */
+    .flashcards-view {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      animation: fadeInView 0.25s ease forwards;
+    }
+
+    .fc-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding-bottom: 4px;
+    }
+
+    .fc-meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .fc-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .fc-level-pills {
+      display: inline-flex;
+      background: var(--btn-hover);
+      padding: 3px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+    }
+
+    .fc-lvl-pill {
+      min-height: 32px;
+      padding: 0 14px;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      font-weight: 700;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      user-select: none;
+    }
+
+    .fc-lvl-pill.active {
+      background: #ffffff;
+      color: var(--text-main);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    }
+
+    .fc-toolbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .fc-tool-btn {
+      min-height: 32px;
+      padding: 0 10px;
+      border: 1px solid var(--border);
+      background: #ffffff;
+      color: var(--text-muted);
+      border-radius: var(--radius-sm);
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.15s ease;
+      user-select: none;
+    }
+
+    .fc-tool-btn:hover {
+      color: var(--text-main);
+      border-color: var(--focus-line);
+    }
+
+    .fc-tool-btn.active {
+      background: var(--btn-hover);
+      color: var(--text-main);
+    }
+
+    /* Progress bar */
+    .fc-progress-container {
+      width: 100%;
+      height: 6px;
+      background: var(--btn-hover);
+      border-radius: 9999px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+
+    .fc-progress-bar {
+      height: 100%;
+      background: var(--text-main);
+      border-radius: 9999px;
+      transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Stats bar */
+    .fc-stats-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 8px 12px;
+      font-size: 0.82rem;
+    }
+
+    .fc-stat-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .fc-stat-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+    .fc-stat-dot.total { background: var(--text-muted); }
+    .fc-stat-dot.mastered { background: var(--accent-green); }
+    .fc-stat-dot.learning { background: #f59e0b; }
+
+    .fc-stat-label {
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .fc-stat-val {
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    /* 3D Flashcard Stage */
+    .fc-stage {
+      width: 100%;
+      min-height: 290px;
+      perspective: 1100px;
+      margin: 4px 0;
+    }
+
+    .fc-card {
+      width: 100%;
+      min-height: 290px;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1);
+      cursor: pointer;
+      user-select: none;
+      border-radius: var(--radius-lg);
+    }
+
+    .fc-card.is-flipped {
+      transform: rotateY(180deg);
+    }
+
+    .fc-face {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      background: #ffffff;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 22px 22px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .fc-card:hover .fc-face {
+      border-color: var(--focus-line);
+      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.07);
+    }
+
+    .fc-front {
+      z-index: 2;
+      transform: rotateY(0deg);
+    }
+
+    .fc-back {
+      transform: rotateY(180deg);
+      background: #fafafa;
+    }
+
+    .fc-face-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .fc-flip-hint {
+      font-size: 0.74rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      background: var(--btn-hover);
+      padding: 4px 8px;
+      border-radius: 9999px;
+      border: 1px solid var(--border);
+    }
+
+    .fc-front-body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      text-align: center;
+      margin: auto 0;
+    }
+
+    .fc-word-text {
+      font-size: 2.2rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--text-main);
+      line-height: 1.15;
+    }
+
+    .fc-speak-btn {
+      min-height: 38px;
+      padding: 0 16px;
+      border-radius: 9999px;
+      border: 1px solid var(--border);
+      background: var(--btn-hover);
+      color: var(--text-main);
+      font-size: 0.86rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+    }
+
+    .fc-speak-btn:hover {
+      background: var(--text-main);
+      color: #ffffff;
+      border-color: var(--text-main);
+    }
+
+    .fc-speak-btn.speaking {
+      background: var(--accent-green);
+      color: #ffffff;
+      border-color: var(--accent-green);
+      animation: pulseVocabBtn 0.8s infinite alternate;
+    }
+
+    .fc-back-body {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin: auto 0;
+    }
+
+    .fc-tr-text {
+      font-size: 1.65rem;
+      font-weight: 700;
+      color: var(--text-main);
+      letter-spacing: -0.01em;
+    }
+
+    .fc-example-box {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 12px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .fc-example-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .fc-example-en {
+      font-size: 0.94rem;
+      font-style: italic;
+      color: var(--text-main);
+      line-height: 1.45;
+    }
+
+    .fc-example-uz {
+      font-size: 0.86rem;
+      color: var(--text-muted);
+      border-top: 1px dashed var(--border);
+      padding-top: 6px;
+      margin-top: 2px;
+      line-height: 1.4;
+    }
+
+    .fc-face-footer {
+      text-align: center;
+    }
+
+    .fc-tap-prompt {
+      font-size: 0.74rem;
+      color: var(--text-muted);
+    }
+
+    /* Actions Wrap */
+    .fc-actions-wrap {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+    }
+
+    .fc-action-btn {
+      min-height: 56px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+      background: #ffffff;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      padding: 8px 6px;
+      transition: all 0.15s ease;
+      user-select: none;
+    }
+
+    .fc-action-btn .btn-icon {
+      font-size: 1.15rem;
+      line-height: 1;
+    }
+
+    .fc-action-btn .btn-title {
+      font-size: 0.84rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .fc-action-btn .btn-sub {
+      font-size: 0.68rem;
+      color: var(--text-muted);
+    }
+
+    .fc-action-btn.again:hover {
+      background: var(--red-bg);
+      border-color: var(--red-border);
+    }
+    .fc-action-btn.again:hover .btn-title {
+      color: #dc2626;
+    }
+
+    .fc-action-btn.flip:hover {
+      background: var(--btn-hover);
+      border-color: var(--focus-line);
+    }
+
+    .fc-action-btn.know:hover {
+      background: var(--green-bg);
+      border-color: var(--green-border);
+    }
+    .fc-action-btn.know:hover .btn-title {
+      color: #059669;
+    }
+
+    .fc-action-btn:active {
+      transform: scale(0.97);
+    }
+
+    /* Navigation row */
+    .fc-nav-controls {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding-top: 2px;
+    }
+
+    .fc-nav-btn {
+      min-height: 40px;
+      padding: 0 16px;
+      border: 1px solid var(--border);
+      background: #ffffff;
+      color: var(--text-main);
+      border-radius: var(--radius-sm);
+      font-size: 0.84rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      user-select: none;
+    }
+
+    .fc-nav-btn:hover {
+      background: var(--btn-hover);
+      border-color: var(--focus-line);
+    }
+
+    .fc-nav-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    .fc-nav-indicator {
+      font-size: 0.84rem;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+
+    /* Complete Card */
+    .fc-complete-card {
+      background: #ffffff;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 28px 20px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+      animation: fadeInView 0.3s ease;
+    }
+
+    .fc-complete-icon {
+      font-size: 3rem;
+      line-height: 1;
+    }
+
+    .fc-complete-title {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+
+    .fc-complete-msg {
+      font-size: 0.94rem;
+      color: var(--text-muted);
+      max-width: 380px;
+      line-height: 1.45;
+    }
+
+    .fc-complete-stats {
+      display: flex;
+      gap: 24px;
+      margin: 6px 0;
+    }
+
+    .fc-cstat-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+    }
+
+    .fc-cstat-num {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+
+    .fc-cstat-label {
+      font-size: 0.76rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .fc-complete-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      width: 100%;
+      max-width: 340px;
+      margin-top: 6px;
+    }
+
+    .fc-bottom-shortcuts {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding-top: 10px;
+      border-top: 1px dashed var(--border);
     }
 
     /* Flashcard blur effect */
@@ -1341,6 +1844,10 @@
 
     /* MOBILE ADJUSTMENTS */
     @media (max-width: 520px) {
+      .mode-switch-wrap {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 6px;
+      }
       .app-shell {
         padding: calc(10px + env(safe-area-inset-top, 0px)) 14px calc(14px + env(safe-area-inset-bottom, 0px));
       }
@@ -1405,6 +1912,9 @@
         </button>
         <button type="button" class="mode-btn" id="mode-vocabulary-btn" data-mode="vocabulary">
           <span>📖</span> Vocabulary
+        </button>
+        <button type="button" class="mode-btn" id="mode-flashcards-btn" data-mode="flashcards">
+          <span>🃏</span> Flashcards
         </button>
       </div>
 
@@ -1608,10 +2118,178 @@
         <div class="vocab-mode-shortcuts">
           <button type="button" id="vocab-to-speak-btn" class="action-btn secondary">🎙️ Shu matnni o'qish</button>
           <button type="button" id="vocab-to-listen-btn" class="action-btn secondary">🎧 Tinglash va Test</button>
+          <button type="button" id="vocab-to-flashcard-btn" class="action-btn secondary">🃏 Flashcard takrorlash</button>
         </div>
         <button type="button" id="vocab-next-btn" class="action-btn primary">Keyingi mavzu →</button>
       </div>
     </section>
+
+    <!-- 5) FLASHCARDS VIEW (Interaktiv 3D kartochkalar orqali takrorlash) -->
+    <section id="flashcards-view" class="flashcards-view hidden" aria-label="Flashcards Practice">
+      <header class="fc-topbar">
+        <button type="button" id="fc-back-btn" class="back-btn">← Back</button>
+        <div class="fc-meta">
+          <div id="fc-topic-display" class="reader-topic-title">Daily Life — A1</div>
+          <span id="fc-counter-badge" class="score-badge">Karta 1 / 6</span>
+        </div>
+      </header>
+
+      <!-- Level Selector & Deck Controls -->
+      <div class="fc-toolbar">
+        <div class="fc-level-pills" role="tablist" aria-label="Flashcards Level">
+          <button type="button" class="fc-lvl-pill active" data-level="A1">A1</button>
+          <button type="button" class="fc-lvl-pill" data-level="A2">A2</button>
+          <button type="button" class="fc-lvl-pill" data-level="B1">B1</button>
+        </div>
+
+        <div class="fc-toolbar-actions">
+          <button type="button" id="fc-shuffle-btn" class="fc-tool-btn" title="Kartalarni tasodifiy aralashtirish">
+            <span>🔀</span> <span class="tool-label">Aralashtirish</span>
+          </button>
+          <button type="button" id="fc-auto-audio-btn" class="fc-tool-btn active" title="Avtomatik o'qib berish">
+            <span id="fc-auto-audio-icon">🔊</span> <span class="tool-label">Ovoz: Yoqiq</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Progress Bar -->
+      <div class="fc-progress-container" aria-label="Flashcards Progress">
+        <div id="fc-progress-bar" class="fc-progress-bar" style="width: 16.6%;"></div>
+      </div>
+
+      <!-- Stats Pill Bar (Mastered / Reviewing) -->
+      <div class="fc-stats-bar">
+        <div class="fc-stat-item">
+          <span class="fc-stat-dot total"></span>
+          <span class="fc-stat-label">Jami:</span>
+          <span id="fc-stat-total" class="fc-stat-val">6</span>
+        </div>
+        <div class="fc-stat-item">
+          <span class="fc-stat-dot mastered"></span>
+          <span class="fc-stat-label">Yodlandi:</span>
+          <span id="fc-stat-mastered" class="fc-stat-val">0</span>
+        </div>
+        <div class="fc-stat-item">
+          <span class="fc-stat-dot learning"></span>
+          <span class="fc-stat-label">O'rganilmoqda:</span>
+          <span id="fc-stat-learning" class="fc-stat-val">6</span>
+        </div>
+      </div>
+
+      <!-- 3D FLIP CARD STAGE -->
+      <div class="fc-stage">
+        <div id="fc-card" class="fc-card" role="button" tabindex="0" aria-label="Flashcard. Click or press space to flip.">
+          <!-- FRONT FACE -->
+          <div class="fc-face fc-front">
+            <div class="fc-face-header">
+              <span id="fc-front-pos" class="vocab-pos-badge">VERB</span>
+              <span class="fc-flip-hint">Aylantirish uchun bosing ↷</span>
+            </div>
+
+            <div class="fc-front-body">
+              <h2 id="fc-front-word" class="fc-word-text">Breathe</h2>
+              <button type="button" id="fc-front-speak-btn" class="fc-speak-btn" title="Talaffuzni tinglash" aria-label="Pronounce word">
+                <span class="speak-icon">🔊</span>
+                <span>O'qish</span>
+              </button>
+            </div>
+
+            <div class="fc-face-footer">
+              <span class="fc-tap-prompt">Kartani aylantiring va tarjimasini ko'ring</span>
+            </div>
+          </div>
+
+          <!-- BACK FACE -->
+          <div class="fc-face fc-back">
+            <div class="fc-face-header">
+              <span class="fc-tr-label">O'ZBEKCHA TARJIMA</span>
+              <span class="fc-flip-hint">Oldinga qaytish ↶</span>
+            </div>
+
+            <div class="fc-back-body">
+              <h3 id="fc-back-tr" class="fc-tr-text">Nafas olmoq</h3>
+
+              <div class="fc-example-box">
+                <div class="fc-example-top">
+                  <div id="fc-back-ex" class="fc-example-en">“You drink warm water and breathe slowly.”</div>
+                  <button type="button" id="fc-back-speak-btn" class="vocab-ex-speak-btn" title="Misolni tinglash" aria-label="Listen sentence">🔊</button>
+                </div>
+                <div id="fc-back-ex-tr" class="fc-example-uz">Siz iliq suv ichasiz va sekin nafas olasiz.</div>
+              </div>
+            </div>
+
+            <div class="fc-face-footer">
+              <span class="fc-tap-prompt">Qaytish uchun bosing yoki tugmalardan foydalaning</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MEMORY REVIEW ACTIONS (Qaytarish vs Yodladim) -->
+      <div class="fc-actions-wrap">
+        <button type="button" id="fc-again-btn" class="fc-action-btn again" title="Keyinroq yana takrorlash">
+          <span class="btn-icon">🔄</span>
+          <span class="btn-title">Qaytarish</span>
+          <span class="btn-sub">Yana o'rganish</span>
+        </button>
+
+        <button type="button" id="fc-flip-btn" class="fc-action-btn flip" title="Kartani aylantirish">
+          <span class="btn-icon">↷</span>
+          <span class="btn-title">Aylantirish</span>
+          <span class="btn-sub">Space / Enter</span>
+        </button>
+
+        <button type="button" id="fc-know-btn" class="fc-action-btn know" title="Yodlab bo'ldim">
+          <span class="btn-icon">✅</span>
+          <span class="btn-title">Yodladim</span>
+          <span class="btn-sub">Eslab qoldim</span>
+        </button>
+      </div>
+
+      <!-- CARD NAVIGATION CONTROLS -->
+      <div class="fc-nav-controls">
+        <button type="button" id="fc-prev-btn" class="fc-nav-btn" title="Oldingi karta">
+          ◀ Oldingi
+        </button>
+        <span id="fc-nav-indicator" class="fc-nav-indicator">1 / 6</span>
+        <button type="button" id="fc-next-btn" class="fc-nav-btn" title="Keyingi karta">
+          Keyingi ▶
+        </button>
+      </div>
+
+      <!-- COMPLETION CELEBRATION MODAL / CARD -->
+      <div id="fc-complete-modal" class="fc-complete-card hidden">
+        <div class="fc-complete-icon">🎉</div>
+        <h3 class="fc-complete-title">Ajoyib natija!</h3>
+        <p id="fc-complete-msg" class="fc-complete-msg">Ushbu bo'limdagi barcha kartochkalarni muvaffaqiyatli takrorladingiz.</p>
+        
+        <div class="fc-complete-stats">
+          <div class="fc-cstat-item">
+            <span class="fc-cstat-num" id="fc-cstat-mastered">6</span>
+            <span class="fc-cstat-label">Yodlangan</span>
+          </div>
+          <div class="fc-cstat-item">
+            <span class="fc-cstat-num" id="fc-cstat-accuracy">100%</span>
+            <span class="fc-cstat-label">Natija</span>
+          </div>
+        </div>
+
+        <div class="fc-complete-buttons">
+          <button type="button" id="fc-restart-btn" class="action-btn primary">↺ Qaytadan takrorlash</button>
+          <button type="button" id="fc-to-vocab-btn" class="action-btn secondary">📖 Lug'at ro'yxatida ko'rish</button>
+          <button type="button" id="fc-to-speak-btn" class="action-btn secondary">🎙️ Shu matnni o'qish</button>
+          <button type="button" id="fc-next-topic-btn" class="action-btn primary">Keyingi mavzu →</button>
+        </div>
+      </div>
+
+      <!-- BOTTOM NAVIGATION SHORTCUTS -->
+      <div class="fc-bottom-shortcuts">
+        <button type="button" id="fc-bottom-to-vocab-btn" class="action-btn secondary">📖 Lug'at ro'yxatiga o'tish</button>
+        <button type="button" id="fc-bottom-to-speak-btn" class="action-btn secondary">🎙️ O'qish (Speaking)</button>
+        <button type="button" id="fc-bottom-to-listen-btn" class="action-btn secondary">🎧 Tinglash (Listening)</button>
+      </div>
+    </section>
+
   </div>
 
   <script type="module">
@@ -4182,6 +4860,364 @@
       }
     }
 
+
+    // =========================================================================
+    // 8.2 FLASHCARDS CONTROLLER (Interaktiv 3D kartochkalar, takrorlash va yodlash)
+    // =========================================================================
+    class FlashcardsPracticeController {
+      constructor(elements) {
+        this.el = elements;
+        this.currentTopic = null;
+        this.currentLevel = null;
+        this.deck = [];
+        this.currentIndex = 0;
+        this.isFlipped = false;
+        this.autoAudio = true;
+        this.masteredSet = new Set();
+        this.learningSet = new Set();
+        this.currentlySpeakingBtn = null;
+        this.audioTimer = null;
+
+        this.initListeners();
+      }
+
+      initListeners() {
+        if (this.el.levelPills) {
+          this.el.levelPills.forEach(pill => {
+            pill.addEventListener("click", () => {
+              this.el.levelPills.forEach(p => p.classList.remove("active"));
+              pill.classList.add("active");
+              this.currentLevel = pill.dataset.level;
+              this.startSession(this.currentTopic, this.currentLevel);
+            });
+          });
+        }
+
+        // Card flip on click
+        if (this.el.card) {
+          this.el.card.addEventListener("click", (e) => {
+            if (e.target.closest("button")) return;
+            this.toggleFlip();
+          });
+        }
+
+        if (this.el.flipBtn) {
+          this.el.flipBtn.addEventListener("click", () => this.toggleFlip());
+        }
+
+        if (this.el.frontSpeakBtn) {
+          this.el.frontSpeakBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            const cur = this.getCurrentCard();
+            if (cur) this.speak(cur.w, 0.88, this.el.frontSpeakBtn);
+          });
+        }
+
+        if (this.el.backSpeakBtn) {
+          this.el.backSpeakBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            const cur = this.getCurrentCard();
+            if (cur) this.speak(cur.ex, 0.91, this.el.backSpeakBtn);
+          });
+        }
+
+        if (this.el.prevBtn) {
+          this.el.prevBtn.addEventListener("click", () => this.prevCard());
+        }
+
+        if (this.el.nextBtn) {
+          this.el.nextBtn.addEventListener("click", () => this.nextCard());
+        }
+
+        if (this.el.againBtn) {
+          this.el.againBtn.addEventListener("click", () => this.markAgain());
+        }
+
+        if (this.el.knowBtn) {
+          this.el.knowBtn.addEventListener("click", () => this.markKnow());
+        }
+
+        if (this.el.shuffleBtn) {
+          this.el.shuffleBtn.addEventListener("click", () => this.shuffleDeck());
+        }
+
+        if (this.el.autoAudioBtn) {
+          this.el.autoAudioBtn.addEventListener("click", () => {
+            this.autoAudio = !this.autoAudio;
+            if (this.autoAudio) {
+              this.el.autoAudioBtn.classList.add("active");
+              this.el.autoAudioBtn.querySelector(".tool-label").textContent = "Ovoz: Yoqiq";
+            } else {
+              this.el.autoAudioBtn.classList.remove("active");
+              this.el.autoAudioBtn.querySelector(".tool-label").textContent = "Ovoz: O'chiq";
+            }
+          });
+        }
+
+        if (this.el.restartBtn) {
+          this.el.restartBtn.addEventListener("click", () => {
+            this.startSession(this.currentTopic, this.currentLevel);
+          });
+        }
+
+        if (this.el.nextTopicBtn) {
+          this.el.nextTopicBtn.addEventListener("click", () => {
+            const curIdx = TOPICS.indexOf(this.currentTopic);
+            const nextIdx = (curIdx + 1) % TOPICS.length;
+            this.startSession(TOPICS[nextIdx], this.currentLevel);
+          });
+        }
+
+        // Global keyboard shortcut
+        window.addEventListener("keydown", (e) => {
+          if (!this.el.view || this.el.view.classList.contains("hidden")) return;
+          if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA") return;
+
+          if (e.code === "Space" || e.key === "Enter") {
+            e.preventDefault();
+            this.toggleFlip();
+          } else if (e.key === "ArrowLeft") {
+            e.preventDefault();
+            this.prevCard();
+          } else if (e.key === "ArrowRight") {
+            e.preventDefault();
+            this.nextCard();
+          } else if (e.key === "ArrowDown" || e.key === "1") {
+            e.preventDefault();
+            this.markAgain();
+          } else if (e.key === "ArrowUp" || e.key === "2") {
+            e.preventDefault();
+            this.markKnow();
+          }
+        });
+      }
+
+      getCurrentCard() {
+        if (!this.deck.length || this.currentIndex >= this.deck.length) return null;
+        return this.deck[this.currentIndex];
+      }
+
+      startSession(topic, level) {
+        this.stopSpeech();
+        if (this.audioTimer) clearTimeout(this.audioTimer);
+
+        this.currentTopic = topic;
+        this.currentLevel = level;
+        this.isFlipped = false;
+        this.currentIndex = 0;
+        this.masteredSet.clear();
+        this.learningSet.clear();
+
+        const words = (VOCABULARY_DATA[topic] && VOCABULARY_DATA[topic][level]) || [];
+        this.deck = words.map(item => ({ ...item }));
+        this.deck.forEach(item => this.learningSet.add(item.w));
+
+        if (this.el.levelPills) {
+          this.el.levelPills.forEach(pill => {
+            if (pill.dataset.level === level) pill.classList.add("active");
+            else pill.classList.remove("active");
+          });
+        }
+
+        if (this.el.completeModal) this.el.completeModal.classList.add("hidden");
+        if (this.el.card) this.el.card.classList.remove("is-flipped");
+
+        this.renderCard();
+      }
+
+      shuffleDeck() {
+        if (this.deck.length <= 1) return;
+        this.stopSpeech();
+        this.isFlipped = false;
+        if (this.el.card) this.el.card.classList.remove("is-flipped");
+
+        for (let i = this.deck.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [this.deck[i], this.deck[j]] = [this.deck[j], this.deck[i]];
+        }
+        this.currentIndex = 0;
+        this.renderCard();
+      }
+
+      toggleFlip() {
+        this.isFlipped = !this.isFlipped;
+        if (this.el.card) {
+          if (this.isFlipped) this.el.card.classList.add("is-flipped");
+          else this.el.card.classList.remove("is-flipped");
+        }
+
+        const cur = this.getCurrentCard();
+        if (cur && this.autoAudio && this.isFlipped && this.el.backSpeakBtn) {
+          this.speak(cur.ex, 0.91, this.el.backSpeakBtn);
+        }
+      }
+
+      prevCard() {
+        if (this.currentIndex > 0) {
+          this.currentIndex--;
+          this.isFlipped = false;
+          if (this.el.card) this.el.card.classList.remove("is-flipped");
+          this.renderCard();
+        }
+      }
+
+      nextCard() {
+        if (this.currentIndex < this.deck.length - 1) {
+          this.currentIndex++;
+          this.isFlipped = false;
+          if (this.el.card) this.el.card.classList.remove("is-flipped");
+          this.renderCard();
+        } else {
+          this.checkCompletion();
+        }
+      }
+
+      markKnow() {
+        const cur = this.getCurrentCard();
+        if (!cur) return;
+        this.masteredSet.add(cur.w);
+        this.learningSet.delete(cur.w);
+        this.updateStats();
+
+        if (this.currentIndex < this.deck.length - 1) {
+          this.currentIndex++;
+          this.isFlipped = false;
+          if (this.el.card) this.el.card.classList.remove("is-flipped");
+          this.renderCard();
+        } else {
+          this.checkCompletion();
+        }
+      }
+
+      markAgain() {
+        const cur = this.getCurrentCard();
+        if (!cur) return;
+        this.learningSet.add(cur.w);
+        this.masteredSet.delete(cur.w);
+        this.updateStats();
+
+        this.deck.push({ ...cur });
+        this.currentIndex++;
+        this.isFlipped = false;
+        if (this.el.card) this.el.card.classList.remove("is-flipped");
+        this.renderCard();
+      }
+
+      checkCompletion() {
+        if (this.masteredSet.size >= this.deck.length || this.currentIndex >= this.deck.length - 1) {
+          if (this.el.completeModal) {
+            this.el.completeModal.classList.remove("hidden");
+            const masteredCount = this.masteredSet.size;
+            const totalCount = Math.max(1, (VOCABULARY_DATA[this.currentTopic][this.currentLevel] || []).length);
+            const accuracy = Math.round((masteredCount / totalCount) * 100);
+
+            if (this.el.cstatMastered) this.el.cstatMastered.textContent = String(masteredCount);
+            if (this.el.cstatAccuracy) this.el.cstatAccuracy.textContent = `${accuracy}%`;
+            if (this.el.completeMsg) {
+              this.el.completeMsg.textContent = `Siz "${this.currentTopic} — ${this.currentLevel}" mavzusidagi kartochkalarni muvaffaqiyatli takrorladingiz!`;
+            }
+            this.el.completeModal.scrollIntoView({ behavior: "smooth", block: "nearest" });
+          }
+        }
+      }
+
+      updateStats() {
+        const total = (VOCABULARY_DATA[this.currentTopic] && VOCABULARY_DATA[this.currentTopic][this.currentLevel] || []).length;
+        const mastered = this.masteredSet.size;
+        const learning = Math.max(0, total - mastered);
+
+        if (this.el.statTotal) this.el.statTotal.textContent = String(total);
+        if (this.el.statMastered) this.el.statMastered.textContent = String(mastered);
+        if (this.el.statLearning) this.el.statLearning.textContent = String(learning);
+      }
+
+      renderCard() {
+        if (!this.deck.length) return;
+        const cur = this.getCurrentCard();
+        if (!cur) return;
+
+        if (this.el.topicDisplay) {
+          this.el.topicDisplay.textContent = `${this.currentTopic} — ${this.currentLevel}`;
+        }
+
+        const totalCards = this.deck.length;
+        const currentNum = this.currentIndex + 1;
+
+        if (this.el.counterBadge) {
+          this.el.counterBadge.textContent = `Karta ${currentNum} / ${totalCards}`;
+        }
+        if (this.el.navIndicator) {
+          this.el.navIndicator.textContent = `${currentNum} / ${totalCards}`;
+        }
+
+        if (this.el.progressBar) {
+          const pct = Math.round((currentNum / totalCards) * 100);
+          this.el.progressBar.style.width = `${pct}%`;
+        }
+
+        if (this.el.frontWord) this.el.frontWord.textContent = cur.w;
+        if (this.el.frontPos) this.el.frontPos.textContent = cur.pos.toUpperCase();
+
+        if (this.el.backTr) this.el.backTr.textContent = cur.tr;
+        if (this.el.backEx) this.el.backEx.textContent = `“${cur.ex}”`;
+        if (this.el.backExTr) this.el.backExTr.textContent = cur.exTr;
+
+        if (this.el.prevBtn) this.el.prevBtn.disabled = (this.currentIndex === 0);
+
+        this.updateStats();
+
+        if (this.autoAudio && !this.isFlipped) {
+          if (this.audioTimer) clearTimeout(this.audioTimer);
+          this.audioTimer = setTimeout(() => {
+            if (this.el.frontSpeakBtn) this.speak(cur.w, 0.88, this.el.frontSpeakBtn);
+          }, 280);
+        }
+      }
+
+      stopSpeech() {
+        if ("speechSynthesis" in window) {
+          window.speechSynthesis.cancel();
+        }
+        if (this.currentlySpeakingBtn) {
+          this.currentlySpeakingBtn.classList.remove("speaking");
+          this.currentlySpeakingBtn = null;
+        }
+      }
+
+      speak(text, rate = 0.91, btn = null) {
+        if (!("speechSynthesis" in window)) return;
+        this.stopSpeech();
+
+        try {
+          const utter = new SpeechSynthesisUtterance(text);
+          utter.lang = "en-US";
+          utter.pitch = 1.20;
+          utter.rate = rate;
+
+          const voice = getBestYoungFemaleVoice();
+          if (voice) utter.voice = voice;
+
+          if (btn) {
+            this.currentlySpeakingBtn = btn;
+            btn.classList.add("speaking");
+          }
+
+          utter.onend = () => {
+            if (btn) btn.classList.remove("speaking");
+            this.currentlySpeakingBtn = null;
+          };
+          utter.onerror = () => {
+            if (btn) btn.classList.remove("speaking");
+            this.currentlySpeakingBtn = null;
+          };
+
+          window.speechSynthesis.speak(utter);
+        } catch (e) {
+          console.warn("Speech error:", e);
+        }
+      }
+    }
+
     // DOM Elements
     const homeView = document.getElementById("home-view");
     const readerView = document.getElementById("reader-view");
@@ -4192,11 +5228,13 @@
     const homeTagline = document.getElementById("home-tagline");
 
     const vocabularyView = document.getElementById("vocabulary-view");
+    const flashcardsView = document.getElementById("flashcards-view");
 
     // Mode Buttons (Speaking, Listening, Vocabulary)
     const modeSpeakingBtn = document.getElementById("mode-speaking-btn");
     const modeListeningBtn = document.getElementById("mode-listening-btn");
     const modeVocabularyBtn = document.getElementById("mode-vocabulary-btn");
+    const modeFlashcardsBtn = document.getElementById("mode-flashcards-btn");
     let currentMode = "speaking"; // "speaking", "listening", or "vocabulary"
 
     modeSpeakingBtn.addEventListener("click", () => {
@@ -4204,6 +5242,7 @@
       modeSpeakingBtn.classList.add("active");
       modeListeningBtn.classList.remove("active");
       modeVocabularyBtn.classList.remove("active");
+      modeFlashcardsBtn.classList.remove("active");
       homeTagline.textContent = "Read aloud smoothly at your own pace. Voice prompt & auto-scrolling.";
     });
 
@@ -4212,6 +5251,7 @@
       modeListeningBtn.classList.add("active");
       modeSpeakingBtn.classList.remove("active");
       modeVocabularyBtn.classList.remove("active");
+      modeFlashcardsBtn.classList.remove("active");
       homeTagline.textContent = "Listen to clear English audio, test comprehension with interactive questions.";
     });
 
@@ -4220,7 +5260,17 @@
       modeVocabularyBtn.classList.add("active");
       modeSpeakingBtn.classList.remove("active");
       modeListeningBtn.classList.remove("active");
+      modeFlashcardsBtn.classList.remove("active");
       homeTagline.textContent = "Learn essential words, natural examples, and Uzbek translations with native audio.";
+    });
+
+    modeFlashcardsBtn.addEventListener("click", () => {
+      currentMode = "flashcards";
+      modeFlashcardsBtn.classList.add("active");
+      modeSpeakingBtn.classList.remove("active");
+      modeListeningBtn.classList.remove("active");
+      modeVocabularyBtn.classList.remove("active");
+      homeTagline.textContent = "Review words with interactive 3D flip cards, audio pronunciation, and memory tracking.";
     });
 
     // Speaking Reader Elements
@@ -4292,6 +5342,90 @@
     });
 
     // Vocabulary View Elements & Controller
+
+    const flashcardsPractice = new FlashcardsPracticeController({
+      view: flashcardsView,
+      topbar: document.getElementById("fc-topbar"),
+      topicDisplay: document.getElementById("fc-topic-display"),
+      counterBadge: document.getElementById("fc-counter-badge"),
+      levelPills: document.querySelectorAll(".fc-lvl-pill"),
+      shuffleBtn: document.getElementById("fc-shuffle-btn"),
+      autoAudioBtn: document.getElementById("fc-auto-audio-btn"),
+      progressBar: document.getElementById("fc-progress-bar"),
+      statTotal: document.getElementById("fc-stat-total"),
+      statMastered: document.getElementById("fc-stat-mastered"),
+      statLearning: document.getElementById("fc-stat-learning"),
+      card: document.getElementById("fc-card"),
+      frontPos: document.getElementById("fc-front-pos"),
+      frontWord: document.getElementById("fc-front-word"),
+      frontSpeakBtn: document.getElementById("fc-front-speak-btn"),
+      backTr: document.getElementById("fc-back-tr"),
+      backEx: document.getElementById("fc-back-ex"),
+      backExTr: document.getElementById("fc-back-ex-tr"),
+      backSpeakBtn: document.getElementById("fc-back-speak-btn"),
+      againBtn: document.getElementById("fc-again-btn"),
+      flipBtn: document.getElementById("fc-flip-btn"),
+      knowBtn: document.getElementById("fc-know-btn"),
+      prevBtn: document.getElementById("fc-prev-btn"),
+      nextBtn: document.getElementById("fc-next-btn"),
+      navIndicator: document.getElementById("fc-nav-indicator"),
+      completeModal: document.getElementById("fc-complete-modal"),
+      completeMsg: document.getElementById("fc-complete-msg"),
+      cstatMastered: document.getElementById("fc-cstat-mastered"),
+      cstatAccuracy: document.getElementById("fc-cstat-accuracy"),
+      restartBtn: document.getElementById("fc-restart-btn"),
+      nextTopicBtn: document.getElementById("fc-next-topic-btn")
+    });
+
+    document.getElementById("fc-back-btn").addEventListener("click", () => {
+      flashcardsPractice.stopSpeech();
+      flashcardsView.classList.add("hidden");
+      homeView.classList.remove("hidden");
+    });
+
+    document.getElementById("fc-to-vocab-btn").addEventListener("click", () => {
+      flashcardsPractice.stopSpeech();
+      openVocabularyView(flashcardsPractice.currentTopic, flashcardsPractice.currentLevel);
+    });
+
+    document.getElementById("fc-to-speak-btn").addEventListener("click", () => {
+      flashcardsPractice.stopSpeech();
+      openReaderView(flashcardsPractice.currentTopic, flashcardsPractice.currentLevel);
+    });
+
+    document.getElementById("fc-bottom-to-vocab-btn").addEventListener("click", () => {
+      flashcardsPractice.stopSpeech();
+      openVocabularyView(flashcardsPractice.currentTopic, flashcardsPractice.currentLevel);
+    });
+
+    document.getElementById("fc-bottom-to-speak-btn").addEventListener("click", () => {
+      flashcardsPractice.stopSpeech();
+      openReaderView(flashcardsPractice.currentTopic, flashcardsPractice.currentLevel);
+    });
+
+    document.getElementById("fc-bottom-to-listen-btn").addEventListener("click", () => {
+      flashcardsPractice.stopSpeech();
+      openListeningView(flashcardsPractice.currentTopic, flashcardsPractice.currentLevel);
+    });
+
+    if (document.getElementById("vocab-to-flashcard-btn")) {
+      document.getElementById("vocab-to-flashcard-btn").addEventListener("click", () => {
+        vocabPractice.stopSpeech();
+        openFlashcardsView(vocabPractice.currentTopic, vocabPractice.currentLevel);
+      });
+    }
+
+    flashcardsView.addEventListener("mousedown", (e) => {
+      if (e.target.tagName !== "INPUT" && e.target.tagName !== "BUTTON") {
+        e.preventDefault();
+      }
+    });
+    flashcardsView.addEventListener("selectstart", (e) => {
+      if (e.target.tagName !== "INPUT") {
+        e.preventDefault();
+      }
+    });
+
     const vocabPractice = new VocabularyPracticeController({
       topbar: document.getElementById("vocab-topbar"),
       topicDisplay: document.getElementById("vocab-topic-display"),
@@ -4386,8 +5520,10 @@
           openReaderView(selectedTopic, selectedLevel);
         } else if (currentMode === "listening") {
           openListeningView(selectedTopic, selectedLevel);
-        } else {
+        } else if (currentMode === "vocabulary") {
           openVocabularyView(selectedTopic, selectedLevel);
+        } else {
+          openFlashcardsView(selectedTopic, selectedLevel);
         }
       });
     });
@@ -4418,9 +5554,11 @@
     function openReaderView(topic, level) {
       clearIntroSequence();
       vocabPractice.stopSpeech();
+      flashcardsPractice.stopSpeech();
       homeView.classList.add("hidden");
       listeningView.classList.add("hidden");
       vocabularyView.classList.add("hidden");
+      flashcardsView.classList.add("hidden");
       readerView.classList.remove("hidden");
       readerTopicDisplay.textContent = `${topic} — ${level}`;
       voiceNotice.textContent = "";
@@ -4435,14 +5573,31 @@
     function openListeningView(topic, level) {
       clearIntroSequence();
       vocabPractice.stopSpeech();
+      flashcardsPractice.stopSpeech();
       scroller.pause();
       ambientMusic.pause();
       homeView.classList.add("hidden");
       readerView.classList.add("hidden");
       vocabularyView.classList.add("hidden");
+      flashcardsView.classList.add("hidden");
       listeningView.classList.remove("hidden");
 
       listeningPractice.startSession(topic, level);
+    }
+
+    function openFlashcardsView(topic, level) {
+      clearIntroSequence();
+      scroller.pause();
+      ambientMusic.pause();
+      listeningPractice.stopSpeech();
+      vocabPractice.stopSpeech();
+      homeView.classList.add("hidden");
+      readerView.classList.add("hidden");
+      listeningView.classList.add("hidden");
+      vocabularyView.classList.add("hidden");
+      flashcardsView.classList.remove("hidden");
+
+      flashcardsPractice.startSession(topic, level);
     }
 
     function openVocabularyView(topic, level) {
@@ -4450,9 +5605,11 @@
       scroller.pause();
       ambientMusic.pause();
       listeningPractice.stopSpeech();
+      flashcardsPractice.stopSpeech();
       homeView.classList.add("hidden");
       readerView.classList.add("hidden");
       listeningView.classList.add("hidden");
+      flashcardsView.classList.add("hidden");
       vocabularyView.classList.remove("hidden");
 
       vocabPractice.startSession(topic, level);
