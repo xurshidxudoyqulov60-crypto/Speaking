@@ -2108,9 +2108,6 @@
           <button type="button" id="fc-shuffle-btn" class="fc-tool-btn" title="Kartalarni tasodifiy aralashtirish">
             <span>🔀</span> <span class="tool-label">Aralashtirish</span>
           </button>
-          <button type="button" id="fc-auto-audio-btn" class="fc-tool-btn active" title="Avtomatik o'qib berish">
-            <span id="fc-auto-audio-icon">🔊</span> <span class="tool-label">Ovoz: Yoqiq</span>
-          </button>
         </div>
       </div>
 
@@ -2139,7 +2136,7 @@
       </div>
 
       <!-- 3D FLIP CARD STAGE -->
-      <div class="fc-stage">
+      <div id="fc-stage" class="fc-stage">
         <div id="fc-card" class="fc-card" role="button" tabindex="0" aria-label="Flashcard. Click or press space to flip.">
           <!-- FRONT FACE -->
           <div class="fc-face fc-front">
@@ -2150,10 +2147,6 @@
 
             <div class="fc-front-body">
               <h2 id="fc-front-word" class="fc-word-text">Breathe</h2>
-              <button type="button" id="fc-front-speak-btn" class="fc-speak-btn" title="Talaffuzni tinglash" aria-label="Pronounce word">
-                <span class="speak-icon">🔊</span>
-                <span>O'qish</span>
-              </button>
             </div>
 
             <div class="fc-face-footer">
@@ -2174,7 +2167,6 @@
               <div class="fc-example-box">
                 <div class="fc-example-top">
                   <div id="fc-back-ex" class="fc-example-en">“You drink warm water and breathe slowly.”</div>
-                  <button type="button" id="fc-back-speak-btn" class="vocab-ex-speak-btn" title="Misolni tinglash" aria-label="Listen sentence">🔊</button>
                 </div>
                 <div id="fc-back-ex-tr" class="fc-example-uz">Siz iliq suv ichasiz va sekin nafas olasiz.</div>
               </div>
@@ -2188,7 +2180,7 @@
       </div>
 
       <!-- MEMORY REVIEW ACTIONS (Qaytarish vs Yodladim) -->
-      <div class="fc-actions-wrap">
+      <div id="fc-actions-wrap" class="fc-actions-wrap">
         <button type="button" id="fc-again-btn" class="fc-action-btn again" title="Keyinroq yana takrorlash">
           <span class="btn-icon">🔄</span>
           <span class="btn-title">Qaytarish</span>
@@ -2209,7 +2201,7 @@
       </div>
 
       <!-- CARD NAVIGATION CONTROLS -->
-      <div class="fc-nav-controls">
+      <div id="fc-nav-controls" class="fc-nav-controls">
         <button type="button" id="fc-prev-btn" class="fc-nav-btn" title="Oldingi karta">
           ◀ Oldingi
         </button>
@@ -4824,6 +4816,7 @@
 
 
     // =========================================================================
+        // =========================================================================
     // 8.2 FLASHCARDS CONTROLLER (Interaktiv 3D kartochkalar, takrorlash va yodlash)
     // =========================================================================
     class FlashcardsPracticeController {
@@ -4831,14 +4824,11 @@
         this.el = elements;
         this.currentTopic = null;
         this.currentLevel = null;
-        this.deck = [];
-        this.currentIndex = 0;
+        this.topicWords = [];
+        this.unlearnedQueue = [];
+        this.masteredWords = new Set();
+        this.currentCardIndex = 0;
         this.isFlipped = false;
-        this.autoAudio = true;
-        this.masteredSet = new Set();
-        this.learningSet = new Set();
-        this.currentlySpeakingBtn = null;
-        this.audioTimer = null;
 
         this.initListeners();
       }
@@ -4867,22 +4857,6 @@
           this.el.flipBtn.addEventListener("click", () => this.toggleFlip());
         }
 
-        if (this.el.frontSpeakBtn) {
-          this.el.frontSpeakBtn.addEventListener("click", (e) => {
-            e.stopPropagation();
-            const cur = this.getCurrentCard();
-            if (cur) this.speak(cur.w, 0.88, this.el.frontSpeakBtn);
-          });
-        }
-
-        if (this.el.backSpeakBtn) {
-          this.el.backSpeakBtn.addEventListener("click", (e) => {
-            e.stopPropagation();
-            const cur = this.getCurrentCard();
-            if (cur) this.speak(cur.ex, 0.91, this.el.backSpeakBtn);
-          });
-        }
-
         if (this.el.prevBtn) {
           this.el.prevBtn.addEventListener("click", () => this.prevCard());
         }
@@ -4901,19 +4875,6 @@
 
         if (this.el.shuffleBtn) {
           this.el.shuffleBtn.addEventListener("click", () => this.shuffleDeck());
-        }
-
-        if (this.el.autoAudioBtn) {
-          this.el.autoAudioBtn.addEventListener("click", () => {
-            this.autoAudio = !this.autoAudio;
-            if (this.autoAudio) {
-              this.el.autoAudioBtn.classList.add("active");
-              this.el.autoAudioBtn.querySelector(".tool-label").textContent = "Ovoz: Yoqiq";
-            } else {
-              this.el.autoAudioBtn.classList.remove("active");
-              this.el.autoAudioBtn.querySelector(".tool-label").textContent = "Ovoz: O'chiq";
-            }
-          });
         }
 
         if (this.el.restartBtn) {
@@ -4955,24 +4916,21 @@
       }
 
       getCurrentCard() {
-        if (!this.deck.length || this.currentIndex >= this.deck.length) return null;
-        return this.deck[this.currentIndex];
+        if (!this.unlearnedQueue.length || this.currentCardIndex >= this.unlearnedQueue.length) return null;
+        return this.unlearnedQueue[this.currentCardIndex];
       }
 
       startSession(topic, level) {
         this.stopSpeech();
-        if (this.audioTimer) clearTimeout(this.audioTimer);
-
         this.currentTopic = topic;
         this.currentLevel = level;
         this.isFlipped = false;
-        this.currentIndex = 0;
-        this.masteredSet.clear();
-        this.learningSet.clear();
+        this.masteredWords.clear();
 
         const words = (VOCABULARY_DATA[topic] && VOCABULARY_DATA[topic][level]) || [];
-        this.deck = words.map(item => ({ ...item }));
-        this.deck.forEach(item => this.learningSet.add(item.w));
+        this.topicWords = words.map(item => ({ ...item }));
+        this.unlearnedQueue = words.map(item => ({ ...item }));
+        this.currentCardIndex = 0;
 
         if (this.el.levelPills) {
           this.el.levelPills.forEach(pill => {
@@ -4981,23 +4939,27 @@
           });
         }
 
+        // Show card elements, hide complete modal
         if (this.el.completeModal) this.el.completeModal.classList.add("hidden");
+        if (this.el.cardStage) this.el.cardStage.classList.remove("hidden");
+        if (this.el.actionsWrap) this.el.actionsWrap.classList.remove("hidden");
+        if (this.el.navControls) this.el.navControls.classList.remove("hidden");
         if (this.el.card) this.el.card.classList.remove("is-flipped");
 
         this.renderCard();
       }
 
       shuffleDeck() {
-        if (this.deck.length <= 1) return;
+        if (this.unlearnedQueue.length <= 1) return;
         this.stopSpeech();
         this.isFlipped = false;
         if (this.el.card) this.el.card.classList.remove("is-flipped");
 
-        for (let i = this.deck.length - 1; i > 0; i--) {
+        for (let i = this.unlearnedQueue.length - 1; i > 0; i--) {
           const j = Math.floor(Math.random() * (i + 1));
-          [this.deck[i], this.deck[j]] = [this.deck[j], this.deck[i]];
+          [this.unlearnedQueue[i], this.unlearnedQueue[j]] = [this.unlearnedQueue[j], this.unlearnedQueue[i]];
         }
-        this.currentIndex = 0;
+        this.currentCardIndex = 0;
         this.renderCard();
       }
 
@@ -5007,94 +4969,119 @@
           if (this.isFlipped) this.el.card.classList.add("is-flipped");
           else this.el.card.classList.remove("is-flipped");
         }
-
-        const cur = this.getCurrentCard();
-        if (cur && this.autoAudio && this.isFlipped && this.el.backSpeakBtn) {
-          this.speak(cur.ex, 0.91, this.el.backSpeakBtn);
-        }
       }
 
       prevCard() {
-        if (this.currentIndex > 0) {
-          this.currentIndex--;
-          this.isFlipped = false;
-          if (this.el.card) this.el.card.classList.remove("is-flipped");
-          this.renderCard();
-        }
-      }
-
-      nextCard() {
-        if (this.currentIndex < this.deck.length - 1) {
-          this.currentIndex++;
-          this.isFlipped = false;
-          if (this.el.card) this.el.card.classList.remove("is-flipped");
-          this.renderCard();
-        } else {
-          this.checkCompletion();
-        }
-      }
-
-      markKnow() {
-        const cur = this.getCurrentCard();
-        if (!cur) return;
-        this.masteredSet.add(cur.w);
-        this.learningSet.delete(cur.w);
-        this.updateStats();
-
-        if (this.currentIndex < this.deck.length - 1) {
-          this.currentIndex++;
-          this.isFlipped = false;
-          if (this.el.card) this.el.card.classList.remove("is-flipped");
-          this.renderCard();
-        } else {
-          this.checkCompletion();
-        }
-      }
-
-      markAgain() {
-        const cur = this.getCurrentCard();
-        if (!cur) return;
-        this.learningSet.add(cur.w);
-        this.masteredSet.delete(cur.w);
-        this.updateStats();
-
-        this.deck.push({ ...cur });
-        this.currentIndex++;
+        if (this.unlearnedQueue.length <= 1) return;
+        this.currentCardIndex = (this.currentCardIndex - 1 + this.unlearnedQueue.length) % this.unlearnedQueue.length;
         this.isFlipped = false;
         if (this.el.card) this.el.card.classList.remove("is-flipped");
         this.renderCard();
       }
 
-      checkCompletion() {
-        if (this.masteredSet.size >= this.deck.length || this.currentIndex >= this.deck.length - 1) {
-          if (this.el.completeModal) {
-            this.el.completeModal.classList.remove("hidden");
-            const masteredCount = this.masteredSet.size;
-            const totalCount = Math.max(1, (VOCABULARY_DATA[this.currentTopic][this.currentLevel] || []).length);
-            const accuracy = Math.round((masteredCount / totalCount) * 100);
+      nextCard() {
+        if (this.unlearnedQueue.length <= 1) return;
+        this.currentCardIndex = (this.currentCardIndex + 1) % this.unlearnedQueue.length;
+        this.isFlipped = false;
+        if (this.el.card) this.el.card.classList.remove("is-flipped");
+        this.renderCard();
+      }
 
-            if (this.el.cstatMastered) this.el.cstatMastered.textContent = String(masteredCount);
-            if (this.el.cstatAccuracy) this.el.cstatAccuracy.textContent = `${accuracy}%`;
-            if (this.el.completeMsg) {
-              this.el.completeMsg.textContent = `Siz "${this.currentTopic} — ${this.currentLevel}" mavzusidagi kartochkalarni muvaffaqiyatli takrorladingiz!`;
-            }
-            this.el.completeModal.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      markKnow() {
+        if (!this.unlearnedQueue.length) return;
+        const cur = this.getCurrentCard();
+        if (!cur) return;
+
+        this.masteredWords.add(cur.w);
+        this.unlearnedQueue.splice(this.currentCardIndex, 1);
+        this.updateStats();
+
+        // Check if all cards in level are mastered!
+        if (this.unlearnedQueue.length === 0) {
+          this.showCompletion();
+          return;
+        }
+
+        if (this.currentCardIndex >= this.unlearnedQueue.length) {
+          this.currentCardIndex = 0;
+        }
+
+        this.isFlipped = false;
+        if (this.el.card) this.el.card.classList.remove("is-flipped");
+        this.renderCard();
+      }
+
+      markAgain() {
+        if (!this.unlearnedQueue.length) return;
+        const cur = this.getCurrentCard();
+        if (!cur) return;
+
+        this.masteredWords.delete(cur.w);
+        this.updateStats();
+
+        if (this.unlearnedQueue.length === 1) {
+          // Exactly 1 card left (e.g. user needs to practice this specific card again)
+          this.isFlipped = false;
+          if (this.el.card) {
+            this.el.card.classList.remove("is-flipped");
+            // Add a small tactile pulse animation
+            this.el.card.style.transform = "scale(0.97)";
+            setTimeout(() => { if (this.el.card) this.el.card.style.transform = ""; }, 180);
           }
+          this.renderCard();
+          return;
+        }
+
+        // More than 1 card left: move this difficult card to the back of the queue
+        const [movedCard] = this.unlearnedQueue.splice(this.currentCardIndex, 1);
+        this.unlearnedQueue.push(movedCard);
+
+        if (this.currentCardIndex >= this.unlearnedQueue.length) {
+          this.currentCardIndex = 0;
+        }
+
+        this.isFlipped = false;
+        if (this.el.card) this.el.card.classList.remove("is-flipped");
+        this.renderCard();
+      }
+
+      showCompletion() {
+        if (this.el.cardStage) this.el.cardStage.classList.add("hidden");
+        if (this.el.actionsWrap) this.el.actionsWrap.classList.add("hidden");
+        if (this.el.navControls) this.el.navControls.classList.add("hidden");
+
+        if (this.el.completeModal) {
+          this.el.completeModal.classList.remove("hidden");
+          const totalCount = this.topicWords.length || 6;
+          const masteredCount = this.masteredWords.size;
+          const accuracy = Math.round((masteredCount / totalCount) * 100);
+
+          if (this.el.cstatMastered) this.el.cstatMastered.textContent = String(masteredCount);
+          if (this.el.cstatAccuracy) this.el.cstatAccuracy.textContent = `${accuracy}%`;
+          if (this.el.completeMsg) {
+            this.el.completeMsg.textContent = `Siz "${this.currentTopic} — ${this.currentLevel}" mavzusidagi barcha ${totalCount} ta kartochkani muvaffaqiyatli takrorladingiz!`;
+          }
+          this.el.completeModal.scrollIntoView({ behavior: "smooth", block: "nearest" });
         }
       }
 
       updateStats() {
-        const total = (VOCABULARY_DATA[this.currentTopic] && VOCABULARY_DATA[this.currentTopic][this.currentLevel] || []).length;
-        const mastered = this.masteredSet.size;
-        const learning = Math.max(0, total - mastered);
+        const total = this.topicWords.length || (VOCABULARY_DATA[this.currentTopic] && VOCABULARY_DATA[this.currentTopic][this.currentLevel] || []).length;
+        const mastered = this.masteredWords.size;
+        const learning = this.unlearnedQueue.length;
 
         if (this.el.statTotal) this.el.statTotal.textContent = String(total);
         if (this.el.statMastered) this.el.statMastered.textContent = String(mastered);
         if (this.el.statLearning) this.el.statLearning.textContent = String(learning);
+
+        if (this.el.progressBar) {
+          const pct = Math.round((mastered / Math.max(1, total)) * 100);
+          this.el.progressBar.style.width = `${pct}%`;
+        }
       }
 
       renderCard() {
-        if (!this.deck.length) return;
+        if (!this.unlearnedQueue.length) return;
         const cur = this.getCurrentCard();
         if (!cur) return;
 
@@ -5102,80 +5089,35 @@
           this.el.topicDisplay.textContent = `${this.currentTopic} — ${this.currentLevel}`;
         }
 
-        const totalCards = this.deck.length;
-        const currentNum = this.currentIndex + 1;
+        const remainingCards = this.unlearnedQueue.length;
+        const currentNum = this.currentCardIndex + 1;
 
         if (this.el.counterBadge) {
-          this.el.counterBadge.textContent = `Karta ${currentNum} / ${totalCards}`;
+          this.el.counterBadge.textContent = `Karta ${currentNum} / ${remainingCards}`;
         }
         if (this.el.navIndicator) {
-          this.el.navIndicator.textContent = `${currentNum} / ${totalCards}`;
+          this.el.navIndicator.textContent = `${currentNum} / ${remainingCards}`;
         }
 
-        if (this.el.progressBar) {
-          const pct = Math.round((currentNum / totalCards) * 100);
-          this.el.progressBar.style.width = `${pct}%`;
-        }
-
+        // Front face
         if (this.el.frontWord) this.el.frontWord.textContent = cur.w;
         if (this.el.frontPos) this.el.frontPos.textContent = cur.pos.toUpperCase();
 
+        // Back face
         if (this.el.backTr) this.el.backTr.textContent = cur.tr;
         if (this.el.backEx) this.el.backEx.textContent = `“${cur.ex}”`;
         if (this.el.backExTr) this.el.backExTr.textContent = cur.exTr;
 
-        if (this.el.prevBtn) this.el.prevBtn.disabled = (this.currentIndex === 0);
+        // Navigation button states
+        if (this.el.prevBtn) this.el.prevBtn.disabled = (remainingCards <= 1);
+        if (this.el.nextBtn) this.el.nextBtn.disabled = (remainingCards <= 1);
 
         this.updateStats();
-
-        if (this.autoAudio && !this.isFlipped) {
-          if (this.audioTimer) clearTimeout(this.audioTimer);
-          this.audioTimer = setTimeout(() => {
-            if (this.el.frontSpeakBtn) this.speak(cur.w, 0.88, this.el.frontSpeakBtn);
-          }, 280);
-        }
       }
 
       stopSpeech() {
         if ("speechSynthesis" in window) {
           window.speechSynthesis.cancel();
-        }
-        if (this.currentlySpeakingBtn) {
-          this.currentlySpeakingBtn.classList.remove("speaking");
-          this.currentlySpeakingBtn = null;
-        }
-      }
-
-      speak(text, rate = 0.91, btn = null) {
-        if (!("speechSynthesis" in window)) return;
-        this.stopSpeech();
-
-        try {
-          const utter = new SpeechSynthesisUtterance(text);
-          utter.lang = "en-US";
-          utter.pitch = 1.20;
-          utter.rate = rate;
-
-          const voice = getBestYoungFemaleVoice();
-          if (voice) utter.voice = voice;
-
-          if (btn) {
-            this.currentlySpeakingBtn = btn;
-            btn.classList.add("speaking");
-          }
-
-          utter.onend = () => {
-            if (btn) btn.classList.remove("speaking");
-            this.currentlySpeakingBtn = null;
-          };
-          utter.onerror = () => {
-            if (btn) btn.classList.remove("speaking");
-            this.currentlySpeakingBtn = null;
-          };
-
-          window.speechSynthesis.speak(utter);
-        } catch (e) {
-          console.warn("Speech error:", e);
         }
       }
     }
@@ -5310,19 +5252,19 @@
       counterBadge: document.getElementById("fc-counter-badge"),
       levelPills: document.querySelectorAll(".fc-lvl-pill"),
       shuffleBtn: document.getElementById("fc-shuffle-btn"),
-      autoAudioBtn: document.getElementById("fc-auto-audio-btn"),
       progressBar: document.getElementById("fc-progress-bar"),
       statTotal: document.getElementById("fc-stat-total"),
       statMastered: document.getElementById("fc-stat-mastered"),
       statLearning: document.getElementById("fc-stat-learning"),
+      cardStage: document.getElementById("fc-stage"),
+      actionsWrap: document.getElementById("fc-actions-wrap"),
+      navControls: document.getElementById("fc-nav-controls"),
       card: document.getElementById("fc-card"),
       frontPos: document.getElementById("fc-front-pos"),
       frontWord: document.getElementById("fc-front-word"),
-      frontSpeakBtn: document.getElementById("fc-front-speak-btn"),
       backTr: document.getElementById("fc-back-tr"),
       backEx: document.getElementById("fc-back-ex"),
       backExTr: document.getElementById("fc-back-ex-tr"),
-      backSpeakBtn: document.getElementById("fc-back-speak-btn"),
       againBtn: document.getElementById("fc-again-btn"),
       flipBtn: document.getElementById("fc-flip-btn"),
       knowBtn: document.getElementById("fc-know-btn"),
