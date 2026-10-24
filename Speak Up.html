@@ -90,7 +90,7 @@
     /* MODE SWITCHER (3 COLUMNS) */
     .mode-switch-wrap {
       display: grid;
-      grid-template-columns: repeat(5, 1fr);
+      grid-template-columns: repeat(4, 1fr);
       gap: 4px;
       background: var(--btn-hover);
       padding: 4px;
@@ -384,604 +384,6 @@
       transition: filter 0.2s ease, opacity 0.2s ease;
     }
 
-
-
-    /* -------------------------------------------------------------
-       READING EXAM PRACTICE VIEW (Imtihon formati)
-    ------------------------------------------------------------- */
-    .reading-view {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      animation: fadeInView 0.25s ease forwards;
-    }
-
-    .rd-topbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      padding-bottom: 4px;
-    }
-
-    .rd-meta {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .exam-badge {
-      background: #111111 !important;
-      color: #ffffff !important;
-      font-weight: 700 !important;
-      letter-spacing: 0.04em !important;
-    }
-
-    /* Toolbar */
-    .rd-toolbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .rd-level-pills {
-      display: inline-flex;
-      background: var(--btn-hover);
-      padding: 3px;
-      border-radius: var(--radius-sm);
-      border: 1px solid var(--border);
-    }
-
-    .rd-lvl-pill {
-      min-height: 32px;
-      padding: 0 14px;
-      border: none;
-      background: transparent;
-      color: var(--text-muted);
-      font-size: 0.8rem;
-      font-weight: 700;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: all 0.15s ease;
-      user-select: none;
-    }
-
-    .rd-lvl-pill.active {
-      background: #ffffff;
-      color: var(--text-main);
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-    }
-
-    .rd-toolbar-controls {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .rd-timer-box {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: #ffffff;
-      border: 1px solid var(--border);
-      padding: 4px 10px;
-      border-radius: var(--radius-sm);
-      font-size: 0.84rem;
-      font-weight: 700;
-      color: var(--text-main);
-      font-variant-numeric: tabular-nums;
-    }
-
-    .rd-timer-box.warning {
-      background: #fff1f2;
-      border-color: #f43f5e;
-      color: #e11d48;
-      animation: pulseTimer 1s infinite alternate;
-    }
-
-    @keyframes pulseTimer {
-      0% { transform: scale(1); }
-      100% { transform: scale(1.03); }
-    }
-
-    .rd-icon-btn {
-      min-width: 28px;
-      height: 28px;
-      padding: 0 6px;
-      border: 1px solid var(--border);
-      background: var(--btn-hover);
-      color: var(--text-main);
-      border-radius: 6px;
-      font-size: 0.76rem;
-      font-weight: 700;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.15s ease;
-    }
-
-    .rd-icon-btn:hover {
-      background: var(--text-main);
-      color: #ffffff;
-    }
-
-    .rd-font-controls {
-      display: inline-flex;
-      gap: 3px;
-    }
-
-    .rd-tool-btn {
-      min-height: 32px;
-      padding: 0 10px;
-      border: 1px solid var(--border);
-      background: #ffffff;
-      color: var(--text-muted);
-      border-radius: var(--radius-sm);
-      font-size: 0.78rem;
-      font-weight: 600;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      transition: all 0.15s ease;
-      user-select: none;
-    }
-
-    .rd-tool-btn:hover {
-      color: var(--text-main);
-      border-color: var(--focus-line);
-    }
-
-    .rd-tool-btn.active {
-      background: #fef08a;
-      border-color: #facc15;
-      color: #854d0e;
-    }
-
-    /* Two-Panel Layout */
-    .rd-exam-container {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-
-    /* Passage Card */
-    .rd-passage-card {
-      background: #ffffff;
-      border: 1px solid var(--border);
-      border-radius: var(--radius-md);
-      padding: 18px 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
-    }
-
-    .rd-passage-header {
-      display: flex;
-      align-items: baseline;
-      justify-content: space-between;
-      border-bottom: 1px solid var(--border);
-      padding-bottom: 10px;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .rd-passage-title {
-      font-size: 1.05rem;
-      font-weight: 700;
-      color: var(--text-main);
-    }
-
-    .rd-reading-hint {
-      font-size: 0.76rem;
-      color: var(--text-muted);
-    }
-
-    .rd-passage-body {
-      color: var(--text-main);
-      line-height: 1.75;
-      letter-spacing: 0.005em;
-      transition: font-size 0.15s ease;
-    }
-
-    .rd-passage-body.font-size-sm { font-size: 0.92rem; }
-    .rd-passage-body.font-size-md { font-size: 1.02rem; }
-    .rd-passage-body.font-size-lg { font-size: 1.15rem; }
-
-    .rd-para-item {
-      margin-bottom: 12px;
-      position: relative;
-    }
-
-    .rd-para-marker {
-      font-size: 0.72rem;
-      font-weight: 700;
-      color: var(--text-muted);
-      background: var(--btn-hover);
-      padding: 2px 6px;
-      border-radius: 4px;
-      margin-right: 6px;
-      user-select: none;
-      vertical-align: middle;
-    }
-
-    .rd-highlightable {
-      cursor: pointer;
-      border-radius: 3px;
-      transition: background-color 0.15s ease;
-    }
-
-    .rd-highlightable.highlighted {
-      background-color: #fef08a !important;
-      color: #713f12;
-    }
-
-    /* Questions Card */
-    .rd-questions-card {
-      background: #ffffff;
-      border: 1px solid var(--border);
-      border-radius: var(--radius-md);
-      padding: 18px 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-    }
-
-    .rd-q-nav-bar {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      border-bottom: 1px solid var(--border);
-      padding-bottom: 10px;
-    }
-
-    .rd-q-nav-label {
-      font-size: 0.78rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      color: var(--text-muted);
-      letter-spacing: 0.04em;
-    }
-
-    .rd-q-pills-wrap {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .rd-q-pill-btn {
-      width: 32px;
-      height: 32px;
-      border: 1px solid var(--border);
-      background: var(--btn-hover);
-      color: var(--text-muted);
-      border-radius: 6px;
-      font-size: 0.84rem;
-      font-weight: 700;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.15s ease;
-      user-select: none;
-    }
-
-    .rd-q-pill-btn:hover {
-      border-color: var(--text-main);
-      color: var(--text-main);
-    }
-
-    .rd-q-pill-btn.active {
-      background: var(--text-main);
-      color: #ffffff;
-      border-color: var(--text-main);
-    }
-
-    .rd-q-pill-btn.answered {
-      border-color: var(--accent-green);
-      color: var(--accent-green);
-    }
-
-    .rd-q-pill-btn.active.answered {
-      background: var(--accent-green);
-      color: #ffffff;
-    }
-
-    /* Current Question Box */
-    .rd-current-q-box {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .rd-q-type-badge-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-    }
-
-    .rd-q-type-badge {
-      font-size: 0.72rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      padding: 3px 8px;
-      border-radius: 4px;
-      background: var(--btn-hover);
-      color: var(--text-muted);
-      border: 1px solid var(--border);
-    }
-
-    .rd-q-num-label {
-      font-size: 0.8rem;
-      font-weight: 600;
-      color: var(--text-muted);
-    }
-
-    .rd-q-prompt-text {
-      font-size: 1.05rem;
-      font-weight: 700;
-      color: var(--text-main);
-      line-height: 1.45;
-    }
-
-    .rd-options-list {
-      display: flex;
-      flex-direction: column;
-      gap: 9px;
-    }
-
-    .rd-opt-item {
-      width: 100%;
-      min-height: 48px;
-      padding: 10px 14px;
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      background: #ffffff;
-      text-align: left;
-      font-size: 0.93rem;
-      font-weight: 500;
-      color: var(--text-main);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      transition: all 0.15s ease;
-      user-select: none;
-    }
-
-    .rd-opt-item:hover {
-      border-color: var(--focus-line);
-      background: var(--btn-hover);
-    }
-
-    .rd-opt-item.selected {
-      border-color: var(--text-main);
-      background: #ffffff;
-      box-shadow: 0 0 0 1.5px var(--text-main) inset;
-      font-weight: 600;
-    }
-
-    .rd-opt-marker {
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      border: 1.5px solid var(--border);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.76rem;
-      font-weight: 700;
-      color: var(--text-muted);
-      flex-shrink: 0;
-      transition: all 0.15s ease;
-    }
-
-    .rd-opt-item.selected .rd-opt-marker {
-      background: var(--text-main);
-      color: #ffffff;
-      border-color: var(--text-main);
-    }
-
-    .rd-opt-text {
-      flex: 1;
-      line-height: 1.35;
-    }
-
-    /* Bottom Navigation */
-    .rd-q-bottom-nav {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      padding-top: 6px;
-      border-top: 1px solid var(--border);
-    }
-
-    .rd-nav-btn {
-      min-height: 42px;
-      padding: 0 16px;
-      border: 1px solid var(--border);
-      background: #ffffff;
-      color: var(--text-main);
-      border-radius: var(--radius-sm);
-      font-size: 0.86rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.15s ease;
-      user-select: none;
-    }
-
-    .rd-nav-btn:hover {
-      background: var(--btn-hover);
-      border-color: var(--focus-line);
-    }
-
-    .rd-nav-btn:disabled {
-      opacity: 0.35;
-      cursor: not-allowed;
-    }
-
-    .rd-submit-btn {
-      margin-left: auto;
-    }
-
-    /* Result & Diagnostic Review Card */
-    .rd-result-card {
-      background: #ffffff;
-      border: 1.5px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 24px 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.05);
-      animation: fadeInView 0.3s ease;
-    }
-
-    .rd-result-top {
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .rd-result-icon {
-      font-size: 3rem;
-      line-height: 1;
-    }
-
-    .rd-result-title {
-      font-size: 1.45rem;
-      font-weight: 800;
-      color: var(--text-main);
-    }
-
-    .rd-band-badge {
-      display: inline-block;
-      padding: 4px 14px;
-      border-radius: 9999px;
-      background: var(--btn-hover);
-      color: var(--text-main);
-      font-size: 0.86rem;
-      font-weight: 700;
-      border: 1px solid var(--border);
-    }
-
-    .rd-result-score {
-      font-size: 2.2rem;
-      font-weight: 800;
-      color: var(--text-main);
-      letter-spacing: -0.02em;
-    }
-
-    .rd-result-time {
-      font-size: 0.86rem;
-      color: var(--text-muted);
-    }
-
-    /* Review list */
-    .rd-review-section {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      border-top: 1px solid var(--border);
-      padding-top: 16px;
-    }
-
-    .rd-review-heading {
-      font-size: 0.96rem;
-      font-weight: 700;
-      color: var(--text-main);
-    }
-
-    .rd-review-list {
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-    }
-
-    .rd-review-item {
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      padding: 14px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      background: #ffffff;
-    }
-
-    .rd-review-item.correct {
-      border-left: 4px solid var(--accent-green);
-    }
-
-    .rd-review-item.incorrect {
-      border-left: 4px solid #ef4444;
-    }
-
-    .rd-rev-q-title {
-      font-size: 0.94rem;
-      font-weight: 700;
-      color: var(--text-main);
-    }
-
-    .rd-rev-answers {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      font-size: 0.88rem;
-    }
-
-    .rd-rev-user-ans {
-      font-weight: 600;
-    }
-    .rd-rev-user-ans.is-correct { color: #059669; }
-    .rd-rev-user-ans.is-wrong { color: #dc2626; }
-
-    .rd-rev-corr-ans {
-      color: #059669;
-      font-weight: 600;
-    }
-
-    .rd-rev-evidence-box {
-      background: #fefce8;
-      border: 1px solid #fef08a;
-      border-radius: 6px;
-      padding: 8px 10px;
-      font-size: 0.84rem;
-      color: #713f12;
-      line-height: 1.4;
-    }
-
-    .rd-rev-evidence-label {
-      font-weight: 700;
-      text-transform: uppercase;
-      font-size: 0.72rem;
-      display: block;
-      margin-bottom: 2px;
-      color: #854d0e;
-    }
-
-    .rd-rev-explanation {
-      font-size: 0.84rem;
-      color: var(--text-muted);
-      line-height: 1.4;
-    }
-
-    .rd-result-actions {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      width: 100%;
-      border-top: 1px solid var(--border);
-      padding-top: 16px;
-    }
 
     /* -------------------------------------------------------------
        FLASHCARDS PRACTICE VIEW (Interaktiv 3D takrorlash)
@@ -2446,9 +1848,6 @@
         grid-template-columns: repeat(2, 1fr);
         gap: 6px;
       }
-      .mode-btn:last-child:nth-child(odd) {
-        grid-column: span 2;
-      }
       .app-shell {
         padding: calc(10px + env(safe-area-inset-top, 0px)) 14px calc(14px + env(safe-area-inset-bottom, 0px));
       }
@@ -2516,9 +1915,6 @@
         </button>
         <button type="button" class="mode-btn" id="mode-flashcards-btn" data-mode="flashcards">
           <span>🃏</span> Flashcards
-        </button>
-        <button type="button" class="mode-btn" id="mode-reading-btn" data-mode="reading">
-          <span>📚</span> Reading
         </button>
       </div>
 
@@ -2611,7 +2007,7 @@
 
     <!-- 3) LISTENING & QUIZ VIEW -->
     <section id="listening-view" class="listening-view hidden" aria-label="Listening Practice">
-      <header class="listen-topbar">
+      <header id="listen-topbar" class="listen-topbar">
         <button type="button" id="listen-back-btn" class="back-btn">← Back</button>
         <div class="listen-meta">
           <div id="listen-topic-display" class="reader-topic-title">Daily Life — A1</div>
@@ -2680,7 +2076,7 @@
 
     <!-- VOCABULARY VIEW -->
     <section id="vocabulary-view" class="vocabulary-view hidden" aria-label="Vocabulary Practice">
-      <header class="vocab-topbar">
+      <header id="vocab-topbar" class="vocab-topbar">
         <button type="button" id="vocab-back-btn" class="back-btn">← Back</button>
         <div class="vocab-meta">
           <div id="vocab-topic-display" class="reader-topic-title">Daily Life — A1</div>
@@ -2730,7 +2126,7 @@
 
     <!-- 5) FLASHCARDS VIEW (Interaktiv 3D kartochkalar orqali takrorlash) -->
     <section id="flashcards-view" class="flashcards-view hidden" aria-label="Flashcards Practice">
-      <header class="fc-topbar">
+      <header id="fc-topbar" class="fc-topbar">
         <button type="button" id="fc-back-btn" class="back-btn">← Back</button>
         <div class="fc-meta">
           <div id="fc-topic-display" class="reader-topic-title">Daily Life — A1</div>
@@ -5822,382 +5218,6 @@
       }
     }
 
-
-    // =========================================================================
-    // 8.3 READING EXAM CONTROLLER (Imtihon formati, taymer va savollar tahlili)
-    // =========================================================================
-    class ReadingExamController {
-      constructor(elements) {
-        this.el = elements;
-        this.currentTopic = null;
-        this.currentLevel = null;
-        this.questions = [];
-        this.currentQIndex = 0;
-        this.userAnswers = {}; // { 0: optionIndex, 1: optionIndex, ... }
-        this.timerSeconds = 300; // 5 daqiqalik standart imtihon
-        this.timerInterval = null;
-        this.isTimerPaused = false;
-        this.secondsElapsed = 0;
-        this.highlightMode = false;
-        this.fontSizeState = "md"; // "sm", "md", "lg"
-
-        this.initListeners();
-      }
-
-      initListeners() {
-        if (this.el.levelPills) {
-          this.el.levelPills.forEach(pill => {
-            pill.addEventListener("click", () => {
-              this.el.levelPills.forEach(p => p.classList.remove("active"));
-              pill.classList.add("active");
-              this.currentLevel = pill.dataset.level;
-              this.startSession(this.currentTopic, this.currentLevel);
-            });
-          });
-        }
-
-        if (this.el.timerToggleBtn) {
-          this.el.timerToggleBtn.addEventListener("click", () => {
-            this.isTimerPaused = !this.isTimerPaused;
-            this.el.timerToggleBtn.textContent = this.isTimerPaused ? "▶" : "⏸";
-          });
-        }
-
-        if (this.el.fontIncBtn) {
-          this.el.fontIncBtn.addEventListener("click", () => {
-            if (this.fontSizeState === "sm") this.setFontSize("md");
-            else if (this.fontSizeState === "md") this.setFontSize("lg");
-          });
-        }
-
-        if (this.el.fontDecBtn) {
-          this.el.fontDecBtn.addEventListener("click", () => {
-            if (this.fontSizeState === "lg") this.setFontSize("md");
-            else if (this.fontSizeState === "md") this.setFontSize("sm");
-          });
-        }
-
-        if (this.el.highlightToggleBtn) {
-          this.el.highlightToggleBtn.addEventListener("click", () => {
-            this.highlightMode = !this.highlightMode;
-            if (this.highlightMode) {
-              this.el.highlightToggleBtn.classList.add("active");
-            } else {
-              this.el.highlightToggleBtn.classList.remove("active");
-            }
-          });
-        }
-
-        if (this.el.prevQBtn) {
-          this.el.prevQBtn.addEventListener("click", () => {
-            if (this.currentQIndex > 0) {
-              this.currentQIndex--;
-              this.renderQuestion();
-            }
-          });
-        }
-
-        if (this.el.nextQBtn) {
-          this.el.nextQBtn.addEventListener("click", () => {
-            if (this.currentQIndex < this.questions.length - 1) {
-              this.currentQIndex++;
-              this.renderQuestion();
-            }
-          });
-        }
-
-        if (this.el.submitBtn) {
-          this.el.submitBtn.addEventListener("click", () => {
-            this.finishExam();
-          });
-        }
-
-        if (this.el.retakeBtn) {
-          this.el.retakeBtn.addEventListener("click", () => {
-            this.startSession(this.currentTopic, this.currentLevel);
-          });
-        }
-
-        if (this.el.nextTopicBtn) {
-          this.el.nextTopicBtn.addEventListener("click", () => {
-            const curIdx = TOPICS.indexOf(this.currentTopic);
-            const nextIdx = (curIdx + 1) % TOPICS.length;
-            this.startSession(TOPICS[nextIdx], this.currentLevel);
-          });
-        }
-      }
-
-      setFontSize(size) {
-        this.fontSizeState = size;
-        if (this.el.passageBody) {
-          this.el.passageBody.classList.remove("font-size-sm", "font-size-md", "font-size-lg");
-          this.el.passageBody.classList.add(`font-size-${size}`);
-        }
-      }
-
-      startSession(topic, level) {
-        this.stopTimer();
-
-        this.currentTopic = topic;
-        this.currentLevel = level;
-        this.currentQIndex = 0;
-        this.userAnswers = {};
-        this.timerSeconds = 300; // 5 min
-        this.secondsElapsed = 0;
-        this.isTimerPaused = false;
-        this.highlightMode = false;
-
-        if (this.el.timerToggleBtn) this.el.timerToggleBtn.textContent = "⏸";
-        if (this.el.timerBox) this.el.timerBox.classList.remove("warning");
-        if (this.el.highlightToggleBtn) this.el.highlightToggleBtn.classList.remove("active");
-        if (this.el.resultModal) this.el.resultModal.classList.add("hidden");
-
-        const qList = (READING_EXAM_DATA[topic] && READING_EXAM_DATA[topic][level]) || [];
-        this.questions = qList.map(q => ({ ...q }));
-
-        if (this.el.levelPills) {
-          this.el.levelPills.forEach(pill => {
-            if (pill.dataset.level === level) pill.classList.add("active");
-            else pill.classList.remove("active");
-          });
-        }
-
-        this.renderPassage();
-        this.renderQuestionPills();
-        this.renderQuestion();
-        this.startTimer();
-      }
-
-      startTimer() {
-        this.updateTimerDisplay();
-        this.timerInterval = setInterval(() => {
-          if (this.isTimerPaused) return;
-
-          this.timerSeconds--;
-          this.secondsElapsed++;
-          this.updateTimerDisplay();
-
-          if (this.timerSeconds <= 60 && this.el.timerBox) {
-            this.el.timerBox.classList.add("warning");
-          }
-
-          if (this.timerSeconds <= 0) {
-            this.stopTimer();
-            this.finishExam(true);
-          }
-        }, 1000);
-      }
-
-      stopTimer() {
-        if (this.timerInterval) {
-          clearInterval(this.timerInterval);
-          this.timerInterval = null;
-        }
-      }
-
-      updateTimerDisplay() {
-        if (!this.el.timerText) return;
-        const mins = Math.floor(Math.max(0, this.timerSeconds) / 60);
-        const secs = Math.max(0, this.timerSeconds) % 60;
-        this.el.timerText.textContent = `${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
-      }
-
-      renderPassage() {
-        if (!this.el.passageBody) return;
-        const rawText = (TEXTS[this.currentTopic] && TEXTS[this.currentTopic][this.currentLevel]) || "";
-
-        if (this.el.topicDisplay) {
-          this.el.topicDisplay.textContent = `${this.currentTopic} — ${this.currentLevel}`;
-        }
-
-        // Split text into readable sentences / segments
-        const sentences = rawText.match(/[^.!?]+[.!?]+/g) || [rawText];
-        
-        let html = '<div class="rd-para-item">';
-        html += '<span class="rd-para-marker">[¶ 1]</span>';
-
-        sentences.forEach((s, idx) => {
-          const trimmed = s.trim();
-          html += `<span class="rd-highlightable" data-sentence="${idx}">${trimmed} </span>`;
-        });
-        html += '</div>';
-
-        this.el.passageBody.innerHTML = html;
-
-        // Add highlighter listener on sentences
-        const highlightSpans = this.el.passageBody.querySelectorAll(".rd-highlightable");
-        highlightSpans.forEach(span => {
-          span.addEventListener("click", () => {
-            span.classList.toggle("highlighted");
-          });
-        });
-      }
-
-      renderQuestionPills() {
-        if (!this.el.qPillsWrap) return;
-        this.el.qPillsWrap.innerHTML = "";
-
-        this.questions.forEach((_, idx) => {
-          const btn = document.createElement("button");
-          btn.type = "button";
-          btn.className = "rd-q-pill-btn";
-          btn.textContent = String(idx + 1);
-
-          if (idx === this.currentQIndex) btn.classList.add("active");
-          if (this.userAnswers[idx] !== undefined) btn.classList.add("answered");
-
-          btn.addEventListener("click", () => {
-            this.currentQIndex = idx;
-            this.renderQuestion();
-          });
-
-          this.el.qPillsWrap.appendChild(btn);
-        });
-      }
-
-      renderQuestion() {
-        if (!this.questions.length) return;
-        const curQ = this.questions[this.currentQIndex];
-        if (!curQ) return;
-
-        this.renderQuestionPills();
-
-        if (this.el.qTypeBadge) {
-          const typeNames = {
-            MCQ: "Multiple Choice",
-            TFNG: "True / False / Not Given",
-            INFERENCE: "Inference & Purpose",
-            VOCAB: "Vocabulary in Context"
-          };
-          this.el.qTypeBadge.textContent = typeNames[curQ.type] || curQ.type;
-        }
-
-        if (this.el.qNumberLabel) {
-          this.el.qNumberLabel.textContent = `Savol ${this.currentQIndex + 1} / ${this.questions.length}`;
-        }
-
-        if (this.el.qPrompt) {
-          this.el.qPrompt.textContent = curQ.q;
-        }
-
-        if (this.el.optionsList) {
-          this.el.optionsList.innerHTML = "";
-
-          const optionLetters = ["A", "B", "C", "D"];
-          curQ.options.forEach((opt, idx) => {
-            const item = document.createElement("button");
-            item.type = "button";
-            item.className = "rd-opt-item";
-
-            if (this.userAnswers[this.currentQIndex] === idx) {
-              item.classList.add("selected");
-            }
-
-            let markerText = optionLetters[idx] || String(idx + 1);
-            if (curQ.type === "TFNG") {
-              if (idx === 0) markerText = "T";
-              else if (idx === 1) markerText = "F";
-              else markerText = "NG";
-            }
-
-            item.innerHTML = `
-              <span class="rd-opt-marker">${markerText}</span>
-              <span class="rd-opt-text">${opt}</span>
-            `;
-
-            item.addEventListener("click", () => {
-              this.userAnswers[this.currentQIndex] = idx;
-              this.renderQuestion();
-            });
-
-            this.el.optionsList.appendChild(item);
-          });
-        }
-
-        // Prev / Next button states
-        if (this.el.prevQBtn) this.el.prevQBtn.disabled = (this.currentQIndex === 0);
-        if (this.el.nextQBtn) this.el.nextQBtn.disabled = (this.currentQIndex === this.questions.length - 1);
-      }
-
-      finishExam(isTimeout = false) {
-        this.stopTimer();
-
-        let correctCount = 0;
-        this.questions.forEach((q, idx) => {
-          if (this.userAnswers[idx] === q.answer) correctCount++;
-        });
-
-        const totalQ = this.questions.length;
-        const percentage = Math.round((correctCount / totalQ) * 100);
-
-        // CEFR / IELTS Band calculation
-        let bandTitle = "B1 Intermediate (IELTS 5.0 - 5.5)";
-        let icon = "🎯";
-        if (percentage === 100) {
-          bandTitle = "C1 Mastery (IELTS 8.5 - 9.0) — A'lo daraja!";
-          icon = "🏆";
-        } else if (percentage >= 66) {
-          bandTitle = "B2 Upper-Intermediate (IELTS 6.5 - 7.0) — Yaxshi natija!";
-          icon = "⭐";
-        } else {
-          bandTitle = "A2 / B1 Foundational — Qaytadan mashq qilish tavsiya etiladi";
-          icon = "📚";
-        }
-
-        if (this.el.resultIcon) this.el.resultIcon.textContent = icon;
-        if (this.el.resultBandBadge) this.el.resultBandBadge.textContent = bandTitle;
-        if (this.el.resultScoreText) this.el.resultScoreText.textContent = `${correctCount} / ${totalQ} (${percentage}%)`;
-
-        const mins = Math.floor(this.secondsElapsed / 60);
-        const secs = this.secondsElapsed % 60;
-        if (this.el.resultTimeText) {
-          this.el.resultTimeText.textContent = isTimeout
-            ? "⏱️ Vaqt tugadi! 05:00 sarflandi."
-            : `⏱️ ${mins} daqiqa ${secs} soniya sarflandi.`;
-        }
-
-        // Render detailed Diagnostic Review
-        if (this.el.reviewList) {
-          this.el.reviewList.innerHTML = "";
-
-          this.questions.forEach((q, idx) => {
-            const userAnsIdx = this.userAnswers[idx];
-            const isCorrect = (userAnsIdx === q.answer);
-
-            const card = document.createElement("div");
-            card.className = `rd-review-item ${isCorrect ? "correct" : "incorrect"}`;
-
-            const userAnsText = userAnsIdx !== undefined ? q.options[userAnsIdx] : "(Javob berilmadi)";
-            const corrAnsText = q.options[q.answer];
-
-            card.innerHTML = `
-              <div class="rd-rev-q-title">${idx + 1}. ${q.q}</div>
-              <div class="rd-rev-answers">
-                <div class="rd-rev-user-ans ${isCorrect ? "is-correct" : "is-wrong"}">
-                  Sizning javobingiz: ${userAnsText} ${isCorrect ? "✓ To'g'ri" : "✗ Noto'g'ri"}
-                </div>
-                ${!isCorrect ? `<div class="rd-rev-corr-ans">To'g'ri javob: ${corrAnsText}</div>` : ""}
-              </div>
-              <div class="rd-rev-evidence-box">
-                <span class="rd-rev-evidence-label">📖 Matndagi dalil (Text Evidence):</span>
-                “${q.evidence}”
-              </div>
-              <div class="rd-rev-explanation">
-                <strong>Izoh:</strong> ${q.explanation}
-              </div>
-            `;
-
-            this.el.reviewList.appendChild(card);
-          });
-        }
-
-        if (this.el.resultModal) {
-          this.el.resultModal.classList.remove("hidden");
-          this.el.resultModal.scrollIntoView({ behavior: "smooth", block: "start" });
-        }
-      }
-    }
-
     // DOM Elements
     const homeView = document.getElementById("home-view");
     const readerView = document.getElementById("reader-view");
@@ -6209,14 +5229,12 @@
 
     const vocabularyView = document.getElementById("vocabulary-view");
     const flashcardsView = document.getElementById("flashcards-view");
-    const readingView = document.getElementById("reading-view");
 
     // Mode Buttons (Speaking, Listening, Vocabulary)
     const modeSpeakingBtn = document.getElementById("mode-speaking-btn");
     const modeListeningBtn = document.getElementById("mode-listening-btn");
     const modeVocabularyBtn = document.getElementById("mode-vocabulary-btn");
     const modeFlashcardsBtn = document.getElementById("mode-flashcards-btn");
-    const modeReadingBtn = document.getElementById("mode-reading-btn");
     let currentMode = "speaking"; // "speaking", "listening", or "vocabulary"
 
     modeSpeakingBtn.addEventListener("click", () => {
@@ -6225,7 +5243,6 @@
       modeListeningBtn.classList.remove("active");
       modeVocabularyBtn.classList.remove("active");
       modeFlashcardsBtn.classList.remove("active");
-      modeReadingBtn.classList.remove("active");
       homeTagline.textContent = "Read aloud smoothly at your own pace. Voice prompt & auto-scrolling.";
     });
 
@@ -6235,7 +5252,6 @@
       modeSpeakingBtn.classList.remove("active");
       modeVocabularyBtn.classList.remove("active");
       modeFlashcardsBtn.classList.remove("active");
-      modeReadingBtn.classList.remove("active");
       homeTagline.textContent = "Listen to clear English audio, test comprehension with interactive questions.";
     });
 
@@ -6245,7 +5261,6 @@
       modeSpeakingBtn.classList.remove("active");
       modeListeningBtn.classList.remove("active");
       modeFlashcardsBtn.classList.remove("active");
-      modeReadingBtn.classList.remove("active");
       homeTagline.textContent = "Learn essential words, natural examples, and Uzbek translations with native audio.";
     });
 
@@ -6255,18 +5270,7 @@
       modeSpeakingBtn.classList.remove("active");
       modeListeningBtn.classList.remove("active");
       modeVocabularyBtn.classList.remove("active");
-      modeReadingBtn.classList.remove("active");
       homeTagline.textContent = "Review words with interactive 3D flip cards, audio pronunciation, and memory tracking.";
-    });
-
-    modeReadingBtn.addEventListener("click", () => {
-      currentMode = "reading";
-      modeReadingBtn.classList.add("active");
-      modeSpeakingBtn.classList.remove("active");
-      modeListeningBtn.classList.remove("active");
-      modeVocabularyBtn.classList.remove("active");
-      modeFlashcardsBtn.classList.remove("active");
-      homeTagline.textContent = "Exam-style reading comprehension test with timer, paragraph evidence, and CEFR scoring.";
     });
 
     // Speaking Reader Elements
@@ -6338,71 +5342,6 @@
     });
 
     // Vocabulary View Elements & Controller
-
-
-    const readingExam = new ReadingExamController({
-      view: readingView,
-      topbar: document.getElementById("rd-topbar"),
-      topicDisplay: document.getElementById("rd-topic-display"),
-      statusBadge: document.getElementById("rd-status-badge"),
-      levelPills: document.querySelectorAll(".rd-lvl-pill"),
-      timerBox: document.getElementById("rd-timer-box"),
-      timerText: document.getElementById("rd-timer-text"),
-      timerToggleBtn: document.getElementById("rd-timer-toggle-btn"),
-      fontIncBtn: document.getElementById("rd-font-inc-btn"),
-      fontDecBtn: document.getElementById("rd-font-dec-btn"),
-      highlightToggleBtn: document.getElementById("rd-highlight-toggle-btn"),
-      passageBody: document.getElementById("rd-passage-body"),
-      qPillsWrap: document.getElementById("rd-q-pills-wrap"),
-      qTypeBadge: document.getElementById("rd-q-type-badge"),
-      qNumberLabel: document.getElementById("rd-q-number-label"),
-      qPrompt: document.getElementById("rd-q-prompt"),
-      optionsList: document.getElementById("rd-options-list"),
-      prevQBtn: document.getElementById("rd-prev-q-btn"),
-      nextQBtn: document.getElementById("rd-next-q-btn"),
-      submitBtn: document.getElementById("rd-submit-btn"),
-      resultModal: document.getElementById("rd-result-modal"),
-      resultIcon: document.getElementById("rd-result-icon"),
-      resultTitle: document.getElementById("rd-result-title"),
-      resultBandBadge: document.getElementById("rd-result-band-badge"),
-      resultScoreText: document.getElementById("rd-result-score-text"),
-      resultTimeText: document.getElementById("rd-result-time-text"),
-      reviewList: document.getElementById("rd-review-list"),
-      retakeBtn: document.getElementById("rd-retake-btn"),
-      nextTopicBtn: document.getElementById("rd-next-topic-btn")
-    });
-
-    document.getElementById("rd-back-btn").addEventListener("click", () => {
-      readingExam.stopTimer();
-      readingView.classList.add("hidden");
-      homeView.classList.remove("hidden");
-    });
-
-    document.getElementById("rd-to-speak-btn").addEventListener("click", () => {
-      readingExam.stopTimer();
-      openReaderView(readingExam.currentTopic, readingExam.currentLevel);
-    });
-
-    document.getElementById("rd-to-listen-btn").addEventListener("click", () => {
-      readingExam.stopTimer();
-      openListeningView(readingExam.currentTopic, readingExam.currentLevel);
-    });
-
-    document.getElementById("rd-to-vocab-btn").addEventListener("click", () => {
-      readingExam.stopTimer();
-      openVocabularyView(readingExam.currentTopic, readingExam.currentLevel);
-    });
-
-    document.getElementById("rd-to-flashcards-btn").addEventListener("click", () => {
-      readingExam.stopTimer();
-      openFlashcardsView(readingExam.currentTopic, readingExam.currentLevel);
-    });
-
-    readingView.addEventListener("mousedown", (e) => {
-      if (e.target.tagName !== "INPUT" && e.target.tagName !== "BUTTON" && !e.target.classList.contains("rd-highlightable")) {
-        e.preventDefault();
-      }
-    });
 
     const flashcardsPractice = new FlashcardsPracticeController({
       view: flashcardsView,
@@ -6583,10 +5522,8 @@
           openListeningView(selectedTopic, selectedLevel);
         } else if (currentMode === "vocabulary") {
           openVocabularyView(selectedTopic, selectedLevel);
-        } else if (currentMode === "flashcards") {
-          openFlashcardsView(selectedTopic, selectedLevel);
         } else {
-          openReadingView(selectedTopic, selectedLevel);
+          openFlashcardsView(selectedTopic, selectedLevel);
         }
       });
     });
@@ -6622,7 +5559,6 @@
       listeningView.classList.add("hidden");
       vocabularyView.classList.add("hidden");
       flashcardsView.classList.add("hidden");
-      readingView.classList.add("hidden");
       readerView.classList.remove("hidden");
       readerTopicDisplay.textContent = `${topic} — ${level}`;
       voiceNotice.textContent = "";
@@ -6644,27 +5580,9 @@
       readerView.classList.add("hidden");
       vocabularyView.classList.add("hidden");
       flashcardsView.classList.add("hidden");
-      readingView.classList.add("hidden");
       listeningView.classList.remove("hidden");
 
       listeningPractice.startSession(topic, level);
-    }
-
-    function openReadingView(topic, level) {
-      clearIntroSequence();
-      scroller.pause();
-      ambientMusic.pause();
-      listeningPractice.stopSpeech();
-      vocabPractice.stopSpeech();
-      flashcardsPractice.stopSpeech();
-      homeView.classList.add("hidden");
-      readerView.classList.add("hidden");
-      listeningView.classList.add("hidden");
-      vocabularyView.classList.add("hidden");
-      flashcardsView.classList.add("hidden");
-      readingView.classList.remove("hidden");
-
-      readingExam.startSession(topic, level);
     }
 
     function openFlashcardsView(topic, level) {
@@ -6677,7 +5595,6 @@
       readerView.classList.add("hidden");
       listeningView.classList.add("hidden");
       vocabularyView.classList.add("hidden");
-      readingView.classList.add("hidden");
       flashcardsView.classList.remove("hidden");
 
       flashcardsPractice.startSession(topic, level);
@@ -6693,7 +5610,6 @@
       readerView.classList.add("hidden");
       listeningView.classList.add("hidden");
       flashcardsView.classList.add("hidden");
-      readingView.classList.add("hidden");
       vocabularyView.classList.remove("hidden");
 
       vocabPractice.startSession(topic, level);
