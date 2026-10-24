@@ -1,0 +1,19 @@
+{
+  "name": "speakflow",
+  "version": "1.0.0",
+  "description": "SpeakFlow — English Speaking, Listening, Reading, Vocabulary & Flashcards Practice Web Application",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": [
+    "english",
+    "speaking",
+    "listening",
+    "reading",
+    "vocabulary",
+    "flashcards"
+  ],
+  "author": "xurshidxudoyqulov60-crypto",
+  "license": "MIT"
+}

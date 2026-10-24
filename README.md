@@ -60,13 +60,19 @@ Minimalist va qulay ingliz tili amaliyoti veb-ilovasi. Foydalanuvchilar o'qish t
 
 ## 🛠️ O'rnatish va Ishga tushirish
 
-Hech qanday qo'shimcha o'rnatish talab etilmaydi. Shunchaki brauzerda oching:
-
 1. Reponi yuklab oling yoki klon qiling:
    ```bash
    git clone https://github.com/xurshidxudoyqulov60-crypto/Speaking.git
+   cd Speaking
    ```
-2. `index.html` faylini istalgan brauzerda oching (Chrome, Edge, Safari yoki Firefox).
+2. Mahalliy serverda ishga tushirish (Localhost):
+   ```bash
+   npm start
+   # yoki
+   node server.js
+   ```
+3. Brauzerda oching:
+   👉 **http://localhost:3000**
 
 ---
 
@@ -75,6 +81,8 @@ Hech qanday qo'shimcha o'rnatish talab etilmaydi. Shunchaki brauzerda oching:
 ```text
 ├── index.html          # Asosiy veb-ilova (Speaking, Listening, Reading, Vocabulary, Flashcards)
 ├── Speak Up.html       # Zaxira nusxa
+├── server.js           # Tezkor zero-dependency localhost HTTP serveri (Audio range qo'llab-quvvatlaydi)
+├── package.json        # Loyiha konfiguratsiyasi
 ├── assets/
 │   └── audio/          # Mahalliy Minecraft fon musiqalari (.mp3)
 └── README.md           # Loyiha qo'llanmasi
