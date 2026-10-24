@@ -2080,7 +2080,6 @@
         <div class="vocab-mode-shortcuts">
           <button type="button" id="vocab-to-speak-btn" class="action-btn secondary">🎙️ Shu matnni o'qish</button>
           <button type="button" id="vocab-to-listen-btn" class="action-btn secondary">🎧 Tinglash va Test</button>
-          <button type="button" id="vocab-to-flashcard-btn" class="action-btn secondary">🃏 Flashcard takrorlash</button>
         </div>
         <button type="button" id="vocab-next-btn" class="action-btn primary">Keyingi mavzu →</button>
       </div>
@@ -5309,13 +5308,6 @@
       flashcardsPractice.stopSpeech();
       openListeningView(flashcardsPractice.currentTopic, flashcardsPractice.currentLevel);
     });
-
-    if (document.getElementById("vocab-to-flashcard-btn")) {
-      document.getElementById("vocab-to-flashcard-btn").addEventListener("click", () => {
-        vocabPractice.stopSpeech();
-        openFlashcardsView(vocabPractice.currentTopic, vocabPractice.currentLevel);
-      });
-    }
 
     flashcardsView.addEventListener("mousedown", (e) => {
       if (e.target.tagName !== "INPUT" && e.target.tagName !== "BUTTON") {
