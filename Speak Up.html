@@ -711,7 +711,7 @@
     /* Actions Wrap */
     .fc-actions-wrap {
       display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
+      grid-template-columns: 1fr 1fr;
       gap: 10px;
     }
 
@@ -2180,11 +2180,6 @@
 
       <!-- MEMORY REVIEW ACTIONS (Qaytarish vs Yodladim) -->
       <div id="fc-actions-wrap" class="fc-actions-wrap">
-        <button type="button" id="fc-again-btn" class="fc-action-btn again" title="Keyinroq yana takrorlash">
-          <span class="btn-icon">🔄</span>
-          <span class="btn-title">Qaytarish</span>
-          <span class="btn-sub">Yana o'rganish</span>
-        </button>
 
         <button type="button" id="fc-flip-btn" class="fc-action-btn flip" title="Kartani aylantirish">
           <span class="btn-icon">↷</span>
@@ -2233,13 +2228,6 @@
           <button type="button" id="fc-to-speak-btn" class="action-btn secondary">🎙️ Shu matnni o'qish</button>
           <button type="button" id="fc-next-topic-btn" class="action-btn primary">Keyingi mavzu →</button>
         </div>
-      </div>
-
-      <!-- BOTTOM NAVIGATION SHORTCUTS -->
-      <div class="fc-bottom-shortcuts">
-        <button type="button" id="fc-bottom-to-vocab-btn" class="action-btn secondary">📖 Lug'at ro'yxatiga o'tish</button>
-        <button type="button" id="fc-bottom-to-speak-btn" class="action-btn secondary">🎙️ O'qish (Speaking)</button>
-        <button type="button" id="fc-bottom-to-listen-btn" class="action-btn secondary">🎧 Tinglash (Listening)</button>
       </div>
     </section>
 
@@ -5264,7 +5252,6 @@
       backTr: document.getElementById("fc-back-tr"),
       backEx: document.getElementById("fc-back-ex"),
       backExTr: document.getElementById("fc-back-ex-tr"),
-      againBtn: document.getElementById("fc-again-btn"),
       flipBtn: document.getElementById("fc-flip-btn"),
       knowBtn: document.getElementById("fc-know-btn"),
       prevBtn: document.getElementById("fc-prev-btn"),
@@ -5292,21 +5279,6 @@
     document.getElementById("fc-to-speak-btn").addEventListener("click", () => {
       flashcardsPractice.stopSpeech();
       openReaderView(flashcardsPractice.currentTopic, flashcardsPractice.currentLevel);
-    });
-
-    document.getElementById("fc-bottom-to-vocab-btn").addEventListener("click", () => {
-      flashcardsPractice.stopSpeech();
-      openVocabularyView(flashcardsPractice.currentTopic, flashcardsPractice.currentLevel);
-    });
-
-    document.getElementById("fc-bottom-to-speak-btn").addEventListener("click", () => {
-      flashcardsPractice.stopSpeech();
-      openReaderView(flashcardsPractice.currentTopic, flashcardsPractice.currentLevel);
-    });
-
-    document.getElementById("fc-bottom-to-listen-btn").addEventListener("click", () => {
-      flashcardsPractice.stopSpeech();
-      openListeningView(flashcardsPractice.currentTopic, flashcardsPractice.currentLevel);
     });
 
     flashcardsView.addEventListener("mousedown", (e) => {
