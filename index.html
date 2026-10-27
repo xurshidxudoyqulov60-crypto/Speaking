@@ -1025,20 +1025,20 @@
     .topic-search-input {
       width: 100%;
       padding: 12px 38px 12px 38px;
-      background: var(--bg-card);
+      background: #ffffff;
       border: 1px solid var(--border);
       border-radius: var(--radius-sm);
       color: var(--text-main);
       font-size: 0.92rem;
       outline: none;
-      transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
       box-sizing: border-box;
       font-family: inherit;
     }
 
     .topic-search-input:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(10, 132, 255, 0.15);
+      border-color: #000000;
+      box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.08);
     }
 
     .topic-search-clear {
@@ -1055,11 +1055,11 @@
       align-items: center;
       justify-content: center;
       border-radius: 50%;
-      transition: background var(--transition-fast), color var(--transition-fast);
+      transition: background 0.15s ease, color 0.15s ease;
     }
 
     .topic-search-clear:hover {
-      background: var(--bg-card-hover);
+      background: var(--btn-hover);
       color: var(--text-main);
     }
 
@@ -1077,7 +1077,7 @@
     }
 
     .topic-cat-pill {
-      background: var(--bg-card);
+      background: #ffffff;
       border: 1px solid var(--border);
       border-radius: 999px;
       color: var(--text-muted);
@@ -1086,7 +1086,7 @@
       font-weight: 500;
       white-space: nowrap;
       cursor: pointer;
-      transition: all var(--transition-fast);
+      transition: all 0.15s ease;
       font-family: inherit;
     }
 
@@ -1096,9 +1096,9 @@
     }
 
     .topic-cat-pill.active {
-      background: var(--text-main);
-      color: var(--bg-main);
-      border-color: var(--text-main);
+      background: #111111 !important;
+      color: #ffffff !important;
+      border-color: #111111 !important;
       font-weight: 600;
     }
 
@@ -1123,8 +1123,8 @@
 
     .topic-empty-state button {
       margin-top: 12px;
-      background: var(--accent);
-      color: #fff;
+      background: #111111;
+      color: #ffffff;
       border: none;
       padding: 8px 18px;
       border-radius: var(--radius-sm);
@@ -1132,11 +1132,11 @@
       font-family: inherit;
       font-size: 0.85rem;
       font-weight: 600;
-      transition: opacity var(--transition-fast);
+      transition: opacity 0.15s ease;
     }
 
     .topic-empty-state button:hover {
-      opacity: 0.9;
+      opacity: 0.85;
     }
 
     /* TOPIC LIST & INLINE LEVEL PILLS */
@@ -2395,8 +2395,7 @@
 
   <script type="module">
     // =========================================================================
-    // =========================================================================
-    // 1. MATNLAR BAZASI (50 mavzu x 3 daraja = 150 ta CEFR mos motivatsion matn)
+    // 1. MATNLAR BAZASI (10 mavzu x 3 daraja = 30 ta CEFR mos motivatsion matn)
     // =========================================================================
     const TOPICS = [
   "Daily Life",
@@ -2757,6 +2756,9 @@
   }
 };
 
+    // =========================================================================
+    // 2. LISTENING SAVOLLARI BAZASI (30 matn x 3 savol = 90 savol)
+    // =========================================================================
     const LISTENING_QUIZ = {
   "Daily Life": {
     "A1": [
@@ -6790,6 +6792,744 @@
   }
 };
 
+    // =========================================================================
+    // 3. MINECRAFT DEFAULT FON MUSIQASI (Lokal C418 MP3)
+    // =========================================================================
+    const MUSIC_TRACKS = [
+      { id: "mc-sweden", title: "Minecraft — Sweden (Calm 3)", url: "assets/audio/sweden.mp3" },
+      { id: "mc-wethands", title: "Minecraft — Wet Hands", url: "assets/audio/wet-hands.mp3" },
+      { id: "mc-subwoofer", title: "Minecraft — Subwoofer Lullaby", url: "assets/audio/subwoofer-lullaby.mp3" },
+      { id: "mc-mice", title: "Minecraft — Mice on Venus", url: "assets/audio/mice-on-venus.mp3" },
+      { id: "mc-minecraft", title: "Minecraft — Minecraft (Calm 1)", url: "assets/audio/minecraft.mp3" },
+      { id: "mc-haggstrom", title: "Minecraft — Haggstrom", url: "assets/audio/haggstrom.mp3" }
+    ];
+
+    // =========================================================================
+    // 4. MINIMAL AMBIENT MUSIC CONTROLLER
+    // =========================================================================
+    class AmbientMusicController {
+      constructor(elements) {
+        this.el = elements;
+        this.tracks = MUSIC_TRACKS;
+        this.currentIndex = 0;
+        this.isPlaying = false;
+        this.isMuted = false;
+        this.volume = 0.35;
+
+        this.audio = new Audio();
+        this.audio.preload = "none";
+        this.audio.volume = this.volume;
+
+        this.audio.addEventListener("ended", () => this.nextTrack());
+        this.audio.addEventListener("error", (e) => {
+          if (this.el.notice) {
+            this.el.notice.textContent = "Audio yuklanmoqda...";
+            setTimeout(() => { if (this.el.notice) this.el.notice.textContent = ""; }, 3000);
+          }
+          this.setPlayingState(false);
+        });
+
+        this.initUI();
+      }
+
+      initUI() {
+        this.el.select.innerHTML = "";
+        this.tracks.forEach((t, i) => {
+          const opt = document.createElement("option");
+          opt.value = String(i);
+          opt.textContent = t.title;
+          this.el.select.appendChild(opt);
+        });
+
+        this.el.select.addEventListener("change", (e) => {
+          this.currentIndex = Number(e.target.value);
+          this.loadAndPlay(this.isPlaying);
+        });
+
+        this.el.playBtn.addEventListener("click", () => this.togglePlay());
+        this.el.prevBtn.addEventListener("click", () => this.prevTrack());
+        this.el.nextBtn.addEventListener("click", () => this.nextTrack());
+        this.el.muteBtn.addEventListener("click", () => this.toggleMute());
+
+        this.el.volSlider.value = String(this.volume);
+        this.el.volSlider.addEventListener("input", (e) => {
+          this.volume = Number(e.target.value);
+          if (this.isMuted) this.isMuted = false;
+          this.updateVolume();
+        });
+      }
+
+      updateVolume() {
+        this.audio.volume = this.isMuted ? 0 : this.volume;
+        this.el.muteIcon.textContent = this.isMuted || this.volume === 0 ? "🔇" : "🔊";
+      }
+
+      toggleMute() {
+        this.isMuted = !this.isMuted;
+        this.updateVolume();
+      }
+
+      setPlayingState(playing) {
+        this.isPlaying = playing;
+        this.el.playIcon.textContent = playing ? "⏸" : "▶";
+        this.el.playText.textContent = playing ? "Pause" : "Music";
+        if (playing) {
+          this.el.dot.classList.add("playing");
+        } else {
+          this.el.dot.classList.remove("playing");
+        }
+      }
+
+      async loadAndPlay(shouldPlay = true) {
+        const track = this.tracks[this.currentIndex];
+        this.el.select.value = String(this.currentIndex);
+        this.audio.src = track.url;
+        this.updateVolume();
+
+        if (shouldPlay) {
+          try {
+            await this.audio.play();
+            this.setPlayingState(true);
+          } catch (err) {
+            this.setPlayingState(false);
+          }
+        } else {
+          this.setPlayingState(false);
+        }
+      }
+
+      async togglePlay() {
+        if (this.isPlaying) {
+          this.audio.pause();
+          this.setPlayingState(false);
+        } else {
+          if (!this.audio.src || this.audio.src === "") {
+            await this.loadAndPlay(true);
+          } else {
+            try {
+              await this.audio.play();
+              this.setPlayingState(true);
+            } catch (err) {
+              await this.loadAndPlay(true);
+            }
+          }
+        }
+      }
+
+      prevTrack() {
+        this.currentIndex = (this.currentIndex - 1 + this.tracks.length) % this.tracks.length;
+        this.loadAndPlay(this.isPlaying);
+      }
+
+      nextTrack() {
+        this.currentIndex = (this.currentIndex + 1) % this.tracks.length;
+        this.loadAndPlay(this.isPlaying);
+      }
+
+      pause() {
+        if (this.isPlaying) {
+          this.audio.pause();
+          this.setPlayingState(false);
+        }
+      }
+    }
+
+    // =========================================================================
+    // 5. QATORLAR VA SHRIFT BOSHQARUVCHISI (Maksimum 4 so'z, ResizeObserver)
+    // =========================================================================
+    class TextLayoutManager {
+      constructor(viewportEl, contentEl) {
+        this.viewportEl = viewportEl;
+        this.contentEl = contentEl;
+        this.rawText = "";
+        this.lines = [];
+        this.measureCanvas = document.createElement("canvas");
+        this.measureCtx = this.measureCanvas.getContext("2d");
+      }
+
+      setText(text) {
+        this.rawText = text.trim();
+        this.lines = this.splitIntoFourWordLines(this.rawText);
+        this.renderLines();
+        this.fitFontToContainer();
+      }
+
+      splitIntoFourWordLines(text) {
+        const words = text.split(/\s+/).filter(Boolean);
+        const chunks = [];
+        for (let i = 0; i < words.length; i += 4) {
+          chunks.push(words.slice(i, i + 4).join(" "));
+        }
+        return chunks;
+      }
+
+      renderLines() {
+        this.contentEl.innerHTML = "";
+        const vh = this.viewportEl.clientHeight || 300;
+        const pad = Math.round(vh * 0.45);
+        this.contentEl.style.paddingTop = `${pad}px`;
+        this.contentEl.style.paddingBottom = `${pad}px`;
+
+        const frag = document.createDocumentFragment();
+        for (const lineText of this.lines) {
+          const div = document.createElement("div");
+          div.className = "text-line";
+          div.textContent = lineText;
+          frag.appendChild(div);
+        }
+        this.contentEl.appendChild(frag);
+      }
+
+      fitFontToContainer() {
+        if (!this.lines.length) return;
+        const availableWidth = Math.max(220, (this.viewportEl.clientWidth || 340) - 16);
+        let fontSize = window.innerWidth <= 420 ? 27 : 31;
+        const minFontSize = 16;
+
+        let longestLine = "";
+        for (const line of this.lines) {
+          if (line.length > longestLine.length) longestLine = line;
+        }
+
+        while (fontSize > minFontSize) {
+          this.measureCtx.font = `500 ${fontSize}px system-ui, -apple-system, sans-serif`;
+          if (this.measureCtx.measureText(longestLine).width <= availableWidth) {
+            break;
+          }
+          fontSize -= 1;
+        }
+
+        const lineEls = this.contentEl.querySelectorAll(".text-line");
+        lineEls.forEach(el => {
+          el.style.fontSize = `${fontSize}px`;
+        });
+      }
+
+      recalculateLayout() {
+        const vh = this.viewportEl.clientHeight || 300;
+        const pad = Math.round(vh * 0.45);
+        this.contentEl.style.paddingTop = `${pad}px`;
+        this.contentEl.style.paddingBottom = `${pad}px`;
+        this.fitFontToContainer();
+      }
+    }
+
+    // =========================================================================
+    // 6. UZLUKSIZ SMOOTH SCROLL ENGINE
+    // =========================================================================
+    class SmoothScroller {
+      constructor(viewportEl, contentEl, onStateChange) {
+        this.viewportEl = viewportEl;
+        this.contentEl = contentEl;
+        this.onStateChange = onStateChange;
+
+        this.y = 0.0;
+        this.maxScrollY = 0.0;
+        this.speed = 38.0;
+        this.state = "Ready";
+        this.rafId = null;
+        this.lastTimestamp = 0;
+
+        this.tick = this.tick.bind(this);
+      }
+
+      measureBounds() {
+        const contentHeight = this.contentEl.scrollHeight;
+        const viewportHeight = this.viewportEl.clientHeight;
+        this.maxScrollY = Math.max(0, contentHeight - viewportHeight * 0.55);
+      }
+
+      setSpeed(pxPerSec) {
+        this.speed = Math.max(8, Math.min(140, Number(pxPerSec) || 38));
+      }
+
+      getProgressRatio() {
+        if (this.maxScrollY <= 0) return 0;
+        return Math.max(0, Math.min(1, this.y / this.maxScrollY));
+      }
+
+      restoreFromProgressRatio(ratio) {
+        this.measureBounds();
+        this.y = ratio * this.maxScrollY;
+        this.applyTransform();
+      }
+
+      applyTransform() {
+        this.contentEl.style.transform = `translate3d(0, -${this.y}px, 0)`;
+      }
+
+      start() {
+        if (this.state === "Playing") return;
+        this.measureBounds();
+        if (this.y >= this.maxScrollY) {
+          this.y = 0.0;
+          this.applyTransform();
+        }
+        this.setState("Playing");
+        this.lastTimestamp = 0;
+        if (!this.rafId) {
+          this.rafId = requestAnimationFrame(this.tick);
+        }
+      }
+
+      pause() {
+        if (this.state !== "Playing") return;
+        if (this.rafId) {
+          cancelAnimationFrame(this.rafId);
+          this.rafId = null;
+        }
+        this.lastTimestamp = 0;
+        this.setState("Paused");
+      }
+
+      resume() {
+        if (this.state !== "Paused") return;
+        this.setState("Playing");
+        this.lastTimestamp = 0;
+        if (!this.rafId) {
+          this.rafId = requestAnimationFrame(this.tick);
+        }
+      }
+
+      restart() {
+        if (this.rafId) {
+          cancelAnimationFrame(this.rafId);
+          this.rafId = null;
+        }
+        this.lastTimestamp = 0;
+        this.y = 0.0;
+        this.measureBounds();
+        this.applyTransform();
+        this.setState("Ready");
+      }
+
+      tick(timestamp) {
+        if (this.state !== "Playing") {
+          this.rafId = null;
+          return;
+        }
+
+        if (!this.lastTimestamp) {
+          this.lastTimestamp = timestamp;
+        }
+
+        let deltaTime = (timestamp - this.lastTimestamp) / 1000;
+        this.lastTimestamp = timestamp;
+
+        if (deltaTime < 0 || deltaTime > 0.05) {
+          deltaTime = 0.016;
+        }
+
+        this.y += this.speed * deltaTime;
+
+        if (this.y >= this.maxScrollY) {
+          this.y = this.maxScrollY;
+          this.applyTransform();
+          this.rafId = null;
+          this.setState("Completed");
+          return;
+        }
+
+        this.applyTransform();
+        this.rafId = requestAnimationFrame(this.tick);
+      }
+
+      setState(nextState) {
+        this.state = nextState;
+        if (this.onStateChange) this.onStateChange(this.state);
+      }
+    }
+
+    // =========================================================================
+    // 7. AYOL OVOZI (Intro)
+    // =========================================================================
+    // =========================================================================
+    // 7. YOSH VA MAYIN QIZ OVOZINI TANLASH (18-20 yoshlar, nozik tembr)
+    // =========================================================================
+    function getAvailableEnglishVoices() {
+      if (!("speechSynthesis" in window)) return [];
+      return window.speechSynthesis.getVoices().filter(v => /^en/i.test(v.lang));
+    }
+
+    function getBestYoungFemaleVoice() {
+      const voices = getAvailableEnglishVoices();
+      if (!voices.length) return null;
+
+      // 1. Natural / Neural yosh qiz ovozlari (Edge & Chrome Natural)
+      const neuralYoung = voices.find(v =>
+        /natural/i.test(v.name) &&
+        /(jenny|ava|ana|aria|emma|maisie|sonia|michelle)/i.test(v.name)
+      );
+      if (neuralYoung) return neuralYoung;
+
+      // 2. Google US / UK English Natural
+      const googleYoung = voices.find(v =>
+        /(google us english|google uk english female)/i.test(v.name)
+      );
+      if (googleYoung) return googleYoung;
+
+      // 3. Apple yosh ovozlar (Ava, Zoe, Serena, Samantha)
+      const appleYoung = voices.find(v =>
+        /(ava|zoe|serena|samantha|allison|karen|victoria)/i.test(v.name)
+      );
+      if (appleYoung) return appleYoung;
+
+      // 4. Windows Zira yoki har qanday ingliz ayol ovozi
+      const anyFemale = voices.find(v =>
+        /(female|zira|jenny|aria|eva|girl|woman)/i.test(v.name)
+      );
+      if (anyFemale) return anyFemale;
+
+      // 5. Erkak ovoz bo'lmagan birinchi ingliz ovozi
+      const nonMale = voices.find(v => !/(male|david|george|mark|stefan|guy)/i.test(v.name));
+      if (nonMale) return nonMale;
+
+      return voices[0];
+    }
+
+    class IntroVoiceManager {
+      constructor() {
+        this.cancelled = false;
+      }
+
+      cancel() {
+        this.cancelled = true;
+        if ("speechSynthesis" in window) {
+          window.speechSynthesis.cancel();
+        }
+      }
+
+      playIntroSpeech(noticeEl) {
+        this.cancelled = false;
+        return new Promise((resolve) => {
+          if (!("speechSynthesis" in window)) {
+            if (noticeEl) noticeEl.textContent = "Voice prompt unavailable; starting reading.";
+            resolve();
+            return;
+          }
+
+          try {
+            window.speechSynthesis.cancel();
+            const utter = new SpeechSynthesisUtterance("Speak fast and clear");
+            utter.lang = "en-US";
+            utter.rate = 0.92;
+            utter.pitch = 1.18; // Mayin, yosh qiz ovozi tembri
+
+            const youngVoice = getBestYoungFemaleVoice();
+            if (youngVoice) utter.voice = youngVoice;
+
+            let done = false;
+            const finish = () => {
+              if (!done) {
+                done = true;
+                resolve();
+              }
+            };
+
+            const safetyTimeout = setTimeout(finish, 2600);
+            utter.onend = () => { clearTimeout(safetyTimeout); finish(); };
+            utter.onerror = () => { clearTimeout(safetyTimeout); finish(); };
+
+            window.speechSynthesis.speak(utter);
+          } catch (e) {
+            resolve();
+          }
+        });
+      }
+    }
+
+    // =========================================================================
+    // 8. LISTENING CONTROLLER (Ovozli o'qish, test savollari va baholash)
+    // =========================================================================
+    class ListeningPracticeController {
+      constructor(elements) {
+        this.el = elements;
+        this.currentTopic = null;
+        this.currentLevel = null;
+        this.currentText = "";
+        this.questions = [];
+        this.score = 0;
+        this.answeredCount = 0;
+        this.isPlaying = false;
+        this.rate = 1.0;
+        this.pitch = 1.20; // 18 yoshli nozik qiz tembri
+        this.toneRateMultiplier = 0.91; // Mayin, shoshilmaydigan jozibali tezlik
+        this.selectedVoice = null;
+        this.isTranscriptShown = false;
+
+        this.initVoiceSelector();
+        this.initListeners();
+      }
+
+      initVoiceSelector() {
+        const populate = () => {
+          if (!this.el.voiceSelect) return;
+          const voices = getAvailableEnglishVoices();
+          this.el.voiceSelect.innerHTML = "";
+
+          const best = getBestYoungFemaleVoice();
+          if (!this.selectedVoice) this.selectedVoice = best;
+
+          voices.forEach(v => {
+            const opt = document.createElement("option");
+            opt.value = v.name;
+            let label = v.name.replace(/Microsoft |Online |(Natural) |English /gi, "").trim();
+            if (/natural|google|ava|jenny/i.test(v.name)) label = "🌸 " + label;
+            opt.textContent = label;
+            if (this.selectedVoice && v.name === this.selectedVoice.name) {
+              opt.selected = true;
+            }
+            this.el.voiceSelect.appendChild(opt);
+          });
+        };
+
+        populate();
+        if ("speechSynthesis" in window) {
+          window.speechSynthesis.onvoiceschanged = populate;
+        }
+
+        if (this.el.voiceSelect) {
+          this.el.voiceSelect.addEventListener("change", (e) => {
+            const voices = getAvailableEnglishVoices();
+            this.selectedVoice = voices.find(v => v.name === e.target.value) || null;
+            if (this.isPlaying) {
+              this.stopSpeech();
+              this.startSpeech();
+            }
+          });
+        }
+
+        if (this.el.toneBtns) {
+          this.el.toneBtns.forEach(btn => {
+            btn.addEventListener("click", () => {
+              this.el.toneBtns.forEach(b => b.classList.remove("active"));
+              btn.classList.add("active");
+              this.pitch = parseFloat(btn.dataset.pitch) || 1.20;
+              this.toneRateMultiplier = parseFloat(btn.dataset.rate) || 0.91;
+              if (this.isPlaying) {
+                this.stopSpeech();
+                this.startSpeech();
+              }
+            });
+          });
+        }
+      }
+
+      initListeners() {
+        this.el.playBtn.addEventListener("click", () => this.toggleSpeech());
+
+        this.el.rateBtns.forEach(btn => {
+          btn.addEventListener("click", () => {
+            this.el.rateBtns.forEach(b => b.classList.remove("active"));
+            btn.classList.add("active");
+            this.rate = parseFloat(btn.dataset.rate) || 1.0;
+            if (this.isPlaying) {
+              this.stopSpeech();
+              this.startSpeech();
+            }
+          });
+        });
+
+        this.el.transcriptToggleBtn.addEventListener("click", () => {
+          this.isTranscriptShown = !this.isTranscriptShown;
+          this.el.transcriptContent.classList.toggle("hidden", !this.isTranscriptShown);
+          this.el.transcriptToggleText.textContent = this.isTranscriptShown ? "Hide Transcript" : "Show Transcript";
+          this.el.transcriptToggleIcon.textContent = this.isTranscriptShown ? "✕" : "👁";
+        });
+
+        this.el.retryBtn.addEventListener("click", () => {
+          this.startSession(this.currentTopic, this.currentLevel);
+        });
+
+        this.el.nextBtn.addEventListener("click", () => {
+          const currentIndex = TOPICS.indexOf(this.currentTopic);
+          const nextIndex = (currentIndex + 1) % TOPICS.length;
+          const nextTopic = TOPICS[nextIndex];
+          this.startSession(nextTopic, this.currentLevel);
+        });
+      }
+
+      startSession(topic, level) {
+        this.currentTopic = topic;
+        this.currentLevel = level;
+        this.currentText = TEXTS[topic][level];
+        this.questions = LISTENING_QUIZ[topic][level] || [];
+        this.score = 0;
+        this.answeredCount = 0;
+        this.isTranscriptShown = false;
+
+        this.stopSpeech();
+
+        this.el.topicDisplay.textContent = `${topic} — ${level}`;
+        this.el.scoreBadge.textContent = `Score: 0 / ${this.questions.length}`;
+        this.el.transcriptContent.textContent = this.currentText;
+        this.el.transcriptContent.classList.add("hidden");
+        this.el.transcriptToggleText.textContent = "Show Transcript";
+        this.el.transcriptToggleIcon.textContent = "👁";
+        this.el.resultCard.classList.add("hidden");
+
+        this.renderQuestions();
+      }
+
+      renderQuestions() {
+        this.el.questionsContainer.innerHTML = "";
+
+        this.questions.forEach((qItem, qIndex) => {
+          const card = document.createElement("div");
+          card.className = "question-card";
+
+          const title = document.createElement("div");
+          title.className = "q-title";
+          title.textContent = `${qIndex + 1}. ${qItem.q}`;
+          card.appendChild(title);
+
+          const optsWrap = document.createElement("div");
+          optsWrap.className = "q-options";
+
+          const letters = ["A", "B", "C", "D"];
+          const optionButtons = [];
+
+          const feedbackEl = document.createElement("div");
+          feedbackEl.className = "q-feedback";
+
+          qItem.options.forEach((optText, optIndex) => {
+            const btn = document.createElement("button");
+            btn.type = "button";
+            btn.className = "opt-btn";
+            btn.innerHTML = `<span><strong>${letters[optIndex]})</strong> ${optText}</span>`;
+
+            btn.addEventListener("click", () => {
+              if (btn.disabled) return;
+              optionButtons.forEach(b => b.disabled = true);
+
+              this.answeredCount += 1;
+              const isCorrect = (optIndex === qItem.answer);
+
+              if (isCorrect) {
+                btn.classList.add("correct");
+                btn.innerHTML += `<span>✓</span>`;
+                this.score += 1;
+                feedbackEl.className = "q-feedback show correct";
+                feedbackEl.innerHTML = `<strong>To'g'ri!</strong> ${qItem.tip}`;
+              } else {
+                btn.classList.add("wrong");
+                btn.innerHTML += `<span>✕</span>`;
+                optionButtons[qItem.answer].classList.add("correct");
+                feedbackEl.className = "q-feedback show wrong";
+                feedbackEl.innerHTML = `<strong>Noto'g'ri.</strong> ${qItem.tip}`;
+              }
+
+              this.el.scoreBadge.textContent = `Score: ${this.score} / ${this.questions.length}`;
+
+              if (this.answeredCount === this.questions.length) {
+                this.showResults();
+              }
+            });
+
+            optionButtons.push(btn);
+            optsWrap.appendChild(btn);
+          });
+
+          card.appendChild(optsWrap);
+          card.appendChild(feedbackEl);
+          this.el.questionsContainer.appendChild(card);
+        });
+      }
+
+      showResults() {
+        const total = this.questions.length;
+        const pct = Math.round((this.score / total) * 100);
+        this.el.resultScoreText.textContent = `${this.score} / ${total} (${pct}%)`;
+
+        if (pct === 100) {
+          this.el.resultMsgText.textContent = "Ajoyib natija! Siz barcha savollarga xatosiz javob berdingiz!";
+        } else if (pct >= 60) {
+          this.el.resultMsgText.textContent = "Yaxshi natija! Xatolarni tushunish uchun matnni ochib tekshirib ko'rishingiz mumkin.";
+        } else {
+          this.el.resultMsgText.textContent = "Hali mashq qilish kerak. Qayta tinglab, sinovni qayta topshiring!";
+        }
+
+        this.el.resultCard.classList.remove("hidden");
+        this.el.resultCard.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      }
+
+      toggleSpeech() {
+        if (this.isPlaying) {
+          this.stopSpeech();
+        } else {
+          this.startSpeech();
+        }
+      }
+
+      startSpeech() {
+        if (!("speechSynthesis" in window)) {
+          alert("Kechirasiz, brauzeringiz ovozli o'qish (Web Speech) funksiyasini qo'llab-quvvatlamaydi.");
+          return;
+        }
+
+        this.stopSpeech();
+
+        const utter = new SpeechSynthesisUtterance(this.currentText);
+        utter.lang = "en-US";
+        utter.rate = this.rate * this.toneRateMultiplier; // Mayin va samimiy tezlik
+        utter.pitch = this.pitch; // 18 yoshli nozik qiz tembri (1.20)
+
+        const voiceToUse = this.selectedVoice || getBestYoungFemaleVoice();
+        if (voiceToUse) {
+          utter.voice = voiceToUse;
+        }
+
+        utter.onstart = () => {
+          this.isPlaying = true;
+          this.el.playIcon.textContent = "⏸";
+          this.el.playText.textContent = "Pause Audio";
+          this.el.waveIndicator.classList.add("playing");
+        };
+
+        const onFinish = () => {
+          this.isPlaying = false;
+          this.el.playIcon.textContent = "▶";
+          this.el.playText.textContent = "Replay Audio";
+          this.el.waveIndicator.classList.remove("playing");
+        };
+
+        utter.onend = onFinish;
+        utter.onerror = onFinish;
+
+        window.speechSynthesis.speak(utter);
+      }
+
+      stopSpeech() {
+        this.isPlaying = false;
+        if ("speechSynthesis" in window) {
+          window.speechSynthesis.cancel();
+        }
+        this.el.playIcon.textContent = "▶";
+        this.el.playText.textContent = "Listen Audio";
+        this.el.waveIndicator.classList.remove("playing");
+      }
+    }
+
+    // =========================================================================
+    // 9. ASOSIY ILOVA BOSHQARUVI
+    // =========================================================================
+    const SPEED_STORAGE_KEY = "speakflow_speed_px_s";
+
+    function sliderToSpeed(sliderVal) {
+      const t = Math.max(0, Math.min(1, Number(sliderVal) / 1000));
+      return Math.round(8 + Math.pow(t, 2) * (140 - 8));
+    }
+
+    function speedToSlider(speedPx) {
+      const clamped = Math.max(8, Math.min(140, Number(speedPx)));
+      const t = Math.sqrt((clamped - 8) / (140 - 8));
+      return Math.round(t * 1000);
+    }
+
+
+    // =========================================================================
+    // 2.1 VOCABULARY DATA (10 mavzu x 3 daraja = 180 ta so'z, misol va tarjima)
+    // =========================================================================
     const VOCABULARY_DATA = {
   "Daily Life": {
     "A1": [
