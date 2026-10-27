@@ -2012,6 +2012,217 @@
         padding: 8px 12px;
       }
     }
+  
+    /* =============================================================
+       LIGHT & ELEGANT ANIMATIONS (Apple-style 60-120fps)
+       ============================================================= */
+
+    /* 1. View Transitions */
+    #home-view:not(.hidden),
+    .reader-view:not(.hidden),
+    .listening-view:not(.hidden),
+    .vocabulary-view:not(.hidden),
+    .flashcards-view:not(.hidden) {
+      animation: viewEnter 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    @keyframes viewEnter {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* 2. Universal Button Active Tap Feedback */
+    button:active,
+    .action-btn:active,
+    .back-btn:active,
+    .fc-action-btn:active,
+    .mode-btn:active,
+    .opt-btn:active,
+    .topic-lvl-pill:active,
+    .topic-cat-pill:active {
+      transform: scale(0.96) !important;
+      transition: transform 0.08s ease !important;
+    }
+
+    /* 3. Topic Items & Inline Level Pills */
+    .topic-item {
+      transition: background-color 0.18s ease, transform 0.18s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.18s ease;
+    }
+
+    .topic-item:hover {
+      background-color: var(--btn-hover);
+      transform: translateX(4px);
+    }
+
+    .topic-lvl-pill {
+      transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .topic-lvl-pill:hover {
+      background: var(--text-main);
+      color: #ffffff;
+      border-color: var(--text-main);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    }
+
+    /* 4. Category Filter & Mode Tabs */
+    .mode-btn {
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .mode-btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .mode-btn.active {
+      transform: scale(1.01);
+    }
+
+    .topic-cat-pill {
+      transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .topic-cat-pill:hover {
+      transform: translateY(-1px);
+    }
+
+    .topic-cat-pill.active {
+      transform: scale(1.02);
+    }
+
+    /* 5. Search Clear Button Pop-In */
+    .topic-search-clear {
+      transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .topic-search-clear:not(.hidden) {
+      animation: popIn 0.16s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes popIn {
+      from {
+        opacity: 0;
+        transform: scale(0.7);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    /* 6. Listening Quiz Interactions */
+    .opt-btn {
+      transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .opt-btn:hover:not(:disabled) {
+      transform: translateY(-1px);
+      border-color: var(--text-main);
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .opt-btn.correct {
+      animation: optCorrectPulse 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .opt-btn.wrong {
+      animation: optWrongShake 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .q-feedback.show {
+      animation: feedbackSlideDown 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes optCorrectPulse {
+      0% { transform: scale(1); }
+      40% { transform: scale(1.03); }
+      100% { transform: scale(1); }
+    }
+
+    @keyframes optWrongShake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-4px); }
+      40%, 80% { transform: translateX(4px); }
+    }
+
+    @keyframes feedbackSlideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-6px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* 7. Flashcards 3D, Swipe-Out & Pop-In */
+    .fc-card {
+      transition: transform 0.45s cubic-bezier(0.34, 1.25, 0.64, 1) !important;
+    }
+
+    .fc-card.swipe-out-right {
+      animation: cardSwipeOutRight 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .fc-card.pop-in {
+      animation: cardPopIn 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    @keyframes cardSwipeOutRight {
+      to {
+        opacity: 0;
+        transform: translateX(50px) rotate(4deg);
+      }
+    }
+
+    @keyframes cardPopIn {
+      from {
+        opacity: 0;
+        transform: scale(0.95);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    /* 8. Audio Glow Waves */
+    @keyframes audioGlowPulse {
+      0% {
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.45);
+      }
+      70% {
+        box-shadow: 0 0 0 8px rgba(16, 185, 129, 0);
+      }
+      100% {
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+      }
+    }
+
+    .vocab-speak-btn.speaking,
+    .vocab-ex-speak-btn.speaking,
+    .fc-speak-btn.speaking {
+      animation: audioGlowPulse 1.25s infinite cubic-bezier(0.24, 0, 0.38, 1) !important;
+    }
+
+    /* 9. Accessibility: Respect User's Reduced Motion */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+
   </style>
 </head>
 <body>
@@ -12146,9 +12357,24 @@
           this.currentCardIndex = 0;
         }
 
-        this.isFlipped = false;
-        if (this.el.card) this.el.card.classList.remove("is-flipped");
-        this.renderCard();
+        if (this.el.card) {
+          this.el.card.classList.add("swipe-out-right");
+          setTimeout(() => {
+            if (this.el.card) {
+              this.el.card.classList.remove("swipe-out-right");
+              this.el.card.classList.add("pop-in");
+              setTimeout(() => {
+                if (this.el.card) this.el.card.classList.remove("pop-in");
+              }, 240);
+            }
+            this.isFlipped = false;
+            if (this.el.card) this.el.card.classList.remove("is-flipped");
+            this.renderCard();
+          }, 160);
+        } else {
+          this.isFlipped = false;
+          this.renderCard();
+        }
       }
 
       markAgain() {
